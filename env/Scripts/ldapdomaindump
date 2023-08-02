@@ -1,0 +1,3 @@
+#!C:\Users\Garib\OneDrive\デスクトップ\武器庫\MHDDoS\env\Scripts\python.exe
+import ldapdomaindump
+ldapdomaindump.main()

