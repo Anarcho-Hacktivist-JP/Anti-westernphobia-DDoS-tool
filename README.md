@@ -1,6 +1,6 @@
 <p align="center"><img src="https://cdn.discordapp.com/attachments/938175699326484490/948263435412598864/unknown_2.png" width="400px" height="150px" alt="ddos"></p>
 
-<h1 align="center">Anti-westernphobia-DDoS-tool - DDoS Attack Script Against Authoritarians</h1>
+<h1 align="center">Anti-westernphobia-DDoS-tool - DDoS Attack Script Against tankie, ultranationalist, religious right and militarist</h1>
 <em><h5 align="center">(Programming Language - Python 3)</h5></em>
 
 <p align="center">
