@@ -15,6 +15,11 @@
 <p align="center"><img src="https://i.imgur.com/aNrHJcA.png" width="1078" height="433" alt="POWER"></p>
 <p align="center"><img src="https://i.imgur.com/4Q7v2wn.png" width="1078" height="296" alt="SCRIPT"></p>
 
+## What is the westernphobia and occidentalism
+
+<p align="center">Westernphobia is the resentment ideology by .</p>
+
+
 ## Features And Methods
 
  * 💣 Layer7
