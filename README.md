@@ -22,7 +22,9 @@ Westernphobia and occidentalism are the resentment ideology by local elites and 
 <p align="center">In fact, nationalism is no threat to capitalism or even to imperialism. It replaces imperialist domination with local elite and foreign oppression and exploitation with native versions. That sometimes the local elites, like imperial ones, introduce reforms which benefit the majority does not change the nature of the new regimes although this does potentially bring them into conflict with imperialist powers. - An anarchist FAQ D.6</p>
 
 As anarchist anonymous, we fight against any kind of the oppression and hierarchy and control. 
+
 Long Live Stirner, Spencer, Prudhon, Bakunin, Kropotokin, Machno, Ocalan, and Marcos sub-commander.
+
 Long Live Machnoscina, Zapatista and Rojava. 
 
 ## Features And Methods
