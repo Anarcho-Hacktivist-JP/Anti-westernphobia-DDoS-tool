@@ -17,7 +17,7 @@
 
 ## What is the westernphobia and occidentalism?
 
-Westernphobia is the resentment ideology by local elites and nolibities, and also people who cannnot accept the progress of the technologies and globalism from the lower side. The common feature is authoritarianism, deny of the democracy, anti-technology and anti-human-rights. Their purpose is to occupy the whole walfare of their region, and replace the ruler for them in order to exploit people. Afganistan, Turkey, Myammar, Russia, China and North korea goverment shows us that this instist is the fact.  
+Westernphobia and occidentalism are the resentment ideology by local elites and nolibities, and also people who cannnot accept the progress of the technologies and globalism from the lower side. The common feature is authoritarianism, deny of the democracy, anti-technology and anti-human-rights. Their purpose is to occupy the whole walfare of their region, and replace the ruler for them in order to exploit people. Afganistan, Turkey, Myammar, Russia, China and North korea goverments shows us that this instist is the fact.  
 
 <p align="center">In fact, nationalism is no threat to capitalism or even to imperialism. It replaces imperialist domination with local elite and foreign oppression and exploitation with native versions. That sometimes the local elites, like imperial ones, introduce reforms which benefit the majority does not change the nature of the new regimes although this does potentially bring them into conflict with imperialist powers. - An anarchist FAQ D.6</p>
 
