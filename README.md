@@ -10,15 +10,18 @@
 <a href="#"><img alt="MH-DDoS License" src="https://img.shields.io/github/license/MatrixTM/MHDDoS?color=orange&style=for-the-badge"></a>
 <a href="https://github.com/MatrixTM/MHDDoS/issues"><img alt="MatrixTM issues" src="https://img.shields.io/github/issues/MatrixTM/MHDDoS?color=purple&style=for-the-badge"></a>
   
-<p align="center">Please Don't Attack western countries.</p>
+<p align="center">Please Don't Attack democratic countries which do not oppress people.</p>
 
 <p align="center"><img src="https://i.imgur.com/aNrHJcA.png" width="1078" height="433" alt="POWER"></p>
 <p align="center"><img src="https://i.imgur.com/4Q7v2wn.png" width="1078" height="296" alt="SCRIPT"></p>
 
-## What is the westernphobia and occidentalism
+## What is the westernphobia and occidentalism?
 
-<p align="center">Westernphobia is the resentment ideology by .</p>
+Westernphobia is the resentment ideology by local elites and nolibities, and also people who cannnot accept the progress of the technologies and globalism from the lower side. The common feature is authoritarianism, deny of the democracy, anti-technology and anti-human-rights. Their purpose is to occupy the whole walfare of their region, and replace the ruler for them in order to exploit people. Afganistan, Turkey, Myammar, Russia, China and North korea goverment shows us that this instist is the fact.  
 
+<p align="center">In fact, nationalism is no threat to capitalism or even to imperialism. It replaces imperialist domination with local elite and foreign oppression and exploitation with native versions. That sometimes the local elites, like imperial ones, introduce reforms which benefit the majority does not change the nature of the new regimes although this does potentially bring them into conflict with imperialist powers. - An anarchist FAQ D.6</p>
+
+As anarchist anonymous, we fight against any kind of the oppression and hierarchy and control. 
 
 ## Features And Methods
 
