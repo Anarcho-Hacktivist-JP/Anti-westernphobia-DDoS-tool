@@ -14,7 +14,7 @@
     <InterpreterId>MSBuild|env|$(MSBuildProjectFullPath)</InterpreterId>
     <TestFramework>Pytest</TestFramework>
     <LaunchProvider>Standard Python launcher</LaunchProvider>
-    <CommandLineArguments>CFRAGHEAD2 http://www.uriminzokkiri.com/index.php 5 4000 proxy.txt 100 100000</CommandLineArguments>
+    <CommandLineArguments>CFTANKIE2 http://www.uriminzokkiri.com/index.php 5 4000 proxy.txt 100 100000</CommandLineArguments>
     <EnableNativeCodeDebugging>True</EnableNativeCodeDebugging>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
