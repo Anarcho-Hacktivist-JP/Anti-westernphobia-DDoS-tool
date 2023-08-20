@@ -59,7 +59,9 @@ Long Live Machnoscina, Zapatista and Rojava.
    * <img src="https://cdn-icons-png.flaticon.com/512/905/905568.png" width="16" height="16" alt="bypass"> BOMB |  Bypass with codesenberg/bombardier
    * 🔪 KILLER | Run many threads to kill a target
    * 🧅 TOR | Bypass onion website
-   * 🧅 TOR | Bypass onion website
+   * 🖕 RAGHEAD | AVB Bypass for Iran goverment website and pro-goverment media.
+   * 🖕 PAPIST | Google Project Shield, Vshield, DDoS Guard Free, CF NoSec With Proxy for any webiste.
+   * 🖕 KACAP | Direct scraping attack for any webiste.
 
 * 🧨 Layer4: 
   * <img src="https://raw.githubusercontent.com/kgretzky/pwndrop/master/media/pwndrop-logo-512.png" width="16" height="16" alt="tcp"> TCP | TCP Flood Bypass
