@@ -66,9 +66,9 @@ Long Live Machnoscina, Zapatista and Rojava.
    * 🖕 RAGHEAD | AVB Bypass for Iran goverment website and pro-goverment media.
    * 🖕 PAPIST | Google Project Shield, Vshield, DDoS Guard Free, CF NoSec With Proxy for any webiste.
    * 🖕 KACAP | Direct scraping attack for any webiste.
-   * 🎵 AMAMI_CANON | CloudFlare and DDS-GUARD Bypass for Catholic religios right, TARF and SWERF and anti-LGBT website with proxy
-   * 🎵 AMAMI_CANON2 | CloudFlare and DDS-GUARD Bypass for Catholic religios right, TARF and SWERF and anti-LGBT website with proxy
-   * 🎵 AMAMI_CANON3 | CloudFlare and DDS-GUARD Bypass for Catholic religios right, TARF and SWERF and anti-LGBT website without proxy
+   * 🎵 AMAMI_CANON | CloudFlare and DDoS Guard Bypass for Catholic religios right, TARF and SWERF and anti-LGBT website with proxy
+   * 🎵 AMAMI_CANON2 | CloudFlare and DDoS Guard Bypass for Catholic religios right, TARF and SWERF and anti-LGBT website with proxy
+   * 🎵 AMAMI_CANON3 | CloudFlare and DDoS Guard Bypass for Catholic religios right, TARF and SWERF and anti-LGBT website without proxy
 
 * 🧨 Layer4: 
   * <img src="https://raw.githubusercontent.com/kgretzky/pwndrop/master/media/pwndrop-logo-512.png" width="16" height="16" alt="tcp"> TCP | TCP Flood Bypass
