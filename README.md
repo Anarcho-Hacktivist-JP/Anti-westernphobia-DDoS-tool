@@ -54,6 +54,10 @@ Long Live Machnoscina, Zapatista and Rojava.
    * <img src="https://techcrunch.com/wp-content/uploads/2019/06/J2LlHqT3qJl0bG9Alpgc-1-730x438.png?w=730" width="16" height="16" alt="CloudFlare"> CFB | CloudFlare Bypass
    * <img src="https://techcrunch.com/wp-content/uploads/2019/06/J2LlHqT3qJl0bG9Alpgc-1-730x438.png?w=730" width="16" height="16" alt="Bypass-Strong"> CFTANKIE | CloudFlare Bypass for Russia, China and North Korea with proxy
    * <img src="https://techcrunch.com/wp-content/uploads/2019/06/J2LlHqT3qJl0bG9Alpgc-1-730x438.png?w=730" width="16" height="16" alt="Bypass-Strong"> CFTANKIE2 | CloudFlare Bypass for Russia, China and North Korea without proxy
+   * <img src="https://techcrunch.com/wp-content/uploads/2019/06/J2LlHqT3qJl0bG9Alpgc-1-730x438.png?w=730" width="16" height="16" alt="Bypass-Strong"> CFFUNDIE | CloudFlare Bypass for Religious right and fundamentalist with proxy
+   * <img src="https://techcrunch.com/wp-content/uploads/2019/06/J2LlHqT3qJl0bG9Alpgc-1-730x438.png?w=730" width="16" height="16" alt="Bypass-Strong"> CFTANKIE2 | CloudFlare Bypass for Religious right and fundamentalist without proxy
+   * <img src="https://techcrunch.com/wp-content/uploads/2019/06/J2LlHqT3qJl0bG9Alpgc-1-730x438.png?w=730" width="16" height="16" alt="Bypass-Strong"> CFRAGHEAD | CloudFlare Bypass for Iran, Taliban and Moonie with proxy
+   * <img src="https://techcrunch.com/wp-content/uploads/2019/06/J2LlHqT3qJl0bG9Alpgc-1-730x438.png?w=730" width="16" height="16" alt="Bypass-Strong"> CFRAGHEAD2 | CloudFlare Bypass for Iran, Taliban and Moonie without proxy
    * <img src="https://techcrunch.com/wp-content/uploads/2019/06/J2LlHqT3qJl0bG9Alpgc-1-730x438.png?w=730" width="16" height="16" alt="CloudFlare UnderAttack Mode"> CFBUAM | CloudFlare Under Attack Mode Bypass
    * <img src="http://iclouddnsbypass.com/wp-content/uploads/2015/02/iCloudDNSBypassServer.ico" width="16" height="16" alt="bypass"> BYPASS |  Bypass Normal AntiDDoS
    * <img src="https://cdn-icons-png.flaticon.com/512/905/905568.png" width="16" height="16" alt="bypass"> BOMB |  Bypass with codesenberg/bombardier
@@ -62,6 +66,9 @@ Long Live Machnoscina, Zapatista and Rojava.
    * 🖕 RAGHEAD | AVB Bypass for Iran goverment website and pro-goverment media.
    * 🖕 PAPIST | Google Project Shield, Vshield, DDoS Guard Free, CF NoSec With Proxy for any webiste.
    * 🖕 KACAP | Direct scraping attack for any webiste.
+   * 🎵 AMAMI_CANON | CloudFlare and DDS-GUARD Bypass for Catholic religios right, TARF and SWERF and anti-LGBT website with proxy
+   * 🎵 AMAMI_CANON2 | CloudFlare and DDS-GUARD Bypass for Catholic religios right, TARF and SWERF and anti-LGBT website with proxy
+   * 🎵 AMAMI_CANON3 | CloudFlare and DDS-GUARD Bypass for Catholic religios right, TARF and SWERF and anti-LGBT website without proxy
 
 * 🧨 Layer4: 
   * <img src="https://raw.githubusercontent.com/kgretzky/pwndrop/master/media/pwndrop-logo-512.png" width="16" height="16" alt="tcp"> TCP | TCP Flood Bypass
