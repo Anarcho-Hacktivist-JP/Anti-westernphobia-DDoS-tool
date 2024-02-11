@@ -1,0 +1,1 @@
+CFRAGHEAD3 https://jebhepaydari.ir/ 4 5000 proxy.txt 5000 100000
