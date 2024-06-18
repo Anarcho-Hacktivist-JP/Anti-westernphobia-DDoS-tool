@@ -14,8 +14,8 @@
     <InterpreterId>MSBuild|env|$(MSBuildProjectFullPath)</InterpreterId>
     <TestFramework>Pytest</TestFramework>
     <LaunchProvider>Standard Python launcher</LaunchProvider>
-    <CommandLineArguments>CFRAGHEAD https://lehava-us.com/ 5 3000 proxy.txt 3000 100000</CommandLineArguments>
-    <EnableNativeCodeDebugging>False</EnableNativeCodeDebugging>
+    <CommandLineArguments>CF_NO_MORE_TANKIE_RAGHEADS https://www.alemarahenglish.af/ 5 7000 proxy.txt 7000 100000</CommandLineArguments>
+    <EnableNativeCodeDebugging>True</EnableNativeCodeDebugging>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>
@@ -4251,7 +4251,10 @@
     <Content Include="files\proxies\proxy5.txt" />
     <Content Include="files\proxies\socks5.txt" />
     <Content Include="files\referers.txt" />
+    <Content Include="files\referers2.txt" />
+    <Content Include="files\ua.txt" />
     <Content Include="files\useragent.txt" />
+    <Content Include="files\useragent3.txt" />
     <Content Include="files\useragents2.txt" />
     <Content Include="LICENSE" />
     <Content Include="README.md" />
