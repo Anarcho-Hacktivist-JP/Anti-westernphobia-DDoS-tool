@@ -1,4 +1,4 @@
-<p align="center"><img src="https://cdn.discordapp.com/attachments/938175699326484490/948263435412598864/unknown_2.png" width="400px" height="150px" alt="ddos"></p>
+<p align="center"><img src="https://i.ibb.co/3F6V9JQ/MHDDoS.png" width="400px" height="150px" alt="ddos"></p>
 
 <h1 align="center">Anti-westernphobia-DDoS-tool - DDoS Attack Script Against tankie, ultranationalist, religious right and militarist</h1>
 <em><h5 align="center">(Programming Language - Python 3)</h5></em>
@@ -33,7 +33,7 @@ Long Live Machnoscina, Zapatista and Rojava.
 
    * <img src="https://img.icons8.com/cotton/344/domain.png" width="16" height="16" alt="get"> GET | GET Flood
    * <img src="https://cdn0.iconfinder.com/data/icons/database-storage-5/60/server__database__fire__burn__safety-512.png" width="16" height="16" alt="post"> POST | POST Flood
-   * <img src="https://upload.wikimedia.org/wikipedia/en/thumb/f/f9/OVH_Logo.svg/1200px-OVH_Logo.svg.png" width="16" height="16" alt="ovh"> OVH | Bypass OVH
+   * <img src="https://static-00.iconduck.com/assets.00/ovh-icon-2048x2048-l4c3izvg.png" width="16" height="16" alt="ovh"> OVH | Bypass OVH
    * <img src="https://cdn-icons-png.flaticon.com/512/1691/1691948.png" width="16" height="16" alt="ovh"> RHEX | Random HEX
    * <img src="https://cdn-icons-png.flaticon.com/512/4337/4337972.png" width="16" height="16" alt="ovh"> STOMP | Bypass chk_captcha
    * <img src="https://cdn.iconscout.com/icon/premium/png-256-thumb/cyber-bullying-2557797-2152371.png" width="16" height="16" alt="stress"> STRESS | Send HTTP Packet With High Byte 
@@ -45,10 +45,10 @@ Long Live Machnoscina, Zapatista and Rojava.
    * <img src="https://i.pinimg.com/originals/03/2e/7d/032e7d0755cd511c753bcb6035d44f68.png" width="16" height="16" alt="cookie"> COOKIE | Random Cookie PHP 'if (isset($_COOKIE))'
    * <img src="https://cdn0.iconfinder.com/data/icons/dicticons-files-folders/32/office_pps-512.png" width="16" height="16" alt="pps"> PPS |  Only 'GET / HTTP/1.1\r\n\r\n'
    * <img src="https://cdn3.iconfinder.com/data/icons/internet-security-14/48/DDoS_website_webpage_bomb_virus_protection-512.png" width="16" height="16" alt="even"> EVEN | GET Method with more header
-   * <img src="https://projectshield.withgoogle.com/static/icons/favicon.ico" width="16" height="16" alt="googleshield"> GSB | Google Project Shield Bypass
+   * <img src="https://iili.io/HU9BC74.png" width="16" height="16" alt="googleshield"> GSB | Google Project Shield Bypass
    * <img src="https://seeklogo.com/images/D/ddos-guard-logo-CFEFCA409C-seeklogo.com.png" width="16" height="16" alt="DDoSGuard"> DGB | DDoS Guard Bypass
    * <img src="https://i.imgur.com/bGL8qfw.png" width="16" height="16" alt="ArvanCloud"> AVB | Arvan Cloud Bypass
-   * <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/1024px-Google_%22G%22_Logo.svg.png" width="16" height="16" alt="Google bot"> BOT | Like Google bot
+   * <img src="https://iili.io/HU9BC74.png" width="16" height="16" alt="Google bot"> BOT | Like Google bot
    * <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/Apache_HTTP_Server_Logo_%282016%29.svg/1000px-Apache_HTTP_Server_Logo_%282016%29.svg.png" width="16" height="16" alt="Apache Webserver"> APACHE | Apache Expliot
    * <img src="https://icon-library.com/images/icon-for-wordpress/icon-for-wordpress-16.jpg" width="16" height="16" alt="wordpress expliot"> XMLRPC | WP XMLRPC exploit (add /xmlrpc.php)
    * <img src="https://techcrunch.com/wp-content/uploads/2019/06/J2LlHqT3qJl0bG9Alpgc-1-730x438.png?w=730" width="16" height="16" alt="CloudFlare"> CFB | CloudFlare Bypass
@@ -106,13 +106,13 @@ Our social's💻
 </h2> 
 
 <div align="center">
-   <img src="https://icon-library.com/images/github-icon-vector/github-icon-vector-27.jpg" width="96" height="96" alt="github" />
-   <img src="https://brandlogos.net/wp-content/uploads/2021/11/discord-logo.png"  width="96" height="96" alt="discord" />
-   <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Telegram_logo.svg/2048px-Telegram_logo.svg.png" width="96" height="96" alt="telegram" />
+   <img src="https://icon-library.com/images/github-icon-vector/github-icon-vector-27.jpg" width="64" height="64"/>
+   <img src="https://brandlogos.net/wp-content/uploads/2021/11/discord-logo.png"  width="64" height="64" alt="discord" />
+   <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Telegram_logo.svg/2048px-Telegram_logo.svg.png" width="64" height="64" alt="telegram" />
 </div>
 
- * [Matrix Team Telegram group](https://t.me/DD0SChat)
- * [Matrix community Telegram channel](https://t.me/MatrixORG)
+ * [Matrix community Telegram channel](https://t.me/Matrix_Development)
+ * [Matrix team Telegram Group](https://t.me/MatrixTMChat)
  * [GitHub](https://github.com/MatrixTM)
 ### If u Like the project, leave a star on the repository!
 
@@ -159,3 +159,8 @@ apt -y update && apt -y install curl wget libcurl4 libssl-dev python3 python3-pi
 
 ---
 
+## Need a Cheap Hourly Server? No Problem
+
+<a href="https://aeza.net/?ref=375036"><img src="https://i.ibb.co/wgq9Ly8/aezabanner.png" width="728" height="90" alt="aeza"></a>
+
+#### You can buy an hourly 10Gbps server from [Aeza Hosting](https://aeza.net/?ref=375036) with crypto (100% anonymous).
