@@ -1,0 +1,16 @@
+LICENSE.md
+MANIFEST.in
+README.md
+setup.py
+PyRoxy/__init__.py
+PyRoxy.egg-info/PKG-INFO
+PyRoxy.egg-info/SOURCES.txt
+PyRoxy.egg-info/dependency_links.txt
+PyRoxy.egg-info/requires.txt
+PyRoxy.egg-info/top_level.txt
+PyRoxy/Exceptions/__init__.py
+PyRoxy/GeoIP/__init__.py
+PyRoxy/GeoIP/Sqlite/COPYRIGHT.txt
+PyRoxy/GeoIP/Sqlite/GeoLite2-Country.mmdb
+PyRoxy/GeoIP/Sqlite/LICENSE.txt
+PyRoxy/Tools/__init__.py

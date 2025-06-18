@@ -1,0 +1,6 @@
+setup.cfg
+setup.py
+socks.egg-info/PKG-INFO
+socks.egg-info/SOURCES.txt
+socks.egg-info/dependency_links.txt
+socks.egg-info/top_level.txt

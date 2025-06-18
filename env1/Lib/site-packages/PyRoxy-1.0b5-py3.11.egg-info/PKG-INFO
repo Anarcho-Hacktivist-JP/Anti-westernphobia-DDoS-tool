@@ -1,0 +1,16 @@
+Metadata-Version: 2.4
+Name: PyRoxy
+Version: 1.0b5
+Home-page: https://github.com/MHProDev/PyRoxy
+Author: MH_ProDev
+License: MIT
+License-File: LICENSE.md
+Requires-Dist: maxminddb>=2.2.0
+Requires-Dist: requests>=2.27.1
+Requires-Dist: yarl>=1.7.2
+Requires-Dist: pysocks>=1.7.1
+Dynamic: author
+Dynamic: home-page
+Dynamic: license
+Dynamic: license-file
+Dynamic: requires-dist
