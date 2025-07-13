@@ -15,7 +15,7 @@
 # specific language governing permissions and limitations
 # under the License.
 
-from typing import List, Optional, Union
+from typing import Optional, Union
 
 from selenium.webdriver.remote.command import Command
 
@@ -61,11 +61,11 @@ class ActionBuilder:
         return next(filter(lambda x: x == name, self.devices), None)
 
     @property
-    def pointer_inputs(self) -> List[PointerInput]:
+    def pointer_inputs(self) -> list[PointerInput]:
         return [device for device in self.devices if device.type == interaction.POINTER]
 
     @property
-    def key_inputs(self) -> List[KeyInput]:
+    def key_inputs(self) -> list[KeyInput]:
         return [device for device in self.devices if device.type == interaction.KEY]
 
     @property

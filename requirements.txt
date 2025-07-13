@@ -45,9 +45,9 @@ pycparser==2.22
 pycryptodomex==3.23.0
 Pygments==2.19.1
 pyOpenSSL==24.0.0
+"pyroxy @ git+https://github.com/MatrixTM/PyRoxy.git"
 pyparsing==3.2.3
 pyreadline3==3.5.4
-pyroxy @ git+https://github.com/MatrixTM/PyRoxy.git
 PySocks==1.7.1
 pytest==8.4.0
 requests==2.32.3

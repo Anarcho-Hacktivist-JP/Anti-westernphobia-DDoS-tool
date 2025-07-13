@@ -14,10 +14,11 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
+
 from __future__ import annotations
 
 from ..utils import keys_to_typing
-from .interaction import KEY, Interaction
+from .interaction import KEY, POINTER, WHEEL, Interaction
 from .key_input import KeyInput
 from .pointer_input import PointerInput
 from .wheel_input import WheelInput
@@ -27,8 +28,19 @@ class KeyActions(Interaction):
     def __init__(self, source: KeyInput | PointerInput | WheelInput | None = None) -> None:
         if source is None:
             source = KeyInput(KEY)
-        self.source = source
-        super().__init__(source)
+        self.input_source = source
+
+        # Determine the correct source type string based on the input object
+        if isinstance(source, KeyInput):
+            source_type = KEY
+        elif isinstance(source, PointerInput):
+            source_type = POINTER
+        elif isinstance(source, WheelInput):
+            source_type = WHEEL
+        else:
+            source_type = KEY
+
+        super().__init__(source_type)
 
     def key_down(self, letter: str) -> KeyActions:
         return self._key_action("create_key_down", letter)
@@ -48,6 +60,6 @@ class KeyActions(Interaction):
         return self
 
     def _key_action(self, action: str, letter) -> KeyActions:
-        meth = getattr(self.source, action)
+        meth = getattr(self.input_source, action)
         meth(letter)
         return self

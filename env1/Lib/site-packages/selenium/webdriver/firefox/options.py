@@ -14,7 +14,7 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-from typing import Any, Dict, Optional, Union
+from typing import Any, Optional, Union
 
 from typing_extensions import deprecated
 
@@ -108,7 +108,7 @@ class Options(ArgOptions):
         # it will defer to geckodriver to find the system Firefox
         # and generate a fresh profile.
         caps = self._caps
-        opts: Dict[str, Any] = {}
+        opts: dict[str, Any] = {}
 
         if self._binary_location:
             opts["binary"] = self._binary_location

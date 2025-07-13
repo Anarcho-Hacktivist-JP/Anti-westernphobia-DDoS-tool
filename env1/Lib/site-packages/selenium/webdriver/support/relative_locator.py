@@ -15,7 +15,7 @@
 # specific language governing permissions and limitations
 # under the License.
 import warnings
-from typing import Dict, List, NoReturn, Optional, Union, overload
+from typing import NoReturn, Optional, Union, overload
 
 from selenium.common.exceptions import WebDriverException
 from selenium.webdriver.common.by import By, ByType
@@ -91,9 +91,9 @@ class RelativeBy:
     >>> assert "mid" in ids
     """
 
-    LocatorType = Dict[ByType, str]
+    LocatorType = dict[ByType, str]
 
-    def __init__(self, root: Optional[Dict[ByType, str]] = None, filters: Optional[List] = None):
+    def __init__(self, root: Optional[dict[ByType, str]] = None, filters: Optional[list] = None):
         """Creates a new RelativeBy object. It is preferred if you use the
         `locate_with` method as this signature could change.
 
@@ -149,7 +149,7 @@ class RelativeBy:
     @overload
     def below(self, element_or_locator: None = None) -> "NoReturn": ...
 
-    def below(self, element_or_locator: Union[WebElement, Dict, None] = None) -> "RelativeBy":
+    def below(self, element_or_locator: Union[WebElement, dict, None] = None) -> "RelativeBy":
         """Add a filter to look for elements below.
 
         Parameters:
@@ -183,7 +183,7 @@ class RelativeBy:
     @overload
     def to_left_of(self, element_or_locator: None = None) -> "NoReturn": ...
 
-    def to_left_of(self, element_or_locator: Union[WebElement, Dict, None] = None) -> "RelativeBy":
+    def to_left_of(self, element_or_locator: Union[WebElement, dict, None] = None) -> "RelativeBy":
         """Add a filter to look for elements to the left of.
 
         Parameters:
@@ -217,7 +217,7 @@ class RelativeBy:
     @overload
     def to_right_of(self, element_or_locator: None = None) -> "NoReturn": ...
 
-    def to_right_of(self, element_or_locator: Union[WebElement, Dict, None] = None) -> "RelativeBy":
+    def to_right_of(self, element_or_locator: Union[WebElement, dict, None] = None) -> "RelativeBy":
         """Add a filter to look for elements right of.
 
         Parameters:
@@ -269,7 +269,7 @@ class RelativeBy:
     @overload
     def straight_below(self, element_or_locator: None = None) -> "NoReturn": ...
 
-    def straight_below(self, element_or_locator: Union[WebElement, Dict, None] = None) -> "RelativeBy":
+    def straight_below(self, element_or_locator: Union[WebElement, dict, None] = None) -> "RelativeBy":
         """Add a filter to look for elements below.
 
         :Args:
@@ -287,7 +287,7 @@ class RelativeBy:
     @overload
     def straight_left_of(self, element_or_locator: None = None) -> "NoReturn": ...
 
-    def straight_left_of(self, element_or_locator: Union[WebElement, Dict, None] = None) -> "RelativeBy":
+    def straight_left_of(self, element_or_locator: Union[WebElement, dict, None] = None) -> "RelativeBy":
         """Add a filter to look for elements to the left of.
 
         :Args:
@@ -305,7 +305,7 @@ class RelativeBy:
     @overload
     def straight_right_of(self, element_or_locator: None = None) -> "NoReturn": ...
 
-    def straight_right_of(self, element_or_locator: Union[WebElement, Dict, None] = None) -> "RelativeBy":
+    def straight_right_of(self, element_or_locator: Union[WebElement, dict, None] = None) -> "RelativeBy":
         """Add a filter to look for elements right of.
 
         :Args:
@@ -357,7 +357,7 @@ class RelativeBy:
         self.filters.append({"kind": "near", "args": [element_or_locator, distance]})
         return self
 
-    def to_dict(self) -> Dict:
+    def to_dict(self) -> dict:
         """Create a dict that will be passed to the driver to start searching
         for the element."""
         return {

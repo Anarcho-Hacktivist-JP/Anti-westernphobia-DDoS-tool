@@ -1,4 +1,4 @@
-#!C:\Users\Garib\Desktop\folder\DDOS\MHDDoS\env1\Scripts\python.exe
+#!C:\Users\Garib\Documents\folder\DDOS\MHDDoS\env1\Scripts\python.exe
 # Impacket - Collection of Python classes for working with network protocols.
 #
 # Copyright Fortra, LLC and its affiliated companies 

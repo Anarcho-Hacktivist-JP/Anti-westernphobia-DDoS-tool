@@ -14,16 +14,18 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
+
 import errno
 import logging
 import os
 import subprocess
 from abc import ABC, abstractmethod
+from collections.abc import Mapping
 from io import IOBase
 from platform import system
 from subprocess import PIPE
 from time import sleep
-from typing import IO, Any, List, Mapping, Optional, Union, cast
+from typing import IO, Any, Optional, Union, cast
 from urllib import request
 from urllib.error import URLError
 
@@ -78,7 +80,7 @@ class Service(ABC):
         return f"http://{utils.join_host_port('localhost', self.port)}"
 
     @abstractmethod
-    def command_line_args(self) -> List[str]:
+    def command_line_args(self) -> list[str]:
         """A List of program arguments (excluding the executable)."""
         raise NotImplementedError("This method needs to be implemented in a sub class")
 

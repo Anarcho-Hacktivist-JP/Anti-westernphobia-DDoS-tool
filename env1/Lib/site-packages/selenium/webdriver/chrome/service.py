@@ -16,7 +16,8 @@
 # under the License.
 
 
-from typing import List, Mapping, Optional
+from collections.abc import Mapping, Sequence
+from typing import Optional
 
 from selenium.types import SubprocessStdAlias
 from selenium.webdriver.chromium import service
@@ -28,7 +29,7 @@ class Service(service.ChromiumService):
 
     :param executable_path: install path of the chromedriver executable, defaults to `chromedriver`.
     :param port: Port for the service to run on, defaults to 0 where the operating system will decide.
-    :param service_args: (Optional) List of args to be passed to the subprocess when launching the executable.
+    :param service_args: (Optional) Sequence of args to be passed to the subprocess when launching the executable.
     :param log_output: (Optional) int representation of STDOUT/DEVNULL, any IO instance or String path to file.
     :param env: (Optional) Mapping of environment variables for the new process, defaults to `os.environ`.
     """
@@ -37,11 +38,13 @@ class Service(service.ChromiumService):
         self,
         executable_path: Optional[str] = None,
         port: int = 0,
-        service_args: Optional[List[str]] = None,
+        service_args: Optional[Sequence[str]] = None,
         log_output: Optional[SubprocessStdAlias] = None,
         env: Optional[Mapping[str, str]] = None,
         **kwargs,
     ) -> None:
+        self._service_args = service_args or []
+
         super().__init__(
             executable_path=executable_path,
             port=port,
@@ -50,3 +53,13 @@ class Service(service.ChromiumService):
             env=env,
             **kwargs,
         )
+
+    @property
+    def service_args(self) -> Sequence[str]:
+        return self._service_args
+
+    @service_args.setter
+    def service_args(self, value: Sequence[str]):
+        if isinstance(value, str) or not isinstance(value, Sequence):
+            raise TypeError("service_args must be a sequence")
+        self._service_args = list(value)

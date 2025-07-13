@@ -16,7 +16,7 @@
 # under the License.
 """The By implementation."""
 
-from typing import Dict, Literal, Optional
+from typing import Literal, Optional
 
 
 class By:
@@ -82,7 +82,7 @@ class By:
     CLASS_NAME = "class name"
     CSS_SELECTOR = "css selector"
 
-    _custom_finders: Dict[str, str] = {}
+    _custom_finders: dict[str, str] = {}
 
     @classmethod
     def register_custom_finder(cls, name: str, strategy: str) -> None:

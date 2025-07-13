@@ -15,7 +15,7 @@
 # specific language governing permissions and limitations
 # under the License.
 from enum import Enum
-from typing import Any, Dict
+from typing import Any
 
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from selenium.webdriver.common.options import ArgOptions
@@ -363,8 +363,8 @@ class Options(ArgOptions):
 
     def __init__(self) -> None:
         super().__init__()
-        self._options: Dict[str, Any] = {}
-        self._additional: Dict[str, Any] = {}
+        self._options: dict[str, Any] = {}
+        self._additional: dict[str, Any] = {}
 
     @property
     def options(self) -> dict:

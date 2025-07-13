@@ -16,7 +16,7 @@
 # under the License.
 
 import time
-from typing import Callable, Generic, Literal, Optional, Tuple, Type, TypeVar, Union
+from typing import Callable, Generic, Literal, Optional, TypeVar, Union
 
 from selenium.common.exceptions import NoSuchElementException, TimeoutException
 from selenium.types import WaitExcTypes
@@ -24,7 +24,7 @@ from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.remote.webelement import WebElement
 
 POLL_FREQUENCY: float = 0.5  # How long to sleep in between calls to the method
-IGNORED_EXCEPTIONS: Tuple[Type[Exception]] = (NoSuchElementException,)  # default to be ignored.
+IGNORED_EXCEPTIONS: tuple[type[Exception]] = (NoSuchElementException,)  # default to be ignored.
 
 D = TypeVar("D", bound=Union[WebDriver, WebElement])
 T = TypeVar("T")

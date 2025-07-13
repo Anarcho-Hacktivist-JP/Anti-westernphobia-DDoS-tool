@@ -24,7 +24,6 @@ from abc import ABCMeta
 from base64 import b64decode, encodebytes
 from hashlib import md5 as md5_hash
 from io import BytesIO
-from typing import List
 
 from selenium.common.exceptions import JavascriptException, WebDriverException
 from selenium.webdriver.common.by import By
@@ -602,7 +601,7 @@ class WebElement(BaseWebElement):
         by, value = self._parent.locator_converter.convert(by, value)
         return self._execute(Command.FIND_CHILD_ELEMENT, {"using": by, "value": value})["value"]
 
-    def find_elements(self, by=By.ID, value=None) -> List[WebElement]:
+    def find_elements(self, by=By.ID, value=None) -> list[WebElement]:
         """Find elements given a By strategy and locator.
 
         Parameters:

@@ -1,4 +1,4 @@
-#!C:\Users\Garib\Desktop\folder\DDOS\MHDDoS\env1\Scripts\python.exe
+#!C:\Users\Garib\Documents\folder\DDOS\MHDDoS\env1\Scripts\python.exe
 # -*- coding: utf-8 -*-
 from __future__ import print_function
 """

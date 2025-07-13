@@ -15,7 +15,6 @@
 # specific language governing permissions and limitations
 # under the License.
 
-from typing import List
 
 from selenium.common.exceptions import NoSuchElementException, UnexpectedTagNameException
 from selenium.webdriver.common.by import By
@@ -41,12 +40,12 @@ class Select:
         self.is_multiple = multi and multi != "false"
 
     @property
-    def options(self) -> List[WebElement]:
+    def options(self) -> list[WebElement]:
         """Returns a list of all options belonging to this select tag."""
         return self._el.find_elements(By.TAG_NAME, "option")
 
     @property
-    def all_selected_options(self) -> List[WebElement]:
+    def all_selected_options(self) -> list[WebElement]:
         """Returns a list of all selected options belonging to this select
         tag."""
         return [opt for opt in self.options if opt.is_selected()]
